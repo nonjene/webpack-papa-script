@@ -77,7 +77,7 @@ if (IsProduction) {
 let configWrap = {
     entry: Object.assign({}, Set.entry),
     output: {
-        path: path.resolve(__dirname, path.join("../", Set.outputDir, Set.module)),
+        path: path.resolve(Set.outputDir, Set.module),
         filename: `[name]/bundle${fileNameHash}.js`,
         publicPath,
         chunkFilename: "[name].chunk.min.js"
@@ -156,7 +156,7 @@ let configWrap = {
     plugins: plugins,
     htmlLoader: {
         ignoreCustomFragments: [/\{\{.*?}}/],
-        root: path.resolve(__dirname, "../src"),
+        root: path.resolve("./src"),
         attrs: ["img:src", "img:data-src", "link:href"]
     },
     postcss: function() {

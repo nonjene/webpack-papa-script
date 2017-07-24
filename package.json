@@ -63,7 +63,7 @@
         "type": "git",
         "url": "https://github.com/nonjene/ok-papa-cli"
     },
-    "keywords": ["frontend project"],
+    "keywords": ["frontend", "project", "solution"],
     "bugs": {
         "url": "https://github.com/nonjene/ok-papa-cli/issues"
     },

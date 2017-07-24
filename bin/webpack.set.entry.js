@@ -21,7 +21,7 @@ const path = require("path");
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const DIR_SRC = path.resolve(__dirname, "../src/") + "/";
+const DIR_SRC = path.resolve("./src/") + "/";
 
 let aDirName = [];
 let entry = {};
@@ -91,8 +91,7 @@ const setEntry = function(dir) {
                 filename: dir + "/index.html",
                 // 优先选取config.json的templateName_m/pc，没有则用默认的
                 template: path.resolve(
-                    __dirname,
-                    `../resource/html/${targetConf[`templateName_${dir}`] || `index_${dir}.handlebars`}`
+                    `./resource/html/${targetConf[`templateName_${dir}`] || `index_${dir}.handlebars`}`
                 ),
                 chunks: [dir, "vendors"],
                 inject: "body",
