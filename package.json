@@ -10,8 +10,8 @@
     },
     "author": "nonjene",
     "license": "MIT",
-    "dependencies": {},
-    "devDependencies": {
+    "devDependencies": {},
+    "dependencies": {
         "autoprefixer": "^6.3.6",
         "babel": "^6.5.2",
         "babel-cli": "^6.24.1",
