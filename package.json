@@ -1,11 +1,14 @@
 {
     "name": "ok-papa-cli",
-    "version": "2.0.1",
+    "version": "2.0.2npm",
     "description": "A frontend projects solution",
     "main": "index.js",
     "scripts": {},
     "author": "nonjene",
     "license": "MIT",
+    "engines": {
+        "node": ">=7"
+    },
     "devDependencies": {},
     "dependencies": {
         "chalk": "^1.1.3",
@@ -17,7 +20,6 @@
         "koa-conditional-get": "^2.0.0",
         "koa-proxy": "^0.8.0",
         "koa-static": "^3.0.0",
-        "node-sass": "^3.7.0",
         "opn": "^4.0.2",
         "uglify-js": "^3.0.24"
     },
@@ -26,7 +28,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/nonjene/ok-papa-cli.git"
+        "url": "git+https://githu·.com/nonjene/ok-papa-cli.git"
     },
     "keywords": ["frontend", "project", "solution"],
     "bugs": {
