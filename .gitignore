@@ -1,1 +1,3 @@
 node_modules
+test/seed/build
+test/seed/dist

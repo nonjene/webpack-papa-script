@@ -21,7 +21,8 @@
         "koa-proxy": "^0.8.0",
         "koa-static": "^3.0.0",
         "opn": "^4.0.2",
-        "uglify-js": "^3.0.24"
+        "uglify-js": "^3.0.24",
+        "webpack": "^1.15.0"
     },
     "bin": {
         "okpapa": "./index.js"
@@ -30,7 +31,11 @@
         "type": "git",
         "url": "git+https://githu·.com/nonjene/ok-papa-cli.git"
     },
-    "keywords": ["frontend", "project", "solution"],
+    "keywords": [
+        "frontend",
+        "project",
+        "solution"
+    ],
     "bugs": {
         "url": "https://github.com/nonjene/ok-papa-cli/issues"
     },
