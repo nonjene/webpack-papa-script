@@ -1,11 +1,14 @@
-#ok-papa-cli
+# ok-papa-cli
+
 基于 webpack 的前端多页面解决方案。在此cli的帮助下快速部署前端页面：可多个输出或每个页面独立输出，并且包含多个环境切换、适合多个环境的最佳配置输出、其他路径代理等功能。
 
 
-#Feature
+# Feature
+
 * webpack使用1.x，支持ie8
 
-#Config
+# Config
+
 papa.config.json：
 ```json
     {
@@ -28,10 +31,12 @@ papa.config.json：
 ```
 
 
-#Todo
+# Todo
+
 万事开头难，然后中间难，最后结尾难
 1. 跑通webpack complie
     1. 把 npm run 的命令改为 run_webpack.js
+    1. npm dependencies 添加 webpack 的依赖
 1. cli: create a Project Solution
 1. write test
 1. 解耦resource的合并文件顺序
