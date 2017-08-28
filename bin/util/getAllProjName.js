@@ -6,7 +6,7 @@ const path = require("path");
 
 const ExcludeDir = ["modules", "static", "m", "pc"];
 
-const DIR_SRC = path.resolve("./src/");
+const DIR_SRC = path.resolve(`${process.cwd()}/src/`);
 
 let ls = function(baseDir = DIR_SRC) {
     let needGoDeep = [];

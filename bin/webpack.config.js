@@ -83,7 +83,7 @@ let configWrap = {
         chunkFilename: "[name].chunk.min.js"
     },
     resolve: {
-        root: path.resolve("./src"),
+        root: path.resolve(`${process.cwd()}/src/`),
         alias: {
             common: "modules/tools/common",
             cssReset: "static/css/reset.css"
@@ -156,7 +156,7 @@ let configWrap = {
     plugins: plugins,
     htmlLoader: {
         ignoreCustomFragments: [/\{\{.*?}}/],
-        root: path.resolve("./src"),
+        root: path.resolve(`${process.cwd()}/src/`),
         attrs: ["img:src", "img:data-src", "link:href"]
     },
     postcss: function() {

@@ -6,7 +6,7 @@ const path = require("path");
 const fs = require("fs");
 
 module.exports = function(target, duans = ["m", "pc"]) {
-    const DIR_SRC = path.resolve("./src/");
+    const DIR_SRC = path.resolve(`${process.cwd()}/src/`);
     if (!Array.isArray(duans)) {
         duans = [duans.toString()];
     }

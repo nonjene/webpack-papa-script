@@ -21,7 +21,7 @@ const path = require("path");
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const DIR_SRC = path.resolve("./src/") + "/";
+const DIR_SRC = path.resolve(`${process.cwd()}/src/`) + "/";
 
 let aDirName = [];
 let entry = {};

@@ -2,13 +2,12 @@
  * Created by Nonjene on 2017/3/5.
  */
 
-const TPL = `try{
-    window.publicConfig.mode = "{$mode}";
-    window.publicConfig.debug = {$debug};
+const TPL = (props = {}) => `try{
+    window.publicConfig.mode = "${props.mode}";
+    window.publicConfig.debug = ${props.debug};
     Object.freeze(window.publicConfig);
 }catch(e){}`;
 
-const T = require("./util/tpl");
 
 const fs = require("fs");
 const path = require("path");
@@ -16,7 +15,7 @@ const { setConf } = require("./config");
 
 const change = function(props, target) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(path.resolve(`./src/${target}/config_v.js`), T(TPL, props), err => {
+        fs.writeFile(path.resolve(`${process.cwd()}/src/${target}/config_v.js`), TPL(props), err => {
             if (err) return reject(err);
             resolve();
         });
