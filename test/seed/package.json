@@ -1,0 +1,28 @@
+{
+    "name": "ok-papa-seed",
+    "version": "1.0.0",
+    "description": "Directory Structure for ok-papa-cli, a frontend projects solution.",
+    "main": "",
+    "scripts": {
+        "watch": "webpack --progress --colors --watch --config ./bin/webpack.config.js",
+        "build": "webpack --progress --colors --config ./bin/webpack.config.js",
+        "start": "serve -p 3005"
+    },
+    "author": "nonjene",
+    "license": "MIT",
+    "dependencies": {
+        "react": "^15.5.4",
+        "react-dom": "^15.5.4"
+    },
+    "devDependencies": {},
+    "bin": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nonjene/ok-papa-seed"
+    },
+    "keywords": ["frontend", "projects solution"],
+    "bugs": {
+        "url": "https://github.com/nonjene/ok-papa-seed/issues"
+    },
+    "homepage": "https://github.com/nonjene/ok-papa-seed#readme"
+}

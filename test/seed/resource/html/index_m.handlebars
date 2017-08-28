@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh" style="font-size: 55.2px;">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{htmlWebpackPlugin.options.tpl.title}}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#0077cc" /> {{{htmlWebpackPlugin.options.tpl.moreMeta}}} {{!--
+    <link rel="dns-prefetch" href=""> --}}
+
+</head>
+
+<body {{{htmlWebpackPlugin.options.tpl.bodyProp}}}>
+    <div id="container" class="container">
+        {{{htmlWebpackPlugin.options.tpl.main}}}
+    </div>
+    {{{htmlWebpackPlugin.options.tpl.moreScript}}}
+
+</body>
+
+</html>

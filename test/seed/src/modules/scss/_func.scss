@@ -1,0 +1,9 @@
+
+$psdSize: 750px;
+$refer: 750px;
+@function px2rem($px, $psdSize: $psdSize, $refer: $refer) {
+    @return $refer / $psdSize * $px / 100 * 1rem;
+}
+@function pr($px, $psdSize: $psdSize, $refer: $refer) {
+    @return px2rem($px, $psdSize, $refer)
+}

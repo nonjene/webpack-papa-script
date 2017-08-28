@@ -1,0 +1,8 @@
+@import "src/modules/scss/normalize_m";
+@import "src/modules/scss/func";
+
+.example {
+    background: url('module/img/example.jpg') no-repeat center;
+    background-size: contain;
+    min-height: pr(990);
+}
