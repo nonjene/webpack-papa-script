@@ -111,19 +111,18 @@ module.exports = Object.assign(
         case 'pre':
           return '预发环境🥑';
         case 'produce':
-          return '生产环境🍆';
+          return '生产环境🍓';
         default:
-          return '程序错误🙄';
+          return '程序错误🌚';
       }
     },
 
-    // todo 更换为run_webpack.js
     combineBuild(which) {
       return [
         getEnvCommander(),
         getTargetCommander(which),
         getDuanCommander(),
-        'npm run build'
+        `node ${path.join(__dirname, './run_build/build')}`
       ].join('&&');
     },
     combineWatch(which) {
@@ -131,7 +130,7 @@ module.exports = Object.assign(
         getEnvCommander(),
         getTargetCommander(which),
         getDuanCommander(),
-        'npm run watch'
+        `node ${path.join(__dirname, './run_build/watch.js')}`
       ].join('&&');
     },
     getTargetCommander,

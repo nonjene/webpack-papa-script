@@ -26,7 +26,7 @@ server.use(proxy({
     match: /^\/(?!activity\/)/       // 非活动页面
 }));
 server.use(conditional());
-server.use(serve(__dirname + '/build/', {
+server.use(serve(process.cwd() + '/build/', {
     maxage: 31536000000
 }));
 

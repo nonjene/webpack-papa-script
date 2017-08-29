@@ -6,7 +6,7 @@
 const { exec } = require("child_process");
 const opn = require('opn');
 const { getConf } = require('./config');
-
+const path = require('path');
 
 
 let serve;
@@ -18,7 +18,7 @@ const serveOpen = function () {
     return new Promise((resovle, reject) => {
         if (serve) return reject('只能执行一次server start.');
         console.log('serve:'+DefProxyPort);
-        serve = exec('node server S '+ DefServePort +' P '+ DefProxyPort, function (err, stdout, stderr) {
+        serve = exec(`node ${path.join(__dirname, '../server')} S ${DefServePort}  P ${DefProxyPort}`, function (err, stdout, stderr) {
             if (err) {
                 reject(err);
             }

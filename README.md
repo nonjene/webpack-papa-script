@@ -35,8 +35,6 @@ papa.config.json：
 
 万事开头难，然后中间难，最后结尾难
 1. 跑通webpack complie
-    1. 把 npm run 的命令改为 run_webpack.js
-    1. npm dependencies 添加 webpack 的依赖
 1. cli: create a Project Solution
 1. write test
 1. 解耦resource的合并文件顺序
