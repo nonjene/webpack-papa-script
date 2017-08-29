@@ -12,8 +12,24 @@ const TPL = (props = {}) => `try{
 const fs = require("fs");
 const path = require("path");
 const { setConf } = require("./config");
+const {asyncEach} = require('./util/asyncEach');
 
-const change = function(props, target) {
+/**
+ * 把所有config_v.js 修改。
+ * @param {*object} props mode, debug option
+ * @param {*array} targets 文件夹
+ */
+const change = function(props, targets) {
+  return new Promise((resolve, reject) => {
+    asyncEach(
+      targets,
+      (target, next) => writeConf(props, target).then(next).catch(reject),
+      resolve
+    );
+  });
+};
+
+const writeConf = function(props, target) {
     return new Promise((resolve, reject) => {
         const dir = `${process.cwd()}/src/${target}`;
         if(!fs.existsSync(dir)) return reject(`指定的文件夹不存在：${target}`);
@@ -39,7 +55,7 @@ module.exports = {
             debug = true;
         }
         if (arg.length === 1) {
-            throw new Error("构建错误：设置setFrontEndConf没有接收到target，请联系负责人。");
+            throw new Error("构建错误：设置setFrontEndConf没有接收到target。");
         }
 
         if (mode === "produce") debug = false;
