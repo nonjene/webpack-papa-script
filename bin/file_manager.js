@@ -9,8 +9,9 @@ const chalk = require('chalk');
 const T = require('./util/tpl');
 
 const { asyncEach } = require('./util/asyncEach');
-const { localAssetPath, remoteBasePath, remotePath, domainName } = require('./config');
+const { localAssetPath: localAssetPath_raw, remoteBasePath, remotePath, domainName } = require('./config');
 
+const localAssetPath = path.join(process.cwd(), localAssetPath_raw);
 
 module.exports = {
     getAssetsFiles(target, duans, callback) {

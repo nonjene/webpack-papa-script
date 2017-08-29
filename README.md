@@ -12,7 +12,7 @@
 papa.config.json：
 ```json
 {
-      "ftp": {
+    "ftp": {
       "host": "192.168.1.1",
       "port": "",
       "user": "user",
@@ -24,7 +24,8 @@ papa.config.json：
     "domainName": "http://m.okpapa.com",
     "cdnDomain": "https://images.okpapa.com",
     "proxyPort": 80,
-    "servePort": 3005
+    "servePort": 3005,
+    "staticFileConcatOrder":[]
   }
 ```
 
@@ -34,19 +35,9 @@ papa.config.json：
 万事开头难，然后中间难，最后结尾难
 1. cli: create a Project Solution
 1. write test
-1. 解耦resource的合并文件顺序
 1. 拆解各种配置：
     1. webpack.config
     1. 
 1. webpack 热替换
 1. upload 功能没测
 
-
-
-
-<!-- script
-`
-"watch": "webpack --progress --colors --watch --config ./bin/webpack.config.js",
-"build": "webpack --progress --colors --config ./bin/webpack.config.js",
-"start": "serve -p 3005"
-` -->
