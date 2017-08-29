@@ -11,23 +11,23 @@
 
 papa.config.json：
 ```json
-    {
-      static:{
-          ftp: {
-          host: "192.168.1.1",
-          port: "",
-          user: "user",
-          password: "ps"
-        },
-        remoteBasePath: "", //ftp的基目录，用于打印地址时方便排除。m.okpapa.com
-        remotePath: "/activity/{$target}",
-        localAssetPath: "build/activity/{$target}",
-        domainName: "http://m.okpapa.com",
-        cdnDomain: "https://images.okpapa.com"
-        proxyPort: 80,
-        servePort: 3005
-      }
-    }
+{
+  "static":{
+      "ftp": {
+      "host": "192.168.1.1",
+      "port": "",
+      "user": "user",
+      "password": "ps"
+    },
+    "remoteBasePath": "", //ftp的基目录，用于打印地址时方便排除。m.okpapa.com
+    "remotePath": "/activity/{$target}",
+    "localAssetPath": "build/activity/{$target}",
+    "domainName": "http://m.okpapa.com",
+    "cdnDomain": "https://images.okpapa.com",
+    "proxyPort": 80,
+    "servePort": 3005
+  }
+}
 ```
 
 
