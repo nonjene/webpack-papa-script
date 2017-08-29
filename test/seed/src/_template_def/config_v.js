@@ -1,5 +1,5 @@
 try{
-    window.publicConfig.mode = "produce";
-    window.publicConfig.debug = false;
+    window.publicConfig.mode = "test";
+    window.publicConfig.debug = true;
     Object.freeze(window.publicConfig);
 }catch(e){}

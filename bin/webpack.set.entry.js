@@ -86,28 +86,29 @@ const setEntry = function(dir) {
             })
         );
     } else {
-        htmlDeclare.push(
-            new HtmlWebpackPlugin({
-                filename: dir + "/index.html",
-                // 优先选取config.json的templateName_m/pc，没有则用默认的
-                template: path.resolve(
-                    `./resource/html/${targetConf[`templateName_${dir}`] || `index_${dir}.handlebars`}`
-                ),
-                chunks: [dir, "vendors"],
-                inject: "body",
-                tpl: Object.assign(
-                    {
-                        // 活动的业务内容的html
-                        main: getHtml(path.join(Path, htmlFile)),
-                        // 在模版插入common.js
-                        moreScript: commonFileInject
-                    },
-                    targetConf
-                )
+      let opt = {
+        filename: dir + '/index.html',
+        // 优先选取config.json的templateName_m/pc，没有则用默认的
+        template: path.resolve(process.cwd(), `resource/html/${targetConf[`templateName_${dir}`] || `index_${dir}.handlebars`}`),
+        chunks: [dir, 'vendors'],
+        inject: 'body',
+        tpl: Object.assign({
+            // 在模版插入common.js
+            moreScript: commonFileInject
+        }, targetConf),
+        cache: false //强制提取html编译，因为模版永远不变，tpl.main动态
 
-                //hash: true
-            })
-        );
+        //hash: true
+      };
+      // 活动的业务内容的html
+      Object.defineProperty(opt.tpl, "main", {
+          get: function() {
+              return getHtml(path.join(Path, htmlFile));
+          },
+          set:function(){}
+      });
+
+      htmlDeclare.push(new HtmlWebpackPlugin(opt));
     }
 };
 //path.resolve(__dirname, '../resource/bundle/common.js')
