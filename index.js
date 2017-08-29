@@ -49,7 +49,7 @@ program
     .option('P, --proxy-port <端口>', '定义本地测试的平台页面服务端口，默认80', name => config.setConf('proxyPort', name), U)
     .option('--copy-static', '把bin/resource/static的文件复制到3个环境', ()=> deployStaticAll(), U)
 
-    .option('--debug', '测试代码', () => test.hasDuan(), U)
+    .option('--debug', '测试代码', () => test.getAllProjName(), U)
     .parse(process.argv);
 
 // 配置写入process.env的形式
@@ -67,17 +67,17 @@ if (program.release) {
     frontendConf.promiseSetDone
         .then(()=> build())
         .then(() => program.upload && upload())
-        .catch(e=> console.log(e));
+        .catch(e=> console.log(chalk.red(e)));
 }
 
 if (program.releaseAll) {
-    setReleaseConfig();
-
-    config.setTarget(getAllProjName(config.getConf('buildAllScope')));
+  config.setTarget(getAllProjName(config.getConf('buildAllScope')));
+  setReleaseConfig();
+  
     frontendConf.promiseSetDone
         .then(() => build())
         .then(() => program.upload && upload())
-        .catch(e => console.log(e));
+        .catch(e => console.log(chalk.red(e)));
 }
 
 if(!program.release && !program.releaseAll && program.upload){
@@ -92,7 +92,7 @@ if(program.watch){
     !program.production && config.setEnv('development');
     frontendConf.promiseSetDone
         .then(() => watch())
-        .catch(e => console.log(e));
+        .catch(e => console.log(chalk.red(e)));
 
     // 复制common.js 到build/
     deployStaticEnvTest();

@@ -15,7 +15,10 @@ const { setConf } = require("./config");
 
 const change = function(props, target) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(path.resolve(`${process.cwd()}/src/${target}/config_v.js`), TPL(props), err => {
+        const dir = `${process.cwd()}/src/${target}`;
+        if(!fs.existsSync(dir)) return reject(`指定的文件夹不存在：${target}`);
+
+        fs.writeFile(path.join(dir, 'config_v.js'), TPL(props), err => {
             if (err) return reject(err);
             resolve();
         });
@@ -36,7 +39,7 @@ module.exports = {
             debug = true;
         }
         if (arg.length === 1) {
-            throw new Error("构建错误：设置setFrontEndConfm没有接收到target，请联系负责人。");
+            throw new Error("构建错误：设置setFrontEndConf没有接收到target，请联系负责人。");
         }
 
         if (mode === "produce") debug = false;
