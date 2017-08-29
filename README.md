@@ -12,7 +12,6 @@
 papa.config.json：
 ```json
 {
-  "static":{
       "ftp": {
       "host": "192.168.1.1",
       "port": "",
@@ -27,14 +26,12 @@ papa.config.json：
     "proxyPort": 80,
     "servePort": 3005
   }
-}
 ```
 
 
 # Todo
 
 万事开头难，然后中间难，最后结尾难
-1. 跑通webpack complie
 1. cli: create a Project Solution
 1. write test
 1. 解耦resource的合并文件顺序
@@ -42,6 +39,7 @@ papa.config.json：
     1. webpack.config
     1. 
 1. webpack 热替换
+1. upload 功能没测
 
 
 

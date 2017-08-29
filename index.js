@@ -47,7 +47,7 @@ program
   .option('-t --template <模版名>', '新建一个活动时，选一个模版', (name, meno) => meno = name, U)
 
   .option('P, --proxy-port <端口>', '定义本地测试的平台页面服务端口，默认80', name => config.setConf('proxyPort', name), U)
-  .option('--copy-static', '把bin/resource/static的文件复制到3个环境', ()=> deployStaticAll(), U)
+  .option('--copy-static', '把bin/resource/static的文件复制到3个环境', U, U)
 
   .option('--debug', '测试代码', () => test.getAllProjName(), U)
   .parse(process.argv);
@@ -80,7 +80,8 @@ if (program.releaseAll) {
     .catch(e => console.log(chalk.red(e)));
 }
 
-if (!program.release && !program.releaseAll && program.upload) {
+// 没有查能不能知道只有一个upload参数，先这么写了。
+if (!program.release && !program.releaseAll && !program.copyStatic && program.upload) {
   upload();
 }
 
@@ -99,6 +100,11 @@ if (program.watch) {
 }
 if (program.watchAll) {
   console.log('功能后续开发。');
+}
+
+// 生成common.js
+if(program.copyStatic){
+  deployStaticAll(!!program.upload)
 }
 
 function upload() {

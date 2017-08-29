@@ -5,13 +5,9 @@
 const path = require('path');
 const fs = require('fs');
 const projConfPath = `${process.cwd()}/papa.config.json`;
-const projConf = Object.assign(
-  {
-    static: {}
-  },
+const projConf =
   (fs.existsSync(projConfPath) && JSON.parse(fs.readFileSync(projConfPath))) ||
-    {}
-);
+  {};
 
 const StaticConfig = Object.assign(
   {
@@ -27,9 +23,10 @@ const StaticConfig = Object.assign(
     domainName: 'http://m.okpapa.com',
     cdnDomain: 'https://images.okpapa.com',
     proxyPort: 80,
-    servePort: 3005
+    servePort: 3005,
+    staticFileConcatOrder: [] //选定需要合并的文件，必须在 resource/js 里
   },
-  projConf.static
+  projConf
 );
 
 // 之前写的有些代码用了 getConf() 来获取 StaticConfig，所以要合并进来

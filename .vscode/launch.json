@@ -11,7 +11,7 @@
       "program": "${workspaceRoot}/index.js",
       "cwd": "${workspaceRoot}/test/seed/",
       "args":[
-        "--debug"
+        "--copy-static"
       ]
     },
     {

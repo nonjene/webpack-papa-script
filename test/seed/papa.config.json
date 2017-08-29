@@ -1,0 +1,20 @@
+{
+  "ftp": {
+    "host": "192.168.1.1",
+    "port": "",
+    "user": "user",
+    "password": "ps"
+  },
+  "remoteBasePath": "",
+  "remotePath": "/activity/{$target}",
+  "localAssetPath": "build/activity/{$target}",
+  "domainName": "http://m.okpapa.com",
+  "cdnDomain": "https://images.okpapa.com",
+  "proxyPort": 80,
+  "servePort": 3005,
+  "staticFileConcatOrder":[
+    "config.js",
+    "reset.js",
+    "responsive.js"
+  ]
+}

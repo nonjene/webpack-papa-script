@@ -1,6 +1,6 @@
 // 公共配置文件
 window._publicConfig = (function(window) {
-    let commonParams;
+    var commonParams;
 
     if (window.okPapa.page.isPC) {
         commonParams = {};

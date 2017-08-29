@@ -16,23 +16,29 @@ const fs = require('fs');
 }*/
 
 const reduceList = aFileList =>
-    aFileList.reduce((host, item) => {
-        host[item] = fs.readFileSync(item, 'utf8');
-        return host;
-    }, {});
-
+  aFileList.reduce((host, item) => {
+    host[item] = fs.readFileSync(item, 'utf8');
+    return host;
+  }, {});
 
 function compress(aFileList, sTo) {
-    const res = UglifyJS.minify(reduceList(aFileList), {
-        ie8: true
-    });
+  const res = UglifyJS.minify(reduceList(aFileList), {
+    ie8: true
+  });
 
-    if (res.error) return reject(res.error);
+  if (res.error) {
+    // 列出所有错误信息。toString()只给了简短的信息，所以需要这样列出
+    const msg = Object.keys(res.error)
+      .map(name => `${name}:${res.error[name]}`)
+      .join('\n');
+    return Promise.reject(`文件合成错误：${sTo}\n⚠️ 注意：合并的js不能包含es6语法。\n${msg}`);
+  }
 
-    fs.writeFileSync(sTo, res.code, 'utf8');
+  fs.writeFileSync(sTo, res.code, 'utf8');
+  return Promise.resolve();
 }
 
 module.exports = function(aFileList, sTo) {
-    //await concatCommon(aFileList, sTo);
-    return compress(aFileList, sTo);
+  //await concatCommon(aFileList, sTo);
+  return compress(aFileList, sTo);
 };
