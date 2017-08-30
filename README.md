@@ -5,12 +5,12 @@
 
 # Feature
 
-* webpack使用1.x，支持ie8
+* 支持ie8, webpack采用1.x
 
 # Config
 
 papa.config.json：
-```json
+```js
 {
     "ftp": {
       "host": "192.168.1.1",
