@@ -70,13 +70,19 @@ const setEntry = function(dir) {
   const comFilePath = '/activity/static/common.js';
   // 这个别改，改了你就要重写compat_v1.js的匹配规则，否则会重复添加。
   const commonFileInject = `<script type="text/javascript" src="${IsPro
-      ? deployConfig.cdnDomain
-      : ''}${comFilePath}"></script>`;
+    ? deployConfig.cdnDomain
+    : ''}${comFilePath}"></script>`;
 
   //兼容旧版
   if (!Object.keys(targetConf).length) {
     //插入script common.js去html
-    compatV1.injectCommon(Path + '/index.html', commonFileInject, comFilePath);
+    if (deployConfig.staticFileConcatOrder.length > 0) {
+      compatV1.injectCommon(
+        Path + '/index.html',
+        commonFileInject,
+        comFilePath
+      );
+    }
 
     htmlDeclare.push(
       new HtmlWebpackPlugin({
@@ -100,7 +106,10 @@ const setEntry = function(dir) {
       tpl: Object.assign(
         {
           // 在模版插入common.js
-          moreScript: commonFileInject
+          moreScript:
+            deployConfig.staticFileConcatOrder.length > 0
+              ? commonFileInject
+              : ''
         },
         targetConf
       ),
