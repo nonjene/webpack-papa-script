@@ -32,11 +32,4 @@ papa.config.json：
 
 # Todo
 
-万事开头难，然后中间难，最后结尾难
 1. write test
-1. 拆解各种配置：
-    1. webpack.config
-    1. 
-1. webpack 热替换
-1. upload 功能没测
-
