@@ -5,7 +5,8 @@ const LiveReloadPlugin = require('webpack-livereload-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
-const { getConf } = require('./config');
+const T = require('./util/tpl');
+const deployConfig = require('./config');
 const Set = require('./webpack.set.entry');
 const IsPro = Set.PRO_SPECIFIC === 'pro';
 const IsPre = Set.PRO_SPECIFIC === 'pre';
@@ -61,9 +62,12 @@ if (IsProduction) {
   if (IsTest) {
     publicPath = '..';
   } else {
-    publicPath = `https://${IsPre
-      ? 'pre'
-      : 'images'}.okpapa.com/activity/${Set.module}`; //cdn地址直接把www改为images就行
+    publicPath = path.join(
+      IsPro ? deployConfig.cdnDomain : '',
+      T(deployConfig.remotePath, {
+        target: Set.module
+      })
+    );
   }
 } else {
   //console.log('目前编译开发环境');
@@ -92,10 +96,7 @@ let configWrap = {
   },
   resolve: {
     root: path.resolve(`${process.cwd()}/src/`),
-    alias: {
-      common: 'modules/tools/common',
-      cssReset: 'static/css/reset.css'
-    },
+    alias: Object.assign({}, deployConfig.webpack.alias),
     extensions: ['', '.js', '.jsx']
   },
   module: {
@@ -174,25 +175,28 @@ let configWrap = {
   postcss: function() {
     return [autoprefixer];
   },
-  imageWebpackLoader: {
-    mozjpeg: {
-      quality: 100
+  imageWebpackLoader: Object.assign(
+    {
+      mozjpeg: {
+        quality: 100
+      },
+      pngquant: {
+        quality: '60-100',
+        speed: 4
+      },
+      svgo: {
+        plugins: [
+          {
+            removeViewBox: false
+          },
+          {
+            removeEmptyAttrs: false
+          }
+        ]
+      }
     },
-    pngquant: {
-      quality: '60-100',
-      speed: 4
-    },
-    svgo: {
-      plugins: [
-        {
-          removeViewBox: false
-        },
-        {
-          removeEmptyAttrs: false
-        }
-      ]
-    }
-  }
+    deployConfig.webpack.imageWebpackLoader
+  )
 };
 if (process.env.NODE_ENV !== 'production') {
   configWrap.devtool = '#inline-source-map';
