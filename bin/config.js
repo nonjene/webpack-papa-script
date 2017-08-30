@@ -4,7 +4,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const projConfPath = `${process.cwd()}/papa.config.json`;
+const projConfPath = `${process.cwd()}/okpapa.config.json`;
 const projConf =
   (fs.existsSync(projConfPath) && JSON.parse(fs.readFileSync(projConfPath))) ||
   {};

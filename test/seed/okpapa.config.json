@@ -2,14 +2,14 @@
   "ftp": {
     "host": "192.168.2.228",
     "port": "",
-    "user": "testlimincom",
-    "password": "testlimincom"
+    "user": "account",
+    "password": "password"
   },
   "remoteBasePath": "",
   "remotePath": "/activity/{$target}",
   "localAssetPath": "build/activity/{$target}",
-  "domainName": "http://m.liminwang.net",
-  "cdnDomain": "https://images.limin.com",
+  "domainName": "http://m.okpapa.net",
+  "cdnDomain": "https://images.okpapa.com",
   "proxyPort": 80,
   "servePort": 3005,
   "staticFileConcatOrder":[

@@ -22,6 +22,9 @@ const reduceList = aFileList =>
   }, {});
 
 function compress(aFileList, sTo) {
+  if(!Array.isArray(aFileList) || aFileList.length<1){
+    return Promise.reject('');
+  }
   const res = UglifyJS.minify(reduceList(aFileList), {
     ie8: true
   });
