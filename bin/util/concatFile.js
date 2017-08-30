@@ -27,11 +27,11 @@ function compress(aFileList, sTo) {
   });
 
   if (res.error) {
-    // 列出所有错误信息。toString()只给了简短的信息，所以需要这样列出
-    const msg = Object.keys(res.error)
-      .map(name => `${name}:${res.error[name]}`)
-      .join('\n');
-    return Promise.reject(`文件合成错误：${sTo}\n⚠️ 注意：合并的js不能包含es6语法。\n${msg}`);
+    return Promise.reject(
+      `文件合成错误：${sTo}\n⚠️ 注意：合并的js不能包含es6语法。\n${JSON.stringify(
+        res.error
+      ).replace(/,/g, ',\n')}`
+    );
   }
 
   fs.writeFileSync(sTo, res.code, 'utf8');
