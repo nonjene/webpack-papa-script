@@ -1,6 +1,6 @@
 {
     "name": "ok-papa-cli",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "description": "A frontend projects solution",
     "main": "index.js",
     "scripts": {},
@@ -64,5 +64,5 @@
     "bugs": {
         "url": "https://github.com/nonjene/ok-papa-cli/issues"
     },
-    "homepage": "https://github.com/nonjene/ok-papa-seed#readme"
+    "homepage": "https://github.com/nonjene/ok-papa-cli#readme"
 }
