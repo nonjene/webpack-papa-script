@@ -1,6 +1,6 @@
 {
     "name": "ok-papa-cli",
-    "version": "2.0.2npm",
+    "version": "3.0.0",
     "description": "A frontend projects solution",
     "main": "index.js",
     "scripts": {},
