@@ -33,7 +33,6 @@ papa.config.json：
 # Todo
 
 万事开头难，然后中间难，最后结尾难
-1. cli: create a Project Solution
 1. write test
 1. 拆解各种配置：
     1. webpack.config

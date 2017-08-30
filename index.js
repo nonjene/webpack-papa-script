@@ -5,6 +5,7 @@ const fs = require("fs");
 const { build } = require('./bin/build');
 const { watch } = require('./bin/watch');
 const { create } = require('./bin/create');
+const initProj = require('./bin/initProj');
 const ftp = require('./bin/ftp');
 const test = require('./bin/test');
 const serve = require('./bin/serve');
@@ -48,6 +49,8 @@ program
 
   .option('P, --proxy-port <端口>', '定义本地测试的平台页面服务端口，默认80', name => config.setConf('proxyPort', name), U)
   .option('--copy-static', '把bin/resource/static的文件复制到3个环境', U, U)
+  .option('init --init <项目文件夹名>', '创建项目目录', U, U)
+  .option('set-source <git地址>', 'git url，指定 init 创建目录的源', U, U)
 
   .option('--debug', '测试代码', () => test.getAllProjName(), U)
   .parse(process.argv);
@@ -81,7 +84,12 @@ if (program.releaseAll) {
 }
 
 // 没有查能不能知道只有一个upload参数，先这么写了。
-if (!program.release && !program.releaseAll && !program.copyStatic && program.upload) {
+if (
+  !program.release &&
+  !program.releaseAll &&
+  !program.copyStatic &&
+  program.upload
+) {
   upload();
 }
 
@@ -105,6 +113,15 @@ if (program.watchAll) {
 // 生成common.js
 if(program.copyStatic){
   deployStaticAll(!!program.upload)
+}
+
+// 创建项目
+if (program.init) {
+  const projName = program.init;
+  console.log(chalk.cyan('正在初始化项目...'));
+  initProj(projName, program.setSource || config.getConf('seedUrl'))
+    .then(() => console.log(chalk.green(`项目 ${projName} 创建成功。`)))
+    .catch(e => console.log(chalk.red(e)));
 }
 
 function upload() {
