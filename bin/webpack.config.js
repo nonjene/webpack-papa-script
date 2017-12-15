@@ -60,7 +60,7 @@ if (IsProduction) {
   CSS_SourceMap = '';
   imgCompress = '!image-webpack-loader';
   if (IsTest) {
-    publicPath = '..';
+    publicPath = '../';
   } else {
     publicPath = path.join(
       IsPro ? deployConfig.cdnDomain : '',

@@ -67,12 +67,12 @@ const setEntry = function(dir) {
   const { htmlFile } = targetConf;
   delete targetConf.htmlFile;
 
+  const cdnPrefix = IsPro ? deployConfig.cdnDomain : '';
   const comFilePath = '/activity/static/common.js';
+  const linkParam = '?v=12';
   // 这个别改，改了你就要重写compat_v1.js的匹配规则，否则会重复添加。
-  const commonFileInject = `<script type="text/javascript" src="${IsPro
-    ? deployConfig.cdnDomain
-    : ''}${comFilePath}"></script>`;
-
+  const commonFileInject = `<script type="text/javascript" src="${cdnPrefix}${comFilePath}${linkParam}"></script>`;
+  
   //兼容旧版
   if (!Object.keys(targetConf).length) {
     //插入script common.js去html

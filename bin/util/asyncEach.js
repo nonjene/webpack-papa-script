@@ -13,22 +13,22 @@
  * @param done      回调：带回 map 的结果
  */
 function asyncEach(arr, filter, done) {
-    let filterResult = [];
-    let run = function (i) {
-        if (i > arr.length - 1) {
-            return done(filterResult);
-        }
-        filter(arr[i], function (items) {
-            if (items === undefined) {
-                if (!(items instanceof Array)) items = [items];
+  let filterResult = [];
+  let run = function(i) {
+    if (i > arr.length - 1) {
+      return done(filterResult);
+    }
+    filter(arr[i], function(items) {
+      if (items === undefined) {
+        if (!(items instanceof Array)) items = [items];
 
-                filterResult = [...filterResult, ...items];
-            }
-            return run(i + 1);
-        });
-    };
+        filterResult = [...filterResult, ...items];
+      }
+      return run(i + 1);
+    });
+  };
 
-    run(0);
+  run(0);
 }
 
 module.exports = { asyncEach };
