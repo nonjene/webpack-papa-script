@@ -2,10 +2,11 @@
 
 基于 webpack 的前端多页面解决方案。在此cli的帮助下快速部署前端页面：可多个输出或每个页面独立输出，并且包含多个环境切换、适合多个环境的最佳配置输出、其他路径代理等功能。
 
+项目开发中。
 
 # Feature
 
-* 支持ie8, webpack采用1.x
+* 为支持ie8, webpack采用1.x
 
 # Config
 
@@ -148,3 +149,4 @@ okpapa.config.json：
 # Todo
 
 1. write test
+1. 
