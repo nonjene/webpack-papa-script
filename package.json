@@ -1,5 +1,5 @@
 {
-    "name": "ok-papa-cli",
+    "name": "ok-papa-script",
     "version": "3.0.4",
     "description": "A frontend projects solution",
     "main": "index.js",
@@ -54,7 +54,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/nonjene/ok-papa-cli.git"
+        "url": "https://github.com/nonjene/ok-papa-script.git"
     },
     "keywords": [
         "frontend",
@@ -62,7 +62,7 @@
         "solution"
     ],
     "bugs": {
-        "url": "https://github.com/nonjene/ok-papa-cli/issues"
+        "url": "https://github.com/nonjene/ok-papa-script/issues"
     },
-    "homepage": "https://github.com/nonjene/ok-papa-cli#readme"
+    "homepage": "https://github.com/nonjene/ok-papa-script#readme"
 }

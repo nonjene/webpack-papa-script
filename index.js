@@ -49,8 +49,8 @@ program
 
   .option('P, --proxy-port <端口>', '定义本地测试的平台页面服务端口，默认80', name => config.setConf('proxyPort', name), U)
   .option('--copy-static', '把bin/resource/static的文件复制到3个环境', U, U)
-  .option('init --init <项目文件夹名>', '创建项目目录', U, U)
-  .option('set-source <git地址>', 'git url，指定 init 创建目录的源', U, U)
+  // .option('init --init <项目文件夹名>', '创建项目目录', U, U)
+  // .option('set-source <git地址>', 'git url，指定 init 创建目录的源', U, U)
 
   .option('--debug', '测试代码', () => test.getAllProjName(), U)
   .parse(process.argv);
