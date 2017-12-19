@@ -58,7 +58,7 @@ if (IsProduction) {
   CSS_Module_Loader_Pargram =
     '?modules&importLoaders=1&localIdentName=[hash:6]';
   CSS_SourceMap = '';
-  imgCompress = '!image-webpack-loader';
+  imgCompress = '';//'!image-webpack-loader';
   if (IsTest) {
     publicPath = '../';
   } else {
@@ -175,7 +175,7 @@ let configWrap = {
   postcss: function() {
     return [autoprefixer];
   },
-  imageWebpackLoader: Object.assign(
+  /* imageWebpackLoader: Object.assign(
     {
       mozjpeg: {
         quality: 100
@@ -196,7 +196,7 @@ let configWrap = {
       }
     },
     deployConfig.webpack.imageWebpackLoader
-  )
+  ) */
 };
 if (process.env.NODE_ENV !== 'production') {
   configWrap.devtool = '#inline-source-map';

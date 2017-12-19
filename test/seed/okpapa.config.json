@@ -20,25 +20,6 @@
   "webpack":{
     "alias":{
       "common": "modules/tools/common"
-    },
-    "imageWebpackLoader":{
-      "mozjpeg": {
-        "quality": 80
-      },
-      "pngquant": {
-        "quality": "60-100",
-        "speed": 4
-      },
-      "svgo": {
-        "plugins": [
-          {
-            "removeViewBox": false
-          },
-          {
-            "removeEmptyAttrs": false
-          }
-        ]
-      }
     }
   }
 }

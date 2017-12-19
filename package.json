@@ -31,7 +31,6 @@
         "handlebars-loader": "^1.4.0",
         "html-loader": "^0.4.4",
         "html-webpack-plugin": "^2.15.0",
-        "image-webpack-loader": "^3.2.0",
         "imports-loader": "^0.6.5",
         "koa": "^2.0.1",
         "koa-conditional-get": "^2.0.0",
