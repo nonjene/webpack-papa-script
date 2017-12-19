@@ -12,14 +12,12 @@
   "cdnDomain": "https://images.okpapa.com",
   "proxyPort": 80,
   "servePort": 3005,
-  "staticFileConcatOrder":[
-    "config.js",
-    "reset.js",
-    "responsive.js"
-  ],
-  "webpack":{
-    "alias":{
-      "common": "modules/tools/common"
+  "staticFileConcatOrder": ["config.js", "reset.js", "responsive.js"],
+  "webpackConfig": {
+    "resolve": {
+      "alias": {
+        "common": "modules/tools/common"
+      }
     }
   }
 }

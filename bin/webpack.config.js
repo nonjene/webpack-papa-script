@@ -1,5 +1,5 @@
 const path = require('path');
-
+const { fromJS } = require('immutable');
 const webpack = require('webpack');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -96,7 +96,7 @@ let configWrap = {
   },
   resolve: {
     root: path.resolve(`${process.cwd()}/src/`),
-    alias: Object.assign({}, deployConfig.webpack.alias),
+    alias: {},
     extensions: ['', '.js', '.jsx']
   },
   module: {
@@ -175,33 +175,14 @@ let configWrap = {
   postcss: function() {
     return [autoprefixer];
   },
-  /* imageWebpackLoader: Object.assign(
-    {
-      mozjpeg: {
-        quality: 100
-      },
-      pngquant: {
-        quality: '60-100',
-        speed: 4
-      },
-      svgo: {
-        plugins: [
-          {
-            removeViewBox: false
-          },
-          {
-            removeEmptyAttrs: false
-          }
-        ]
-      }
-    },
-    deployConfig.webpack.imageWebpackLoader
-  ) */
 };
 if (process.env.NODE_ENV !== 'production') {
   configWrap.devtool = '#inline-source-map';
 } else if (IsTest) {
   configWrap.devtool = 'eval';
 }
+
+//fromJS toJS
+configWrap = fromJS(configWrap).mergeDeep(deployConfig.webpackConfig).toJS();
 
 module.exports = configWrap;
