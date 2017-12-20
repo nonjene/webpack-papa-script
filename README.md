@@ -58,21 +58,21 @@ okpapa.config.json：
 1. 本地环境开发过程：
     * `npm start w huodong_abc`
     * 如果要指定pc端：
-        * `npm start w huodong_abc --duan pc`，移动端是`m`。
+        * `npm start w huodong_abc duan pc`，移动端是`m`。
     * 测试时涉及登录、平台页面跳转，请把平台的本地服务打开，如果服务端口是8080，请加一个参数，如：
         * `npm start w huodong_abc P 8080`
 1. 开发完成，并发到测试环境（`u` 后面不在需要加路径了）：
-    * `npm start r huodong_abc --test u`
-    * 同上，指定端加：`--duan xx`
+    * `npm start r huodong_abc test u`
+    * 同上，指定端加：`duan xx`
 1. 测试通过，发到预发：
-    * `npm start r huodong_abc --pre`
-    * 同理要指定端，加`--duan xx`
+    * `npm start r huodong_abc pre`
+    * 同理要指定端，加`duan xx`
     * 代码会输出到dist/pre文件夹
 1. 发布上线：
     * `npm start r huodong_abc`
     * 代码会输出到dist/pro文件夹
 1. 假如有不需要webpack打包的文件，比如需要在html引入，可放入`./resource/bundle`里，然后执行：
-    * `npm start --copy-static`
+    * `npm start deploy-static`
     * 文件会输出到`dist/pre/static/`和pro。
  . 假如修改了`./resource/js/`里的文件，请跑上面这个例子的命令，将会自动更新 common.js
 
@@ -91,8 +91,8 @@ okpapa.config.json：
 <!-- * `npm start wa`    监听整个activity（未完成） -->
 * `npm start ra`              发布整个activity（也可以加--pre 或 --test）
 * `npm start ra --scope xxx`  发布文件夹`src/xxx`里的所有项目
-* `npm start C <项目名>` 新建一个项目
-* `npm start C <项目名> -t <项目文件模版>` 新建一个项目，并且指定模版
+* `npm start c <项目名>` 新建一个项目
+* `npm start c <项目名> -t <项目文件模版>` 新建一个项目，并且指定模版
 * `npm start P <端口>` 需代理的本地服务的端口，默认80
 * `npm start --copy-static` 把bin/resource/static的文件复制到3个环境
 

@@ -19,40 +19,40 @@ const config = require('./bin/config');
 const frontendConf = require('./bin/frontend_conf');
 const { deployStaticAll, deployStaticEnvTest } = require('./bin/deployStatic');
 
-const U = undefined; //为了消除webstorm编辑器的警告提示
+
 program
-  .option('s, --serve', '开启服务', U, U)
+  .option('s, --serve', '开启服务')
 
-  .option('w, --watch <活动名>', '开发一个活动，监听代码实时刷新，并开启服务', name => config.setTarget(name), U)
-  .option('r, --release <活动名>', '发布某个活动的代码。默认生产环境', name => config.setTarget(name), U)
-  .option('--pre', '代码发布到预发环境(只配合r命令)', () => config.setEnv('production'), U)
-  .option('--test', '代码发布到测试环境(只配合r命令)', () => config.setEnv('production'), U)
+  .option('w, --watch <活动名>', '开发一个活动，监听代码实时刷新，并开启服务', name => config.setTarget(name))
+  .option('r, --release <活动名>', '发布某个活动的代码。默认生产环境', name => config.setTarget(name))
+  .option('pre', '代码发布到预发环境(只配合r命令)', () => config.setEnv('production'))
+  .option('test', '代码发布到测试环境(只配合r命令)', () => config.setEnv('production'))
 
-  .option('--duan <pc或m>', 'pc端or移动端。', name => config.setDuan(name), U)
+  .option('duan <pc或m>', 'pc端or移动端。', name => config.setDuan(name))
 
-  .option('ra, --release-all', '发布所有活动。', U, U)
-  .option('wa, --watch-all', '发布所有活动。', U, U)
+  .option('ra, --release-all', '发布所有活动。')
+  .option('wa, --watch-all', '发布所有活动。')
 
-  .option('u, --upload [活动名]', '上传测试服务器', name => config.setTarget(name), U)
-  .option('--open','打开测试服务器链接', U, U)
-  .option('--scope <文件夹范围>','发布所有活动的文件夹范围', name=>config.setBuildAllScope(name), U)
+  .option('u, --upload [活动名]', '上传测试服务器', name => config.setTarget(name))
+  .option('open','打开测试服务器链接')
+  .option('scope <文件夹范围>','发布所有活动的文件夹范围', name=>config.setBuildAllScope(name))
 
-  .option('-p, --production', '设置为：非开发模式。默认release自带此属性', () => config.setEnv('production'), U)
-  .option('-d, --development', '设置为：不压缩且包含inline-source-map。默认watch自带此属性', () => config.setEnv('development'), U)
+  .option('p, --production', '设置为：非开发模式。默认release自带此属性', () => config.setEnv('production'))
+  .option('d, --development', '设置为：不压缩且包含inline-source-map。默认watch自带此属性', () => config.setEnv('development'))
 
 
-  .option('M, --mode <环境>', '设置前端API接口的环境, 只有在测试环境时生效，预发和生产环境无效。', mode => fFrontEndConf(mode), U)
-  .option('--hard-mode <环境>', '强制更改前端API接口', mode => fFrontEndConf(mode,'hard'), U)
+  .option('mode <环境>', '设置前端API接口的环境, 只有在测试环境时生效，预发和生产环境无效。', mode => fFrontEndConf(mode))
+  .option('M, hard-mode <环境>', '强制更改前端API接口', mode => fFrontEndConf(mode,'hard'))
 
-  .option('C, --create <活动名>', '新建一个活动', name => setTimeout(()=> createAHuodong(name), 0), U)
-  .option('-t --template <模版名>', '新建一个活动时，选一个模版', (name, meno) => meno = name, U)
+  .option('c, --create <活动名>', '新建一个活动', name => setTimeout(()=> createAHuodong(name), 0))
+  .option('t --template <模版名>', '新建一个活动时，选一个模版', (name, meno) => meno = name)
 
-  .option('P, --proxy-port <端口>', '定义本地测试的平台页面服务端口，默认80', name => config.setConf('proxyPort', name), U)
-  .option('--copy-static', '把bin/resource/static的文件复制到3个环境', U, U)
-  // .option('init --init <项目文件夹名>', '创建项目目录', U, U)
-  // .option('set-source <git地址>', 'git url，指定 init 创建目录的源', U, U)
+  .option('P, --proxy-port <端口>', '定义本地测试的平台页面服务端口，默认80', name => config.setConf('proxyPort', name))
+  .option('deploy-static', '把bin/resource/static的文件复制到3个环境')
+  // .option('init --init <项目文件夹名>', '创建项目目录')
+  // .option('set-source <git地址>', 'git url，指定 init 创建目录的源')
 
-  .option('--debug', '测试代码', () => test.getAllProjName(), U)
+  .option('debug', '测试代码', () => test.getAllProjName())
   .parse(process.argv);
 
 // 配置写入process.env的形式
@@ -87,7 +87,7 @@ if (program.releaseAll) {
 if (
   !program.release &&
   !program.releaseAll &&
-  !program.copyStatic &&
+  !program.deployStatic &&
   program.upload
 ) {
   upload();
@@ -111,7 +111,7 @@ if (program.watchAll) {
 }
 
 // 生成common.js
-if(program.copyStatic){
+if(program.deployStatic){
   deployStaticAll(!!program.upload)
 }
 
