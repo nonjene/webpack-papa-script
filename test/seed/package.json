@@ -4,15 +4,14 @@
     "description": "Directory Structure for ok-papa-cli, a frontend projects solution.",
     "main": "",
     "scripts": {
-        "start": "okpapa",
-        "watch":"okpapa w",
-        "build": "okpapa r",
-        "copystatic":"okpapa --copy-static"
+        "start": "node ../../index",
+        "watch":"node ../../index w",
+        "build": "node ../../index r",
+        "deploytatic":"node ../../index --deploy-static"
     },
     "author": "nonjene",
     "license": "MIT",
     "dependencies": {
-        "ok-papa-cli": "^3.0.4",
         "react": "^15.5.4",
         "react-dom": "^15.5.4"
     },
