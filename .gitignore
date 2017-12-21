@@ -1,3 +1,4 @@
 node_modules
 test/seed/build
-test/seed/
+test/seed/dist
+test/seed/resource/bundle

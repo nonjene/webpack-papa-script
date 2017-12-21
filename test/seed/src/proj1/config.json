@@ -1,0 +1,8 @@
+{
+  "title": "标题",
+  "htmlFile": "index.html",
+  "templateName_pc": "index_pc.handlebars",
+  "templateName_m": "index_m.handlebars",
+  "bodyProp": "class=\"body-activity\" data-version=\"3.0.0\"",
+  "moreMeta": "<link rel=\"dns-prefetch\" href=\"https://www.github.com\">"
+}
