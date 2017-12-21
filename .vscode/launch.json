@@ -10,19 +10,25 @@
       "name": "debug",
       "program": "${workspaceRoot}/index.js",
       "cwd": "${workspaceRoot}/test/seed/",
-      "args":[
+      "args": [
         "--copy-static"
       ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "编译所有",
-      "program": "${workspaceRoot}/index.js",
-      "cwd": "${workspaceRoot}/test/seed/",
-      "args":[
-        "ra"
-      ]
-    }
+      "name": "Mocha Tests",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "-u",
+        "tdd",
+        "--colors"
+      ],
+      "env": {
+        "NODE_ENV": "test"
+      },
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart"
+    },
   ]
 }
