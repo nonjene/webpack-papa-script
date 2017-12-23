@@ -1,8 +1,19 @@
 const should = require('should');
 const path = require('path');
 
-
 describe('util', function() {
+  const dir = process.cwd();
+  before(function() {
+    process.chdir(path.join(__dirname, './seed'));
+  });
+  after(function() {
+    process.chdir(dir);
+  });
+  describe('#process cwd',function(){
+    it('should in the "/test/seed/"',function(){
+      process.cwd().should.match(/test\/seed/)
+    })
+  });
   describe('#asyncEach()', function() {
     const { asyncEach } = require('../bin/util/asyncEach');
     it('should return property value', function(done) {
@@ -82,27 +93,24 @@ __<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/co
     });
     //#endregion
   });
-  describe('#getAllProjName', function() {
-    const dir = process.cwd();
+  describe('#getAllProjName()', function() {
     let getAllProjName;
     before(function() {
-      process.chdir(path.join(__dirname, './seed'));
       getAllProjName = require('../bin/util/getAllProjName');
     });
-    after(function() {
-      process.chdir(dir);
-    });
-    it('get all.', function(){
-      
+    it('get all.', function() {
       const list = getAllProjName().split(',');
       list.should.be.an.instanceOf(Array);
       list.should.containEql('_template_def').and.containEql('scope/proj2');
     });
-    it('get scope.', function(){
+    it('get scope.', function() {
       const list = getAllProjName('scope').split(',');
       list.should.be.an.instanceOf(Array);
       list.should.have.length(2);
       list.should.containEql('scope/proj1').and.containEql('scope/proj2');
     });
+  });
+  describe('#hasDuan()', function() {
+
   });
 });
