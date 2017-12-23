@@ -1,10 +1,11 @@
-const should = require("should");
+const should = require('should');
+const path = require('path');
 
-const { asyncEach } = require("../bin/util/asyncEach");
 
-describe("util", function() {
-  describe("#asyncEach()", function() {
-    it("should return property value", function(done) {
+describe('util', function() {
+  describe('#asyncEach()', function() {
+    const { asyncEach } = require('../bin/util/asyncEach');
+    it('should return property value', function(done) {
       asyncEach(
         [1, 2, 3],
         (item, next) => {
@@ -16,7 +17,7 @@ describe("util", function() {
         }
       );
     });
-    it("should concatenate value", function(done) {
+    it('should concatenate value', function(done) {
       asyncEach(
         [1, 2, 3],
         (item, next) => {
@@ -28,7 +29,7 @@ describe("util", function() {
         }
       );
     });
-    it("flatten array", function(done) {
+    it('flatten array', function(done) {
       asyncEach(
         [1, 2, 3],
         (item, next) => {
@@ -40,7 +41,7 @@ describe("util", function() {
         }
       );
     });
-    it("filter", function(done) {
+    it('filter', function(done) {
       asyncEach(
         [1, 2, 3],
         (item, next) => {
@@ -51,6 +52,57 @@ describe("util", function() {
           done();
         }
       );
+    });
+  });
+
+  describe('#compat_v1:replace()', function() {
+    const { replace: compatReplace } = require('../bin/util/compat_v1');
+    //#region replace
+    it('replace <script src="common.js"/> property.', function() {
+      const res = compatReplace(
+        `
+<html>
+  <body>
+    <div id="container" class="container">test</div>
+____<script type="text/javascript" src="/activity/static/common.js?hehe=233"></script>
+    <script src="https://cdn.okpapa.com//activity/static/common.js"></script>
+__<script src="https://cdn2.okpapa.com//activity/static/common.js?it_is=bug_too"></script></body>
+</html>`,
+        `<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/common.js?v=666"></script>`,
+        '/activity/static/common.js'
+      );
+      res.should.eql(`
+<html>
+  <body>
+    <div id="container" class="container">test</div>
+____
+    
+__<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/common.js?v=666"></script></body>
+</html>`);
+    });
+    //#endregion
+  });
+  describe('#getAllProjName', function() {
+    const dir = process.cwd();
+    let getAllProjName;
+    before(function() {
+      process.chdir(path.join(__dirname, './seed'));
+      getAllProjName = require('../bin/util/getAllProjName');
+    });
+    after(function() {
+      process.chdir(dir);
+    });
+    it('get all.', function(){
+      
+      const list = getAllProjName().split(',');
+      list.should.be.an.instanceOf(Array);
+      list.should.containEql('_template_def').and.containEql('scope/proj2');
+    });
+    it('get scope.', function(){
+      const list = getAllProjName('scope').split(',');
+      list.should.be.an.instanceOf(Array);
+      list.should.have.length(2);
+      list.should.containEql('scope/proj1').and.containEql('scope/proj2');
     });
   });
 });

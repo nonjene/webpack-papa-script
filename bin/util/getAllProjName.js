@@ -4,7 +4,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const ExcludeDir = ["modules", "static", "m", "pc"];
+const ExcludeDir = ["modules", "components", "static", "m", "pc"];
 
 const DIR_SRC = path.join(process.cwd(), '/src');
 
