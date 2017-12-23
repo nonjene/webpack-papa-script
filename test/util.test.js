@@ -9,10 +9,10 @@ describe('util', function() {
   after(function() {
     process.chdir(dir);
   });
-  describe('#process cwd',function(){
-    it('should in the "/test/seed/"',function(){
-      process.cwd().should.match(/test\/seed/)
-    })
+  describe('#process cwd', function() {
+    it('should in the "/test/seed/"', function() {
+      process.cwd().should.match(/test\/seed/);
+    });
   });
   describe('#asyncEach()', function() {
     const { asyncEach } = require('../bin/util/asyncEach');
@@ -111,6 +111,29 @@ __<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/co
     });
   });
   describe('#hasDuan()', function() {
-
+    let hasDuan;
+    before(function() {
+      hasDuan = require('../bin/util/hasDuan');
+    });
+    it('_template_def has "m" and "pc".', function() {
+      const tar = hasDuan('_template_def');
+      tar.should.be.an.instanceOf(Array);
+      tar.should.containEql('m').and.containEql('pc');
+    });
+    it('get the "m" of _template_def', function() {
+      const tar = hasDuan('_template_def','m');
+      tar.should.be.an.instanceOf(Array);
+      tar.should.containEql('m').and.not.containEql('pc');
+    });
+    it('get the actual dir.', function() {
+      const tar = hasDuan('scope/proj1');
+      tar.should.be.an.instanceOf(Array);
+      tar.should.containEql('m').and.not.containEql('pc');
+    });
+    it('get the nothing.', function() {
+      const tar = hasDuan('scope/proj1','pc');
+      tar.should.be.an.instanceOf(Array);
+      tar.should.lengthOf(0);
+    });
   });
 });
