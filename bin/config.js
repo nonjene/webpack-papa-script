@@ -26,7 +26,8 @@ const StaticConfig = Object.assign(
     servePort: 3005,
     staticFileConcatOrder: [], //选定需要合并的文件，必须在 resource/js 里
     seedUrl:'https://github.com/nonjene/ok-papa-seed.git',
-    webpackConfig:{}
+    webpackConfig:{},
+    commonVersion:''
   },
   projConf
 );

@@ -69,7 +69,7 @@ const setEntry = function(dir) {
 
   const cdnPrefix = IsPro ? deployConfig.cdnDomain : '';
   const comFilePath = '/activity/static/common.js';
-  const linkParam = '?v=12';
+  const linkParam = `?v=${deployConfig.commonVersion}`;
   // 这个别改，改了你就要重写compat_v1.js的匹配规则，否则会重复添加。
   const commonFileInject = `<script type="text/javascript" src="${cdnPrefix}${comFilePath}${linkParam}"></script>`;
   

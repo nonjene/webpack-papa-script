@@ -13,6 +13,7 @@
   "proxyPort": 80,
   "servePort": 3005,
   "staticFileConcatOrder": ["config.js", "reset.js", "responsive.js"],
+  "commonVersion":"12",
   "webpackConfig": {
     "resolve": {
       "alias": {
