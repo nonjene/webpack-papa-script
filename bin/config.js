@@ -27,7 +27,17 @@ const StaticConfig = Object.assign(
     staticFileConcatOrder: [], //选定需要合并的文件，必须在 resource/js 里
     seedUrl:'https://github.com/nonjene/ok-papa-seed.git',
     webpackConfig:{},
-    commonVersion:''
+    commonVersion:'',
+    releaseEnvDesc:{
+      pre:'预发环境😛',
+      pro:'生产环境😝',
+      test:'开发环境🤔',
+    },
+    requestEnvDesc:{
+      pre:'预发环境🥑',
+      test:'测试环境🥝',
+      produce:'生产环境🍓',
+    },
   },
   projConf
 );
@@ -90,31 +100,13 @@ module.exports = Object.assign(
     },
     getEnvDesc() {
       if (config.proSpecific) {
-        switch (config.proSpecific) {
-          case 'pre':
-            return '预发环境😛';
-          case 'pro':
-            return '生产环境😝';
-          case 'test':
-            return '开发环境🤔';
-          default:
-            return '黑洞';
-        }
+        return config.releaseEnvDesc[config.proSpecific] || '黑洞';
       } else {
-        return '开发环境🤔';
+        return config.releaseEnvDesc.test || '开发环境🤔';
       }
     },
     getFrontendEnvDesc() {
-      switch (config.fronendEnv) {
-        case 'test':
-          return '测试环境🥝';
-        case 'pre':
-          return '预发环境🥑';
-        case 'produce':
-          return '生产环境🍓';
-        default:
-          return '程序错误🌚';
-      }
+      return config.requestEnvDesc[config.proSpecific] || '没有定义的空间🌚';
     },
 
     combineBuild(which) {
