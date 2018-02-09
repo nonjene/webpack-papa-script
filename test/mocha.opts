@@ -2,3 +2,4 @@
 --recursive
 
 test/util.test.js
+test/build.test.js

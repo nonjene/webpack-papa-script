@@ -106,7 +106,7 @@ module.exports = Object.assign(
       }
     },
     getFrontendEnvDesc() {
-      return config.requestEnvDesc[config.proSpecific] || '没有定义的空间🌚';
+      return config.requestEnvDesc[config.proSpecific] || '异次元空间🌚';
     },
 
     combineBuild(which) {

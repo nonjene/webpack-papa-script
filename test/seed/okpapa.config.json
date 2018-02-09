@@ -13,12 +13,22 @@
   "proxyPort": 80,
   "servePort": 3005,
   "staticFileConcatOrder": ["config.js", "reset.js", "responsive.js"],
-  "commonVersion":"12",
+  "commonVersion": "12",
   "webpackConfig": {
     "resolve": {
       "alias": {
         "common": "modules/tools/common"
       }
     }
+  },
+  "releaseEnvDesc": {
+    "pre": "预发环境😛",
+    "pro": "生产环境😝",
+    "test": "开发环境🤔"
+  },
+  "requestEnvDesc": {
+    "pre": "预发环境🥑",
+    "produce": "生产环境🍓",
+    "test": "测试环境🥝"
   }
 }

@@ -121,16 +121,16 @@ __<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/co
       tar.should.containEql('m').and.containEql('pc');
     });
     it('get the "m" of _template_def', function() {
-      const tar = hasDuan('_template_def','m');
+      let tar = hasDuan('_template_def','m');
       tar.should.be.an.instanceOf(Array);
       tar.should.containEql('m').and.not.containEql('pc');
     });
     it('get the actual dir.', function() {
-      const tar = hasDuan('scope/proj1');
+      const tar = hasDuan('scope/proj1',['m','pc']);
       tar.should.be.an.instanceOf(Array);
       tar.should.containEql('m').and.not.containEql('pc');
     });
-    it('get the nothing.', function() {
+    it('get nothing.', function() {
       const tar = hasDuan('scope/proj1','pc');
       tar.should.be.an.instanceOf(Array);
       tar.should.lengthOf(0);
