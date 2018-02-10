@@ -20,7 +20,6 @@ const copy = function(name, templateName = "def", resolve, reject) {
         if (err) {
             reject(err);
         } else {
-            console.log(chalk.cyan("活动" + name + "添加成功"));
             resolve();
         }
     });

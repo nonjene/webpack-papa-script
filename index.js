@@ -146,7 +146,9 @@ function fFrontEndConf(mode, isHard) {
 }
 
 function createAHuodong(name) {
-  create(name, program.template).catch(err => console.error(chalk.red(err)));
+  create(name, program.template).then(()=>{
+    console.log(chalk.cyan("活动" + name + "添加成功"));
+  }).catch(err => console.error(chalk.red(err)));
 }
 
 function setReleaseConfig() {
