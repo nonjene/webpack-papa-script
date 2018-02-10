@@ -42,5 +42,27 @@ describe('build', function() {
       config.combineBuild(0).should.containEql('bin/run_build/build');
     });
 
+    
+
+
+    it('release a test project', function(){
+
+    });
+    it('release a pre project', function(){
+
+    });
+    it('release a pro project', function(){
+
+    });
+    
+    it('upload files of a test project to ftp.', function(){
+
+    });
+
+    it('deploy static.', function(){
+
+    });
+
   });
+  
 });
