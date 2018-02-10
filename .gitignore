@@ -1,4 +1,5 @@
 node_modules
+coverage
 test/seed/build
 test/seed/dist
 test/seed/resource/bundle
