@@ -1,23 +1,33 @@
 const should = require('should');
 const path = require('path');
+const fs = require('fs');
+const shelljs = require('shelljs');
 
 describe('build', function() {
   const dir = process.cwd();
+  const pathConfig = path.join(__dirname, '../bin/config.js');
   let config;
-  before(function() {
-    process.chdir(path.join(__dirname, './seed'));
+  let frontendConf;
+  
 
-    const pathConfig = path.join(__dirname, '../bin/config.js');
+  const resetConfig = () => {
     if (require.cache[pathConfig]) {
       delete require.cache[pathConfig];
     }
     config = require('../bin/config');
+  };
+
+  before(function() {
+    process.chdir(path.join(__dirname, './seed'));
+    frontendConf = require('../bin/frontend_conf');
   });
   after(function() {
     process.chdir(dir);
   });
 
   describe('#config setting', function() {
+    before(() => resetConfig());
+
     it('set target.', function() {
       config.setTarget('scope/proj1');
       config.getTarget().should.eql(['scope/proj1']);
@@ -45,9 +55,50 @@ describe('build', function() {
     });
   });
 
-  describe('#run build', function(){
-    it('release a test project', function() {
-      
+  describe('#run build', function() {
+    let runBuild;
+    before(function() {
+      resetConfig();
+      runBuild = require('../bin/build').build;
+    });
+
+    describe('##build test', function(){
+      let relDir, config_v;
+      before(function() {
+        relDir = path.join(process.cwd(), 'build/activity/proj1');
+        config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
+        try{ 
+          shelljs.rm('-rf', relDir);
+          shelljs.rm('-rf', config_v);
+         }catch(e){}
+
+      });
+      after(function(){
+        try{ 
+          shelljs.rm('-rf', relDir);
+          //shelljs.rm('-rf', config_v);
+         }catch(e){}
+      });
+      it('release a test project', function(done) {
+        config.setTarget('proj1');
+        config.setConf('proSpecific', 'test');
+        
+        frontendConf.setFrontEndConf('test', config.getTarget());
+        frontendConf.promiseSetDone
+          .then(function(){
+            return runBuild({noLog:true})
+          })
+          .then(() => {
+            fs.existsSync(relDir).should.be.true();
+            fs.existsSync(config_v).should.be.true();
+            done();
+          })
+          .catch(e => {
+            should.throws(()=>{
+              throw new Error('should not throw error:' + e);
+            })
+          });
+      });
     });
     it('release a pre project', function() {});
     it('release a pro project', function() {});
@@ -55,5 +106,5 @@ describe('build', function() {
     it('upload files of a test project to ftp.', function() {});
 
     it('deploy static.', function() {});
-  })
+  });
 });
