@@ -152,6 +152,7 @@ okpapa.config.json：
 # Todo
 
 1. write test
-1. 
+1. common.js引用自动加hash参数
+2. webpack.config.js转移到项目目录上
 
 
