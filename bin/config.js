@@ -106,7 +106,7 @@ module.exports = Object.assign(
       }
     },
     getFrontendEnvDesc() {
-      return config.requestEnvDesc[config.proSpecific] || '异次元空间🌚';
+      return config.requestEnvDesc[config.fronendEnv] || '异次元空间🌚';
     },
 
     combineBuild(which) {
