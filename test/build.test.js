@@ -100,8 +100,45 @@ describe('build', function() {
           });
       });
     });
-    it('release a pre project', function() {});
-    it('release a pro project', function() {});
+
+    describe('##release production', function(){
+      let relDir, config_v;
+      before(function() {
+        relDir = path.join(process.cwd(), 'dist/pro/proj1');
+        config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
+        try{ 
+          shelljs.rm('-rf', relDir);
+          shelljs.rm('-rf', config_v);
+         }catch(e){}
+
+      });
+      after(function(){
+        try{ 
+          shelljs.rm('-rf', relDir);
+          //shelljs.rm('-rf', config_v);
+         }catch(e){}
+      });
+      it('release a pro project', function(done) {
+        config.setTarget('proj1');
+        config.setConf('proSpecific', 'pro');
+        
+        frontendConf.setFrontEndConf('pro', config.getTarget());
+        frontendConf.promiseSetDone
+          .then(function(){
+            return runBuild({noLog:true})
+          })
+          .then(() => {
+            fs.existsSync(relDir).should.be.true();
+            fs.existsSync(config_v).should.be.true();
+            done();
+          })
+          .catch(e => {
+            should.throws(()=>{
+              throw new Error('should not throw error:' + e);
+            })
+          });
+      });
+    });
 
     it('upload files of a test project to ftp.', function() {});
 
