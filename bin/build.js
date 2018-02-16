@@ -26,6 +26,9 @@ const setEnv = {
   },
   env() {
     process.env.NODE_ENV = getConf('env');
+    if ( getConf('proSpecific')) {
+      process.env.PRO_SPECIFIC = getConf('proSpecific')
+    }
   },
   target(which) {
     process.env.BUILD_TARGET = getTarget()[which];
