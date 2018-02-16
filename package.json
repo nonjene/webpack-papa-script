@@ -5,7 +5,9 @@
     "main": "index.js",
     "scripts": {
         "test": "mocha",
-        "test-cov": "istanbul cover --include-all-sources --root ./bin _mocha"
+        "test-cov": "istanbul cover _mocha",
+        "test-covall": "istanbul cover --include-all-sources --root ./bin _mocha"
+
     },
     "author": "nonjene",
     "license": "MIT",
