@@ -19,7 +19,6 @@ describe('build', function() {
 
   before(function() {
     process.chdir(path.join(__dirname, './seed'));
-    frontendConf = require('../bin/frontend_conf');
   });
   after(function() {
     process.chdir(dir);
@@ -33,7 +32,6 @@ describe('build', function() {
       config.getTarget().should.eql(['scope/proj1']);
     });
     it('getEnvDesc() echo right desc.', function() {
-      //frontendConf.setFrontEndConf('pre', target);
       config.setConf('proSpecific', 'pro');
       (config.getEnvDesc().indexOf('生产环境') > -1).should.be.true();
     });
@@ -57,13 +55,11 @@ describe('build', function() {
 
   describe('#run build', function() {
     let runBuild;
-    before(function() {
-      resetConfig();
-      runBuild = require('../bin/build').build;
-    });
+    let relDir, config_v;
+    before(function() {});
 
     describe('##build test', function(){
-      let relDir, config_v;
+      
       before(function() {
         relDir = path.join(process.cwd(), 'build/activity/proj1');
         config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
@@ -71,6 +67,10 @@ describe('build', function() {
           shelljs.rm('-rf', relDir);
           shelljs.rm('-rf', config_v);
          }catch(e){}
+         
+         resetConfig();         
+         frontendConf = require('../bin/frontend_conf');
+         runBuild = require('../bin/build').build;
 
       });
       after(function(){
@@ -85,7 +85,7 @@ describe('build', function() {
         
         frontendConf.setFrontEndConf('test', config.getTarget());
         frontendConf.promiseSetDone
-          .then(function(){
+          .then(function(){        
             return runBuild({noLog:true})
           })
           .then(() => {
@@ -101,44 +101,47 @@ describe('build', function() {
       });
     });
 
-    describe('##release production', function(){
-      let relDir, config_v;
-      before(function() {
-        relDir = path.join(process.cwd(), 'dist/pro/proj1');
-        config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
-        try{ 
-          shelljs.rm('-rf', relDir);
-          shelljs.rm('-rf', config_v);
-         }catch(e){}
+    // describe('##release production', function(){
+    //   before(function() {
+    //     relDir = path.join(process.cwd(), 'dist/pro/proj1');
+    //     config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
+    //     try{ 
+    //       shelljs.rm('-rf', relDir);
+    //       shelljs.rm('-rf', config_v);
+    //      }catch(e){}
 
-      });
-      after(function(){
-        try{ 
-          shelljs.rm('-rf', relDir);
-          //shelljs.rm('-rf', config_v);
-         }catch(e){}
-      });
-      it('release a pro project', function(done) {
-        config.setTarget('proj1');
-        config.setConf('proSpecific', 'pro');
+    //    resetConfig();         
+    //    frontendConf = require('../bin/frontend_conf');
+    //    runBuild = require('../bin/build').build;
+
+    //   });
+    //   after(function(){
+    //     try{ 
+    //       shelljs.rm('-rf', relDir);
+    //       //shelljs.rm('-rf', config_v);
+    //      }catch(e){}
+    //   });
+    //   it('release a pro project', function(done) {
+    //     config.setTarget('proj1');
+    //     config.setConf('proSpecific', 'pro');
         
-        frontendConf.setFrontEndConf('pro', config.getTarget());
-        frontendConf.promiseSetDone
-          .then(function(){
-            return runBuild({noLog:true})
-          })
-          .then(() => {
-            fs.existsSync(relDir).should.be.true();
-            fs.existsSync(config_v).should.be.true();
-            done();
-          })
-          .catch(e => {
-            should.throws(()=>{
-              throw new Error('should not throw error:' + e);
-            })
-          });
-      });
-    });
+    //     frontendConf.setFrontEndConf('pro', config.getTarget());
+    //     frontendConf.promiseSetDone
+    //       .then(function(){
+    //         return runBuild({noLog:true})
+    //       })
+    //       .then(() => {
+    //         fs.existsSync(relDir).should.be.true();
+    //         fs.existsSync(config_v).should.be.true();
+    //         done();
+    //       })
+    //       .catch(e => {
+    //         should.throws(()=>{
+    //           throw new Error('should not throw error:' + e);
+    //         })
+    //       });
+    //   });
+    // });
 
     it('upload files of a test project to ftp.', function() {});
 
