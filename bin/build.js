@@ -1,7 +1,6 @@
 /**
  * Created by chenzhian on 2016/7/21.
  */
-const { exec } = require('child_process');
 const path = require('path');
 const { combineBuild, getConf, getTarget } = require('./config');
 
@@ -11,8 +10,7 @@ const logInfo = require('./util/logInfo');
 const hasDuan = require('./util/hasDuan');
 const doBuild = require('./run_build/build');
 
-
-const _emptyCache = (dir) => {
+const _emptyCache = dir => {
   if (require.cache[dir]) {
     delete require.cache[dir];
   }
@@ -20,7 +18,7 @@ const _emptyCache = (dir) => {
 
 // 给 webpack.config 读取
 const setEnv = {
-  init(which){
+  init(which) {
     this.emptycache();
     this.env();
     this.target(which);
@@ -35,9 +33,11 @@ const setEnv = {
   duan() {
     getConf('duan') && (process.env.DUAN = getConf('duan').join(','));
   },
-  emptycache(){
-    _emptyCache(path.join(__dirname, './webpack.config.js'));  //todo 转移到项目目录
-    _emptyCache(path.join(__dirname, './webpack.set.entry.js'));
+  emptycache() {
+    _emptyCache(require.resolve('./webpack.config.js')); //todo 转移到项目目录
+    _emptyCache(require.resolve('./webpack.set.entry.js'));
+    //_emptyCache(require.resolve('./run_build/build.js'));
+    //_emptyCache(require.resolve('./run_build/watch.js'));
   }
 };
 
@@ -63,28 +63,23 @@ const buildOne = function(which = 0, hasLog = true) {
       );
     }
 
-    try{
+    try {
+      // 清除webpack.config.js的require.cache, 然后设置node.env的config
       setEnv.init(which);
-      doBuild(hasLog).then(msg=>{
-
-        hasLog && console.log(chalk.cyan('webpack:build'));
-        hasLog && console.log(msg);
-        // 下一个
-        resolve();
-
-      }).catch(err=>{
-        // 单个编译不通过不阻碍下一个编译
-        hasLog && console.log(chalk.red(err));
-      });
-     
-    }catch(err){
+      doBuild(hasLog)
+        .then(msg => {
+          hasLog && console.log(chalk.cyan('webpack:build'));
+          hasLog && console.log(msg);
+          // 下一个
+          resolve();
+        })
+        .catch(err => {
+          // 单个编译不通过不阻碍下一个编译
+          hasLog && console.log(chalk.red(err));
+        });
+    } catch (err) {
       reject(err);
     }
-    /* exec(combineBuild(which), function(err, stdout, stderr) {
-      if (err) reject(err);
-
-      
-    }); */
   });
 };
 
