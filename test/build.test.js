@@ -8,7 +8,6 @@ describe('build', function() {
   const pathConfig = path.join(__dirname, '../bin/config.js');
   let config;
   let frontendConf;
-  
 
   const resetConfig = () => {
     if (require.cache[pathConfig]) {
@@ -56,95 +55,85 @@ describe('build', function() {
   describe('#run build', function() {
     let runBuild;
     let relDir, config_v;
-    before(function() {});
+    beforeEach(function() {
+      config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
+      try {
+        shelljs.rm('-rf', config_v);
+      } catch (e) {}
 
-    describe('##build test', function(){
-      
-      before(function() {
-        relDir = path.join(process.cwd(), 'build/activity/proj1');
-        config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
-        try{ 
-          shelljs.rm('-rf', relDir);
-          shelljs.rm('-rf', config_v);
-         }catch(e){}
-         
-         resetConfig();         
-         frontendConf = require('../bin/frontend_conf');
-         runBuild = require('../bin/build').build;
-
-      });
-      after(function(){
-        try{ 
-          shelljs.rm('-rf', relDir);
-          //shelljs.rm('-rf', config_v);
-         }catch(e){}
-      });
-      it('release a test project', function(done) {
-        config.setTarget('proj1');
-        config.setConf('proSpecific', 'test');
-        
-        frontendConf.setFrontEndConf('test', config.getTarget());
-        frontendConf.promiseSetDone
-          .then(function(){        
-            return runBuild({noLog:true})
-          })
-          .then(() => {
-            fs.existsSync(relDir).should.be.true();
-            fs.existsSync(config_v).should.be.true();
-            done();
-          })
-          .catch(e => {
-            should.throws(()=>{
-              throw new Error('should not throw error:' + e);
-            })
-          });
-      });
+      resetConfig();
+      frontendConf = require('../bin/frontend_conf');
+      runBuild = require('../bin/build').build;
+    });
+    afterEach(function() {
+      try {
+        delete require.cache[require.resolve('../bin/frontend_conf')];
+        delete require.cache[require.resolve('../bin/build')];
+      } catch (e) {}
     });
 
-    // describe('##release production', function(){
-    //   before(function() {
-    //     relDir = path.join(process.cwd(), 'dist/pro/proj1');
-    //     config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
-    //     try{ 
-    //       shelljs.rm('-rf', relDir);
-    //       shelljs.rm('-rf', config_v);
-    //      }catch(e){}
+    it('release a test project', function(done) {
+      relDir = path.join(process.cwd(), 'build/activity/proj1');
+      try {
+        shelljs.rm('-rf', relDir);
+      } catch (e) {}
+      ////////////////
 
-    //    resetConfig();         
-    //    frontendConf = require('../bin/frontend_conf');
-    //    runBuild = require('../bin/build').build;
+      config.setTarget('proj1');
+      config.setConf('proSpecific', 'test');
 
-    //   });
-    //   after(function(){
-    //     try{ 
-    //       shelljs.rm('-rf', relDir);
-    //       //shelljs.rm('-rf', config_v);
-    //      }catch(e){}
-    //   });
-    //   it('release a pro project', function(done) {
-    //     config.setTarget('proj1');
-    //     config.setConf('proSpecific', 'pro');
-        
-    //     frontendConf.setFrontEndConf('pro', config.getTarget());
-    //     frontendConf.promiseSetDone
-    //       .then(function(){
-    //         return runBuild({noLog:true})
-    //       })
-    //       .then(() => {
-    //         fs.existsSync(relDir).should.be.true();
-    //         fs.existsSync(config_v).should.be.true();
-    //         done();
-    //       })
-    //       .catch(e => {
-    //         should.throws(()=>{
-    //           throw new Error('should not throw error:' + e);
-    //         })
-    //       });
-    //   });
-    // });
+      frontendConf.setFrontEndConf('test', config.getTarget());
+      frontendConf.promiseSetDone
+        .then(function() {
+          fs.existsSync(config_v).should.be.true();
+          fs
+            .readFileSync(config_v, { encoding: 'utf8' })
+            .should.containEql('test');
 
-    it('upload files of a test project to ftp.', function() {});
+          config.getTarget().should.eql(['proj1']);
+          config.getEnvDesc().should.containEql('开发环境');
+          config.getFrontendEnvDesc().should.containEql('测试环境');
 
-    it('deploy static.', function() {});
+          return runBuild({ noLog: true });
+        })
+        .then(() => {
+          fs.existsSync(relDir).should.be.true();
+          done();
+        });
+    });
+
+    it('release as production', function(done) {
+      relDir = path.join(process.cwd(), 'dist/pro/proj1');
+      try {
+        shelljs.rm('-rf', relDir);
+      } catch (e) {}
+      ////////////////
+
+      config.setTarget('proj1');
+      config.setConf('proSpecific', 'pro');
+
+      frontendConf.setFrontEndConf('produce', config.getTarget());
+      frontendConf.promiseSetDone
+        .then(function() {
+          fs.existsSync(config_v).should.be.true();
+          fs
+            .readFileSync(config_v, { encoding: 'utf8' })
+            .should.containEql('produce');
+
+          config.getTarget().should.eql(['proj1']);
+          config.getEnvDesc().should.containEql('生产环境');
+          config.getFrontendEnvDesc().should.containEql('生产环境');
+
+          return runBuild({ noLog: true });
+        })
+        .then(() => {
+          fs.existsSync(relDir).should.be.true();
+          done();
+        });
+    });
+
+    // it('upload files of a test project to ftp.', function() {});
+
+    // it('deploy static.', function() {});
   });
 });

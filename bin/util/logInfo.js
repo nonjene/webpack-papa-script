@@ -5,7 +5,7 @@
 const {  getConf, getEnvDesc, getFrontendEnvDesc } = require('../config');
 
 const chalk = require('chalk');
-
+/* istanbul ignore next */
 module.exports = ()=>{
     console.log(chalk.cyan('发布到： ') + getEnvDesc());
     console.log(chalk.cyan('api环境：') + getFrontendEnvDesc());
