@@ -59,15 +59,13 @@ okpapa.config.json：
 1. 本地环境开发过程：
     * `npm start w huodong_abc`
     * 如果要指定pc端：
-        * `npm start w huodong_abc duan pc`，移动端是`m`。
-    * 测试时涉及登录、平台页面跳转，请把平台的本地服务打开，如果服务端口是8080，请加一个参数，如：
+        * `npm start w huodong_abc`
+    * 测试时假如需要转跳到其他同域名的项目页面（如跳登录页），此项目可以把其他服务端口代理过来。（todo：需要更具体描述）请把该项目的本地服务打开，代理目标的端口默认是80，如果服务端口是其他，请加一个参数，如：
         * `npm start w huodong_abc P 8080`
 1. 开发完成，并发到测试环境（`u` 后面不在需要加路径了）：
     * `npm start r huodong_abc test u`
-    * 同上，指定端加：`duan xx`
 1. 测试通过，发到预发：
     * `npm start r huodong_abc pre`
-    * 同理要指定端，加`duan xx`
     * 代码会输出到dist/pre文件夹
 1. 发布上线：
     * `npm start r huodong_abc`
@@ -99,7 +97,7 @@ okpapa.config.json：
 
 参数：
 
-* `--duan`    选择构建pc端代码或微信端代码。m|pc|m,pc，不选默认两端
+* `--duan`    选择构建pc端代码或微信端代码。m|pc|m,pc，不选默认两端:"m,pc"
 * `--open`    上传代码后，自动打开链接
 * `-p`        非开发模式。
 * `-d`        代码转为开发模式（包含inline-source-map）
