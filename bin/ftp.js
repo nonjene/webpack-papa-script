@@ -75,7 +75,9 @@ module.exports = {
   mkdir(ftpDir) {
     return new Promise((resolve, reject) => {
       c.mkdir(ftpDir, true, function(err) {
+        /* istanbul ignore if  */
         if (err) return reject('创建目录失败：' + ftpDir);
+
         resolve();
       });
     });

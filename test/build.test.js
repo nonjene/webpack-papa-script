@@ -126,6 +126,7 @@ describe('build', function () {
 
       config.setTarget('proj1');
       config.setConf('proSpecific', 'test');
+      //config.setEnv('development');//webpack liveReload会导致测试不结束
 
       frontendConf.setFrontEndConf('test', config.getTarget());
       frontendConf.promiseSetDone
@@ -137,6 +138,7 @@ describe('build', function () {
           return runWatch({ noLog: true, noServ: true });
         })
         .then((watching) => {
+          //watching.invalidate();
           watching.close(() => done());
 
         }).catch((e) => {

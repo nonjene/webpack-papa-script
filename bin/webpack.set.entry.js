@@ -4,7 +4,6 @@
 
 const chalk = require('chalk');
 
-const getOutputDir = require('./getOutputDir');
 // 哪个活动文件夹,只能指定单个
 const { NODE_ENV, PRO_SPECIFIC, BUILD_TARGET } = process.env;
 const IsPro = PRO_SPECIFIC === 'pro';
@@ -22,6 +21,13 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const DIR_SRC = path.resolve(`${process.cwd()}/src/`) + '/';
+
+const getOutputDir = (PRO_SPECIFIC)=>{
+  const outputDir = deployConfig.deployEnvType[PRO_SPECIFIC];
+  /* istanbul ignore next */
+  if(!outputDir) throw new Error(`没有在配置文件中找到对应的"${PRO_SPECIFIC}".`);
+  return outputDir;
+};
 
 let aDirName = [];
 let entry = {};

@@ -31,7 +31,7 @@ const serveOpen = function (isLog) {
         });
 
         serve.on('exit', function (code) {
-            console.log('server stop, code ' + code);
+          isLog && console.log('server stop, code ' + code);
         });
     })
 

@@ -28,6 +28,11 @@ const StaticConfig = Object.assign(
     seedUrl:'https://github.com/nonjene/ok-papa-seed.git',
     webpackConfig:{},
     commonVersion:'',
+    deployEnvType:{
+      pre:"dist/pre",
+      pro:"dist/pro",
+      test:"build/activity",
+    },
     releaseEnvDesc:{
       pre:'预发环境😛',
       pro:'生产环境😝',
@@ -54,25 +59,6 @@ let config = Object.assign(
   StaticConfig
 );
 
-let EXPORT = 'export';
-if (path.sep.indexOf('\\') > -1) {
-  EXPORT = 'SET'; //windows
-}
-
-const getTargetCommander = (which = 0) => {
-  return `${EXPORT} BUILD_TARGET=` + config.target[which];
-};
-const getEnvCommander = () => {
-  let com = `${EXPORT} NODE_ENV=` + config.env;
-  //指定预发还是生产
-  if (config.proSpecific) {
-    com += `&&${EXPORT} PRO_SPECIFIC=${config.proSpecific}`;
-  }
-  return com;
-};
-const getDuanCommander = () => {
-  return config.duan ? `${EXPORT} DUAN=` + config.duan.join(',') : '';
-};
 
 module.exports = Object.assign(
   {
@@ -102,15 +88,13 @@ module.exports = Object.assign(
       if (config.proSpecific) {
         return config.releaseEnvDesc[config.proSpecific] || '黑洞';
       } else {
+        /* istanbul ignore next */
         return config.releaseEnvDesc.test || '开发环境🤔';
       }
     },
     getFrontendEnvDesc() {
       return config.requestEnvDesc[config.fronendEnv] || '异次元空间🌚';
     },
-    getTargetCommander,
-    getEnvCommander,
-    getDuanCommander
   },
   StaticConfig
 );

@@ -34,6 +34,7 @@ let plugins = [
   ...Set.htmlDeclare
 ];
 
+/* istanbul ignore else  */
 if (IsProduction) {
   //console.log('目前编译生产环境');
   plugins.push(
