@@ -11,20 +11,20 @@ const path = require('path');
 
 let serve;
 
-const serveOpen = function () {
+const serveOpen = function (isLog) {
     const DefProxyPort = getConf('proxyPort'),
           DefServePort = getConf('servePort');
 
     return new Promise((resovle, reject) => {
         if (serve) return reject('只能执行一次server start.');
-        console.log('serve:'+DefProxyPort);
+        isLog && console.log('serve:'+DefProxyPort);
         serve = exec(`node ${path.join(__dirname, '../server')} S ${DefServePort}  P ${DefProxyPort}`, function (err, stdout, stderr) {
             if (err) {
                 reject(err);
             }
         });
         serve.stdout.on('data', (data) => {
-            console.log(`${data}`);
+          isLog && console.log(`${data}`);
             if (data.indexOf('server started') > -1) {
                 resovle();
             }
@@ -45,14 +45,14 @@ const stop = function () {
 
 };
 
-const start = function () {
+const start = function ({isOpen=true,isLog=true}={}) {
     const DefServePort = getConf('servePort');
-    serveOpen()
+    return serveOpen(isLog)
         .then(() => {
             let addr = 'http://localhost:'+ DefServePort +'/activity/';
             addr += getConf('target')[0]+'/'+ getConf('duan')[0]+'/';
 
-            opn(addr, { wait: false });
+            isOpen && opn(addr, { wait: false });
         })
         .catch(err => console.error(err));
 };

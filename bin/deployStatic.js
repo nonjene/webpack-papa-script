@@ -21,10 +21,10 @@ const doConcat = function() {
   );
 };
 
-const deployStaticAll = function(isUpload) {
+const deployStaticAll = function(isUpload, isLog=true, done) {
   doConcat()
-    .then(() => console.log(chalk.cyan('common.js 压缩成功。')))
-    .catch(e => console.log(chalk.red(e)));
+    .then(() => isLog && console.log(chalk.cyan('common.js 压缩成功。')))
+    .catch(e => isLog && console.log(chalk.red(e)));
 
   asyncEach(
     OutputDir,
@@ -42,8 +42,9 @@ const deployStaticAll = function(isUpload) {
       );
     },
     () => {
-      console.log(chalk.cyan('静态资源已复制'));
+      isLog && console.log(chalk.cyan('静态资源已复制'));
       isUpload && ftp.uploadStatic('static', { desc: '上传到测试服务器', isLog: false });
+      done && done();
     }
   );
 };

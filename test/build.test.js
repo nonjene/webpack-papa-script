@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const shelljs = require('shelljs');
 
-describe('build', function() {
+describe('build', function () {
   const dir = process.cwd();
   const pathConfig = path.join(__dirname, '../bin/config.js');
   let config;
@@ -16,39 +16,39 @@ describe('build', function() {
     config = require('../bin/config');
   };
 
-  before(function() {
+  before(function () {
     process.chdir(path.join(__dirname, './seed'));
   });
-  after(function() {
+  after(function () {
     process.chdir(dir);
   });
 
-  describe('#config setting', function() {
+  describe('#config setting', function () {
     before(() => resetConfig());
 
-    it('set target.', function() {
+    it('set target.', function () {
       config.setTarget('scope/proj1');
       config.getTarget().should.eql(['scope/proj1']);
     });
-    it('getEnvDesc() echo right desc.', function() {
+    it('getEnvDesc() echo right desc.', function () {
       config.setConf('proSpecific', 'pro');
       (config.getEnvDesc().indexOf('生产环境') > -1).should.be.true();
     });
-    it('getFrontendEnvDesc() echo right desc.', function() {
+    it('getFrontendEnvDesc() echo right desc.', function () {
       config.setConf('fronendEnv', 'pre');
       config.getFrontendEnvDesc().should.containEql('预发环境');
     });
 
   });
 
-  describe('#run build', function() {
+  describe('#run build', function () {
     let runBuild, runWatch;
     let relDir, config_v;
-    beforeEach(function() {
+    beforeEach(function () {
       config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
       try {
         shelljs.rm('-rf', config_v);
-      } catch (e) {}
+      } catch (e) { }
 
       resetConfig();
       frontendConf = require('../bin/frontend_conf');
@@ -56,18 +56,18 @@ describe('build', function() {
       runBuild = build.build;
       runWatch = build.watch;
     });
-    afterEach(function() {
+    afterEach(function () {
       try {
         delete require.cache[require.resolve('../bin/frontend_conf')];
         delete require.cache[require.resolve('../bin/build')];
-      } catch (e) {}
+      } catch (e) { }
     });
 
-    it('release a test project', function(done) {
+    it('release a test project', function (done) {
       relDir = path.join(process.cwd(), 'build/activity/proj1');
       try {
         shelljs.rm('-rf', relDir);
-      } catch (e) {}
+      } catch (e) { }
       ////////////////
 
       config.setTarget('proj1');
@@ -75,7 +75,7 @@ describe('build', function() {
 
       frontendConf.setFrontEndConf('test', config.getTarget());
       frontendConf.promiseSetDone
-        .then(function() {
+        .then(function () {
           fs.existsSync(config_v).should.be.true();
           fs
             .readFileSync(config_v, { encoding: 'utf8' })
@@ -92,12 +92,11 @@ describe('build', function() {
           done();
         });
     });
-
-    it('release as production', function(done) {
+    it('release as production', function (done) {
       relDir = path.join(process.cwd(), 'dist/pro/proj1');
       try {
         shelljs.rm('-rf', relDir);
-      } catch (e) {}
+      } catch (e) { }
       ////////////////
 
       config.setTarget('proj1');
@@ -105,7 +104,7 @@ describe('build', function() {
 
       frontendConf.setFrontEndConf('produce', config.getTarget());
       frontendConf.promiseSetDone
-        .then(function() {
+        .then(function () {
           fs.existsSync(config_v).should.be.true();
           fs
             .readFileSync(config_v, { encoding: 'utf8' })
@@ -123,30 +122,59 @@ describe('build', function() {
         });
     });
 
-    it('run webpack dev watch', function(done) {
-      
+    it('run webpack dev watch', function (done) {
+
       config.setTarget('proj1');
       config.setConf('proSpecific', 'test');
 
       frontendConf.setFrontEndConf('test', config.getTarget());
       frontendConf.promiseSetDone
-        .then(function() {
+        .then(function () {
           config.getTarget().should.eql(['proj1']);
           config.getEnvDesc().should.containEql('开发环境');
           config.getFrontendEnvDesc().should.containEql('测试环境');
 
-          return runWatch({ noLog: true,noServ:true });
+          return runWatch({ noLog: true, noServ: true });
         })
         .then((watching) => {
-          watching.close(()=>done());
-          
-        }).catch((e)=>{
+          watching.close(() => done());
+
+        }).catch((e) => {
           throw new Error(e);
         });
     });
 
-    // it('upload files of a test project to ftp.', function() {});
+    it('start server', function (done) {
+      const { start, stop } = require('../bin/serve');
+      start({ isOpen: false, isLog: false }).then(() => {
+        stop();
+        done();
+      }).catch(e => {
+        ('server.js').should.be.exactly('not throw error.');
+      })
+    });
+    it('upload files of a test project to ftp.', function (done) {
+      relDir = path.join(process.cwd(), 'build/activity/proj1');
+      fs.existsSync(relDir).should.be.true();
 
-    // it('deploy static.', function() {});
+      config.setTarget('proj1');
+      const ftp = require('../bin/ftp');
+      ftp.uploadToServer({ desc:"", isLog: false, isResLog:false })
+      .then(remoteLink => {
+        done()
+      })
+      .catch(e => {
+        ('upload to ftp').should.be.exactly('not throw error.');
+      });
+    });
+    it('deploy static.', function(done) {
+      const { deployStaticAll, deployStaticEnvTest } = require('../bin/deployStatic');
+      try{
+        deployStaticAll(false, false,()=>done());
+      
+      }catch(e){
+        ('deploy static').should.be.exactly('not throw error.');
+      }
+    });
   });
 });

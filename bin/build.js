@@ -100,8 +100,7 @@ const watchOne = function (which = 0, hasLog = true) {
         .then(({msg, watching}) => {
           hasLog && console.log(chalk.cyan('webpack:watch'));
           hasLog && console.log(msg);
-          // 下一个
-          console.log(msg)
+         
           resolve(watching);
         })
         .catch(err => {
