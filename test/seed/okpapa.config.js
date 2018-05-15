@@ -7,7 +7,7 @@ module.exports = {
   },
   "remoteBasePath": "",
   "remotePath": "/activity/{$target}",
-  "localAssetPath": "build/activity/{$target}",
+  "localAssetPath": "build/activity",
   "domainName": "http://m.okpapa.net",
   "cdnDomain": "https://images.okpapa.com",
   "proxyPort": 80,

@@ -8,7 +8,7 @@ const initProj = require('./bin/initProj');
 const ftp = require('./bin/ftp');
 const test = require('./bin/test');
 const serve = require('./bin/serve');
-const getAllProjName = require('./bin/util/getAllProjName');
+const {getAllProjName} = require('./bin/util/getAllProjName');
 
 const chalk = require('chalk');
 const opn = require('opn');

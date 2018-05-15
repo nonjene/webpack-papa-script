@@ -96,7 +96,7 @@ __<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/co
   describe('#getAllProjName()', function() {
     let getAllProjName;
     before(function() {
-      getAllProjName = require('../bin/util/getAllProjName');
+      getAllProjName = require('../bin/util/getAllProjName').getAllProjName;
     });
     it('get all.', function() {
       const list = getAllProjName().split(',');
