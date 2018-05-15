@@ -9,7 +9,7 @@ const { NODE_ENV, PRO_SPECIFIC, BUILD_TARGET } = process.env;
 const IsPro = PRO_SPECIFIC === 'pro';
 const deployConfig = require('./config');
 const compatV1 = require('./util/compat_v1');
-const getAllProjName = require('./util/getAllProjName');
+const {getAllProjName} = require('./util/getAllProjName');
 
 if (!BUILD_TARGET) throw new Error('没有找到活动名。请联系工具维护人员');
 
@@ -142,18 +142,7 @@ const setEntry = function (subpath, duan) {
 if (fs.statSync(Folder).isDirectory()) {
   if (fs.readdirSync(Folder).some(subDir => subDir === 'proj.json')) {
     // 一个项目包含多个页面
-    getAllProjName(BUILD_TARGET).split(',').reduce((_aDirs, dir) => {
-      //getAllProjName是拿到所有包含pc或m或proj.json的文件夹，所以还要把pc和m拼上
-
-      DUAN.forEach(duan => {
-        _aDirs.push({
-          subpath: dir.replace(BUILD_TARGET + path.sep, ''),
-          duan
-        });
-      });
-
-      return _aDirs;
-    }, []).forEach(({ subpath, duan }) => setEntry(subpath, duan));
+    getAllSubPageName(BUILD_TARGET, DUAN).forEach(({subpath, duan}) => setEntry(subpath, duan));
 
 
 

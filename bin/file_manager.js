@@ -2,30 +2,28 @@
  * Created by Nonjene on 2017/3/1.
  */
 
-const fs = require("fs");
-const path = require("path");
-const chalk = require("chalk");
+const fs = require('fs');
+const path = require('path');
+const chalk = require('chalk');
 
-const T = require("./util/tpl");
+const T = require('./util/tpl');
 
-const { asyncEach } = require("./util/asyncEach");
-const {
-  localAssetPath,
-  remoteBasePath,
-  remotePath,
-  domainName
-} = require("./config");
+const { asyncEach } = require('./util/asyncEach');
+const { getAllSubPageName } = require('./util/getAllProjName');
+
+const { localAssetPath, remoteBasePath, remotePath, domainName } = require('./config');
 
 module.exports = {
   getAssetsFiles(target, duans, callback) {
     let allFilesInfo = [];
-    let localDir = T(localAssetPath, { target });
+    let localDir = path.join(localAssetPath, target.toString());
     let remoteDir = T(remotePath, { target });
-    let subPaths = ["img", "vendors", ...duans];
+    let subPaths = ['img', 'files', 'font', 'vendors', ...duans];
     let specFiles = [
       //'vendors.js'//不在这了
     ];
     //path.dirname(basePath) + '/vendors.js',
+    subPaths = subPaths.concat(getAllSubPageName(target, duans, localAssetPath).map(({ subpath, duan }) => path.join(subpath, duan)));
 
     asyncEach(
       subPaths,
@@ -41,8 +39,8 @@ module.exports = {
             ...allFilesInfo,
             ...files.map(file => ({
               fileName: file,
-              localFullPath: [localDir, subPath, file].join("/"),
-              remoteFullPath: [remoteDir, subPath, file].join("/")
+              localFullPath: [localDir, subPath, file].join('/'),
+              remoteFullPath: [remoteDir, subPath, file].join('/')
             }))
           ];
 
@@ -55,18 +53,18 @@ module.exports = {
             ...allFilesInfo,
             ...specFiles.map(file => ({
               fileName: file,
-              localFullPath: [path.dirname(localDir), file].join("/"),
-              remoteFullPath: [path.dirname(remoteDir), file].join("/")
+              localFullPath: [path.dirname(localDir), file].join('/'),
+              remoteFullPath: [path.dirname(remoteDir), file].join('/')
             }))
           ],
           // 把链接传出去
-          domainName + remoteDir + "/" + duans[0]
+          domainName + remoteDir + '/' + duans[0]
         )
     );
   },
   getStaticFiles(target, callback) {
     let allFilesInfo = [];
-    let oriLocalDir = T(localAssetPath, { target });
+    let oriLocalDir = path.join(localAssetPath, target);
     let oriRemoteDir = T(remotePath, { target });
 
     const read = (localDir, remoteDir) => {
@@ -90,7 +88,7 @@ module.exports = {
     callback(allFilesInfo, domainName + oriRemoteDir);
   },
   upLoadFiles(
-    { desc="", isLog = true, isResLog = true } = {},
+    { desc = "", isLog = true, isResLog = true } = {},
     filesInfo,
     uploadFunc,
     done
@@ -104,7 +102,7 @@ module.exports = {
     let log = [];
     asyncEach(
       filesInfo,
-      function({ fileName, localFullPath, remoteFullPath }, next) {
+      function ({ fileName, localFullPath, remoteFullPath }, next) {
         const RealRemoteFullPath = remoteBasePath + remoteFullPath; //打个布丁
 
         return uploadFunc(RealRemoteFullPath, localFullPath, err => {
@@ -117,13 +115,13 @@ module.exports = {
           return next();
         });
       },
-      function() {
+      function () {
         isResLog && console.log(
           "🍺 🍺 🍺 " +
-            desc +
-            "上传完毕!" +
-            (isLog ? "成功上传以下文件：\n" + log.join("\n") : "") +
-            "\n"
+          desc +
+          "上传完毕!" +
+          (isLog ? "成功上传以下文件：\n" + log.join("\n") : "") +
+          "\n"
         );
         return done && done();
       }

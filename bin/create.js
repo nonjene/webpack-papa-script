@@ -2,7 +2,7 @@
  * Created by Nonjene on 2017/3/6.
  */
 
-const getAllProjName = require("./util/getAllProjName");
+const { getAllProjName } = require('./util/getAllProjName');
 
 const copydir = require("copy-dir");
 

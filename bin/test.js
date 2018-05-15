@@ -8,7 +8,7 @@ const fileManager = require('./file_manager');
 
 const { getConf, ftp:FtpConf } = require('./config');
 
-const getAllProjName = require('./util/getAllProjName');
+const { getAllProjName} = require('./util/getAllProjName');
 
 const testPromise = function () {
     return new Promise((resolve,reject)=>{

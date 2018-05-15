@@ -6,6 +6,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const SriPlugin = require('webpack-subresource-integrity');
 
+const T = require('./util/tpl');
+const deployConfig = require('./config');
 
 const Set = require('./webpack.set.entry');
 const IsPro = Set.PRO_SPECIFIC === 'pro';
@@ -66,7 +68,7 @@ if (IsProduction) {
   CSS_SourceMap = '';
   imgCompress = '!image-webpack-loader';
   if (IsTest) {
-    publicPath = `/activity/${Set.module}`;
+    publicPath = T(deployConfig.remotePath, { target: Set.module });
   } else {
     publicPath = path.join(
       IsPro ? deployConfig.cdnDomain : '',
@@ -89,7 +91,7 @@ if (IsProduction) {
   CSS_Module_Loader_Pargram = '?modules&importLoaders=1&localIdentName=[path]__[name]__[local]__[hash:3]';
   CSS_SourceMap = '?sourceMap';
   imgCompress = '';
-  publicPath = `/activity/${Set.module}`;
+  publicPath = T(deployConfig.remotePath, { target: Set.module });
 
 }
 

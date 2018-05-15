@@ -19,7 +19,7 @@ const StaticConfig = Object.assign(
     },
     remoteBasePath: '', //ftp的基目录，用于打印地址时方便排除。m.okpapa.com
     remotePath: '/activity/{$target}',
-    localAssetPath: 'build/activity/{$target}',
+    localAssetPath: 'build/activity',
     domainName: 'http://m.okpapa.com',
     cdnDomain: 'https://images.okpapa.com',
     proxyPort: 80,
