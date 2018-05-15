@@ -170,5 +170,5 @@ module.exports = {
   PRO_SPECIFIC,
   BUILD_TARGET,
   DUAN,
-  helperDirs: [Folder + "m/widgets", Folder + "pc/widgets", Folder + "/widgets"]
+  helperDirs: [Folder+"hbHelper"]
 };
