@@ -9,6 +9,7 @@ const chalk = require('chalk');
 
 const logInfo = require('./util/logInfo');
 const hasDuan = require('./util/hasDuan');
+const isProj = require('./util/isProj');
 const doBuild = require('./run_build/build');
 const doWatch = require('./run_build/watch');
 
@@ -17,7 +18,7 @@ const _emptyCache = dir => {
     delete require.cache[dir];
   }
 };
-const errMsgNoMPC = (Tar)=>chalk.red(`没有找到：${Tar}，或里面没有m或pc文件夹，已略过，请检查拼写`) + '🤦';
+const errMsgNoMPC = (Tar)=>chalk.red(`没有找到：${Tar}，或里面没有m|pc文件夹或proj.json文件，已略过，请检查拼写`) + '🤦';
 
 // 给 webpack.config 读取
 const setEnv = {
@@ -61,7 +62,7 @@ const buildOne = function (which = 0, hasLog = true) {
         )} 端...`
       );
 
-    if (hasDuan(Tar).length < 1) {
+    if (!isProj(Tar)) {
       return reject(errMsgNoMPC(Tar));
     }
 
@@ -91,7 +92,7 @@ const watchOne = function (which = 0, hasLog = true) {
     const Tar = getConf('target')[which];
     hasLog && console.log(`${chalk.blue('监听代码修改：')}${Tar} 的 ${getConf('duan').join(',')} 端...`);
 
-    if (hasDuan(Tar).length < 1) {
+    if (!isProj(Tar)) {
       return reject(errMsgNoMPC(Tar));
     }
     try {

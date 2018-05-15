@@ -4,62 +4,68 @@
 const fs = require("fs");
 const path = require("path");
 
-const ExcludeDir = ["modules", "components", "static", "m", "pc"];
+const ExcludeDir = ['modules', 'module', 'static', 'm', 'pc', 'components', 'component'];
 
 const DIR_SRC = path.join(process.cwd(), '/src');
 
-let ls = function(baseDir = DIR_SRC) {
-    let needGoDeep = [];
-    let matchDirs = fs.readdirSync(baseDir).filter(dir => {
-        let fullPath = path.join(baseDir, dir);
+const isProj = require('./isProj');
 
-        if (fs.statSync(fullPath).isDirectory() && ExcludeDir.every(exDir => exDir != dir)) {
-            if (fs.readdirSync(fullPath).some(subDir => subDir == "m" || subDir == "pc")) {
-                return true;
-            } else {
-                needGoDeep.push(fullPath);
-                return false;
-            }
+let ls = function (baseDir = DIR_SRC) {
+  let needGoDeep = [];
+  let matchDirs = fs
+    .readdirSync(baseDir)
+    .filter(dir => {
+      let fullPath = path.join(baseDir, dir);
+
+      if (fs.statSync(fullPath).isDirectory() && ExcludeDir.every(exDir => exDir !== dir)) {
+        if (isProj(fullPath, 'abs')) {
+          return true;
         } else {
-            return false;
+          needGoDeep.push(fullPath);
+          return false;
         }
+      } else {
+        return false;
+      }
+
     });
 
-    return {
-        matchDirs,
-        needGoDeep
-    };
+
+  return {
+    matchDirs,
+    needGoDeep
+  }
 };
 
-let getAll = function(scope) {
-    let list = [];
+let getAll = function (scope) {
+  let list = [];
 
-    function doit(dir) {
-        let lsRes = ls(dir);
+  function doit(dir) {
 
-        list = [
-            ...list,
-            ...lsRes.matchDirs.map(matchDir => path.join(dir, matchDir).replace(DIR_SRC + "/", ""))
-        ];
+    let lsRes = ls(dir);
 
-        if (lsRes.needGoDeep.length > 0) {
-            lsRes.needGoDeep.map(dir => {
-                return doit(dir);
-            });
-        }
+    list = [...list, ...lsRes.matchDirs.map(matchDir => path.join(dir, matchDir).replace(DIR_SRC + path.sep, ''))];
+
+    if (lsRes.needGoDeep.length > 0) {
+      lsRes.needGoDeep.map(dir => {
+        return doit(dir)
+      });
     }
+  }
 
-    if (Array.isArray(scope)) {
-        scope = scope.map(_scope => path.join(DIR_SRC, _scope));
-    } else if (typeof scope === "string") {
-        scope = [path.join(DIR_SRC, scope)];
-    } else {
-        scope = [DIR_SRC];
-    }
+  if (Array.isArray(scope)) {
+    scope = scope.map(_scope => path.join(DIR_SRC, _scope))
+  }
+  else if (typeof scope === 'string') {
+    scope = [path.join(DIR_SRC, scope)]
+  }
+  else {
+    scope = [DIR_SRC]
+  }
 
-    scope.forEach(_scope => doit(_scope));
+  scope.forEach(_scope => doit(_scope));
 
-    return list.join(",");
+  return list.join(',');
 };
 
 module.exports = getAll;

@@ -9,6 +9,7 @@ const { NODE_ENV, PRO_SPECIFIC, BUILD_TARGET } = process.env;
 const IsPro = PRO_SPECIFIC === 'pro';
 const deployConfig = require('./config');
 const compatV1 = require('./util/compat_v1');
+const getAllProjName = require('./util/getAllProjName');
 
 if (!BUILD_TARGET) throw new Error('没有找到活动名。请联系工具维护人员');
 
@@ -39,16 +40,16 @@ let outputDir = getOutputDir(PRO_SPECIFIC);
 
 const hasDuan = require('./util/hasDuan');
 
-const getHtml = function(Path) {
+const getHtml = function (Path) {
   return fs.readFileSync(Path, 'utf8');
 };
 
-const getTargetConf = function() {
+const getTargetConf = function (dir = Folder) {
   const defConf = {
     htmlFile: 'index.html',
     title: '标题'
   };
-  const file = `${Folder}config.json`;
+  const file = path.join(dir, 'config.json');
 
   if (!fs.existsSync(file)) {
     chalk.yellow(`${BUILD_TARGET}的config.json不存在, 将作为旧版形式编译。`);
@@ -59,8 +60,10 @@ const getTargetConf = function() {
   return Object.assign(defConf, JSON.parse(fs.readFileSync(file, 'utf8')));
 };
 
-const setEntry = function(dir) {
-  const Path = Folder + dir;
+const setEntry = function (subpath, duan) {
+  const dir = path.join(subpath, duan);
+  const Path = path.join(Folder, dir);
+
   if (hasDuan(BUILD_TARGET, dir).length < 1) {
     return console.log(chalk.yellow(`${BUILD_TARGET}的${dir}端不存在, 已略过`) + '🌚');
   }
@@ -69,7 +72,8 @@ const setEntry = function(dir) {
   entry[dir] = Path + '/index.js';
 
   // 设置html文件
-  let targetConf = getTargetConf();
+  //console.log(Path);
+  let targetConf = getTargetConf(path.join(Folder, subpath));// conf在m或pc的上层
   const { htmlFile } = targetConf;
   delete targetConf.htmlFile;
 
@@ -78,7 +82,7 @@ const setEntry = function(dir) {
   const linkParam = `?v=${deployConfig.commonVersion}`;
   // 这个别改，改了你就要重写compat_v1.js的匹配规则，否则会重复添加。
   const commonFileInject = `<script type="text/javascript" src="${cdnPrefix}${comFilePath}${linkParam}"></script>`;
-  
+
   //兼容旧版
   if (!Object.keys(targetConf).length) {
     //插入script common.js去html
@@ -104,8 +108,7 @@ const setEntry = function(dir) {
       // 优先选取config.json的templateName_m/pc，没有则用默认的
       template: path.resolve(
         process.cwd(),
-        `resource/html/${targetConf[`templateName_${dir}`] ||
-          `index_${dir}.handlebars`}`
+        `resource/html/${targetConf[`templateName_${duan}`] || `index_${duan}.handlebars`}`
       ),
       chunks: [dir, 'vendors'],
       inject: 'body',
@@ -125,10 +128,10 @@ const setEntry = function(dir) {
     };
     // 活动的业务内容的html
     Object.defineProperty(opt.tpl, 'main', {
-      get: function() {
+      get: function () {
         return getHtml(path.join(Path, htmlFile));
       },
-      set: function() {}
+      set: function () { }
     });
 
     htmlDeclare.push(new HtmlWebpackPlugin(opt));
@@ -137,12 +140,34 @@ const setEntry = function(dir) {
 //path.resolve(__dirname, '../resource/bundle/common.js')
 
 if (fs.statSync(Folder).isDirectory()) {
-  DUAN.forEach(setEntry);
+  if (fs.readdirSync(Folder).some(subDir => subDir === 'proj.json')) {
+    // 一个项目包含多个页面
+    getAllProjName(BUILD_TARGET).split(',').reduce((_aDirs, dir) => {
+      //getAllProjName是拿到所有包含pc或m或proj.json的文件夹，所以还要把pc和m拼上
+
+      DUAN.forEach(duan => {
+        _aDirs.push({
+          subpath: dir.replace(BUILD_TARGET + path.sep, ''),
+          duan
+        });
+      });
+
+      return _aDirs;
+    }, []).forEach(({ subpath, duan }) => setEntry(subpath, duan));
+
+
+
+  } else {
+    // 一个页面作为一个项目
+    DUAN.forEach(duan => setEntry('', duan));
+
+  }
+
 
   /**
-     * @自定义公共模块抽到这里
-     * 把config_v.js陪到vendors
-     */
+   * @自定义公共模块抽到这里
+   * 把config_v.js陪到vendors
+   */
   entry.vendors = [`${Folder}/config_v.js`];
 } else {
   throw new Error(Folder + '文件夹不存在');
@@ -155,5 +180,6 @@ module.exports = {
   outputDir,
   PRO_SPECIFIC,
   BUILD_TARGET,
-  DUAN
+  DUAN,
+  helperDirs: [Folder + "m/widgets", Folder + "pc/widgets", Folder + "/widgets"]
 };
