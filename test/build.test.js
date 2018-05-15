@@ -39,17 +39,6 @@ describe('build', function() {
       config.getFrontendEnvDesc().should.containEql('预发环境');
     });
 
-    it('combine build command.', function() {
-      config.setConf('fronendEnv', 'produce');
-      config.setTarget('scope/proj1');
-
-      config
-        .combineBuild(0)
-        .should.containEql(
-          'export NODE_ENV=production&&export PRO_SPECIFIC=pro&&export BUILD_TARGET=scope/proj1&&export DUAN=pc,m&&node'
-        );
-      config.combineBuild(0).should.containEql('bin/run_build/build');
-    });
   });
 
   describe('#run build', function() {

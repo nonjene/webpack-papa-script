@@ -2,19 +2,22 @@
  * Created by chenzhian on 2016/7/21.
  */
 const path = require('path');
-const { combineBuild, getConf, getTarget } = require('./config');
+const { getConf, getTarget } = require('./config');
+const serve = require('./serve');
 
 const chalk = require('chalk');
 
 const logInfo = require('./util/logInfo');
 const hasDuan = require('./util/hasDuan');
 const doBuild = require('./run_build/build');
+const doWatch = require('./run_build/watch');
 
 const _emptyCache = dir => {
   if (require.cache[dir]) {
     delete require.cache[dir];
   }
 };
+const errMsgNoMPC = (Tar)=>chalk.red(`没有找到：${Tar}，或里面没有m或pc文件夹，已略过，请检查拼写`) + '🤦';
 
 // 给 webpack.config 读取
 const setEnv = {
@@ -26,7 +29,7 @@ const setEnv = {
   },
   env() {
     process.env.NODE_ENV = getConf('env');
-    if ( getConf('proSpecific')) {
+    if (getConf('proSpecific')) {
       process.env.PRO_SPECIFIC = getConf('proSpecific')
     }
   },
@@ -44,7 +47,7 @@ const setEnv = {
   }
 };
 
-const buildOne = function(which = 0, hasLog = true) {
+const buildOne = function (which = 0, hasLog = true) {
   //export NODE_ENV=production
   //export NODE_ENV=development
 
@@ -59,11 +62,7 @@ const buildOne = function(which = 0, hasLog = true) {
       );
 
     if (hasDuan(Tar).length < 1) {
-      return reject(
-        chalk.red(
-          `没有找到：${Tar}，或里面没有m或pc文件夹，已略过，请检查拼写`
-        ) + '🤦'
-      );
+      return reject(errMsgNoMPC(Tar));
     }
 
     try {
@@ -86,7 +85,42 @@ const buildOne = function(which = 0, hasLog = true) {
   });
 };
 
-const build = function(conf = {}) {
+const watchOne = function (which = 0, hasLog = true) {
+
+  return new Promise((resolve, reject) => {
+    const Tar = getConf('target')[which];
+    hasLog && console.log(`${chalk.blue('监听代码修改：')}${Tar} 的 ${getConf('duan').join(',')} 端...`);
+
+    if (hasDuan(Tar).length < 1) {
+      return reject(errMsgNoMPC(Tar));
+    }
+    try {
+      setEnv.init(which);
+      doWatch(hasLog)
+        .then(msg => {
+          hasLog && console.log(chalk.cyan('webpack:watch'));
+          hasLog && console.log(msg);
+          // 下一个
+          resolve();
+
+          /* 
+          //build成功后有time的打印。resolve只会触发一次
+        if (data.indexOf('Time:') > -1) {
+          resolve();
+        } */
+        })
+        .catch(err => {
+          hasLog && console.log(chalk.red(err));
+          reject(err);
+        });
+    }
+    catch (err) { reject(err); }
+
+  })
+
+};
+
+const build = function (conf = {}) {
   const hasLog = !conf.noLog;
   hasLog && logInfo();
 
@@ -105,4 +139,24 @@ const build = function(conf = {}) {
   });
 };
 
-module.exports = { build };
+const watch = function (conf = {}) {
+  const hasLog = !conf.noLog;
+  hasLog && logInfo();
+
+  return new Promise((resolve, reject) => {
+    if (getConf('target').length > 1) {
+      console.log(chalk.red('只能监听你输入的第一个活动'));
+    }
+    // watch 只能watch一个活动
+    watchOne(0)
+      .then(() => {
+        serve.start();
+      })
+      .catch(err => {
+        serve.stop();
+        reject(err);
+      });
+  })
+};
+
+module.exports = { build, watch };

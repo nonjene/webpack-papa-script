@@ -2,8 +2,7 @@
 const program = require("commander");
 const fs = require("fs");
 
-const { build } = require('./bin/build');
-const { watch } = require('./bin/watch');
+const { build,watch } = require('./bin/build');
 const { create } = require('./bin/create');
 const initProj = require('./bin/initProj');
 const ftp = require('./bin/ftp');

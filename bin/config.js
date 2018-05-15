@@ -108,23 +108,6 @@ module.exports = Object.assign(
     getFrontendEnvDesc() {
       return config.requestEnvDesc[config.fronendEnv] || '异次元空间🌚';
     },
-
-    combineBuild(which) {
-      return [
-        getEnvCommander(),
-        getTargetCommander(which),
-        getDuanCommander(),
-        `node ${path.join(__dirname, './run_build/build')}`
-      ].join('&&');
-    },
-    combineWatch(which) {
-      return [
-        getEnvCommander(),
-        getTargetCommander(which),
-        getDuanCommander(),
-        `node ${path.join(__dirname, './run_build/watch.js')}`
-      ].join('&&');
-    },
     getTargetCommander,
     getEnvCommander,
     getDuanCommander
