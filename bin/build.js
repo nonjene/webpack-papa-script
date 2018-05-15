@@ -97,17 +97,12 @@ const watchOne = function (which = 0, hasLog = true) {
     try {
       setEnv.init(which);
       doWatch(hasLog)
-        .then(msg => {
+        .then(({msg, watching}) => {
           hasLog && console.log(chalk.cyan('webpack:watch'));
           hasLog && console.log(msg);
           // 下一个
-          resolve();
-
-          /* 
-          //build成功后有time的打印。resolve只会触发一次
-        if (data.indexOf('Time:') > -1) {
-          resolve();
-        } */
+          console.log(msg)
+          resolve(watching);
         })
         .catch(err => {
           hasLog && console.log(chalk.red(err));
@@ -145,15 +140,16 @@ const watch = function (conf = {}) {
 
   return new Promise((resolve, reject) => {
     if (getConf('target').length > 1) {
-      console.log(chalk.red('只能监听你输入的第一个活动'));
+      hasLog && console.log(chalk.red('只能监听你输入的第一个活动'));
     }
     // watch 只能watch一个活动
-    watchOne(0)
-      .then(() => {
-        serve.start();
+    watchOne(0,hasLog)
+      .then((watching) => {
+        !conf.noServ && serve.start();
+        resolve(watching);
       })
       .catch(err => {
-        serve.stop();
+        !conf.noServ && serve.stop();
         reject(err);
       });
   })

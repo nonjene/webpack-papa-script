@@ -42,7 +42,7 @@ describe('build', function() {
   });
 
   describe('#run build', function() {
-    let runBuild;
+    let runBuild, runWatch;
     let relDir, config_v;
     beforeEach(function() {
       config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
@@ -52,7 +52,9 @@ describe('build', function() {
 
       resetConfig();
       frontendConf = require('../bin/frontend_conf');
-      runBuild = require('../bin/build').build;
+      const build = require('../bin/build');
+      runBuild = build.build;
+      runWatch = build.watch;
     });
     afterEach(function() {
       try {
@@ -118,6 +120,28 @@ describe('build', function() {
         .then(() => {
           fs.existsSync(relDir).should.be.true();
           done();
+        });
+    });
+
+    it('run webpack dev watch', function(done) {
+      
+      config.setTarget('proj1');
+      config.setConf('proSpecific', 'test');
+
+      frontendConf.setFrontEndConf('test', config.getTarget());
+      frontendConf.promiseSetDone
+        .then(function() {
+          config.getTarget().should.eql(['proj1']);
+          config.getEnvDesc().should.containEql('开发环境');
+          config.getFrontendEnvDesc().should.containEql('测试环境');
+
+          return runWatch({ noLog: true,noServ:true });
+        })
+        .then((watching) => {
+          watching.close(()=>done());
+          
+        }).catch((e)=>{
+          throw new Error(e);
         });
     });
 

@@ -15,15 +15,18 @@ module.exports = function () {
         poll: true // use polling instead of native watchers
         // pass a number to set the polling interval
       },
-      (err, stats) => {
+      function (err, stats) {
         if (err) {
           return reject(err);
         }
         resolve(
-          stats.toString({
-            chunks: false, // Makes the build much quieter
-            colors: true
-          })
+          {
+            msg: stats.toString({
+              chunks: false, // Makes the build much quieter
+              colors: true
+            }),
+            watching: this
+          }
         );
       }
     );
