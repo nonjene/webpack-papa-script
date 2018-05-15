@@ -58,7 +58,7 @@ const getAllProjName = function (scope, base = DIR_SRC) {
 
     let lsRes = ls(dir);
 
-    list = [...list, ...lsRes.matchDirs.map(matchDir => path.join(dir, matchDir).replace(base + path.sep, ''))];
+    list = [...list, ...lsRes.matchDirs.map(matchDir => path.join(dir, matchDir).replace(path.join(base) + path.sep, ''))];
 
     if (lsRes.needGoDeep.length > 0) {
       lsRes.needGoDeep.map(dir => {
@@ -112,7 +112,7 @@ const getAllSubPageName = function (BUILD_TARGET, DUAN, base) {
 
     DUAN.forEach(duan => {
       _aDirs.push({
-        subpath: BUILD_TARGET ? dir.replace(BUILD_TARGET + path.sep, '') : dir,
+        subpath: BUILD_TARGET ? dir.replace(path.join(BUILD_TARGET.toString()) + path.sep, '') : dir,
         duan
       });
     });
