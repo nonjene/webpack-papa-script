@@ -1,4 +1,4 @@
-{
+module.exports = {
   "ftp": {
     "host": "192.168.2.228",
     "port": "",

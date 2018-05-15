@@ -16,7 +16,7 @@
 
 # Config
 
-okpapa.config.json：
+okpapa.config.js:
 ```js
 {
     "ftp": {

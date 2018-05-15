@@ -4,9 +4,9 @@
 
 const path = require('path');
 const fs = require('fs');
-const projConfPath = `${process.cwd()}/okpapa.config.json`;
+const projConfPath = `${process.cwd()}/okpapa.config.js`;
 const projConf =
-  (fs.existsSync(projConfPath) && JSON.parse(fs.readFileSync(projConfPath))) ||
+  (fs.existsSync(projConfPath) && require(projConfPath)) ||
   {};
 
 const StaticConfig = Object.assign(
