@@ -101,7 +101,7 @@ let configWrap = {
     path: path.resolve(Set.outputDir, Set.module),
     filename: `[name]/bundle${fileNameHash}.js`,
     publicPath,
-    chunkFilename: `${vendorLoc}/chunk_[name]${fileNameHash}.js`,
+    chunkFilename: `/${vendorLoc}/chunk_[name]${fileNameHash}.js`,
     crossOriginLoading: 'anonymous'
   },
   resolve: {
