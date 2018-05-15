@@ -172,7 +172,7 @@ describe('build', function () {
     it('deploy static.', function(done) {
       const { deployStaticAll, deployStaticEnvTest } = require('../bin/deployStatic');
       try{
-        deployStaticAll(false, false,()=>done());
+        deployStaticAll(true, false,()=>done());
       
       }catch(e){
         ('deploy static').should.be.exactly('not throw error.');
