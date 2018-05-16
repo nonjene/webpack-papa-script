@@ -1,11 +1,11 @@
 /**
  * Created by Nonjene on 2017/3/2.
  */
-const { getConf } = require("../config");
+const config = require("../config");
 const path = require("path");
 const fs = require("fs");
 
-module.exports = function(target, duans = ["m", "pc"]) {
+module.exports = function(target, duans = config.commSingleProjSubPage) {
     const DIR_SRC = path.resolve(`${process.cwd()}/src/`);
     if (!Array.isArray(duans)) {
         duans = [duans.toString()];

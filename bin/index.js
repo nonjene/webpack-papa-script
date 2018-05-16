@@ -2,21 +2,21 @@
 const program = require("commander");
 const fs = require("fs");
 
-const { build,watch } = require('./bin/build');
-const { create } = require('./bin/create');
-const initProj = require('./bin/initProj');
-const ftp = require('./bin/ftp');
-const test = require('./bin/test');
-const serve = require('./bin/serve');
-const {getAllProjName} = require('./bin/util/getAllProjName');
+const { build, watch } = require('./build');
+const { create } = require('./create');
+const initProj = require('./initProj');
+const ftp = require('./ftp');
+const test = require('./test');
+const serve = require('./serve');
+const { getAllProjName } = require('./util/getAllProjName');
 
 const chalk = require('chalk');
 const opn = require('opn');
 
 
-const config = require('./bin/config');
-const frontendConf = require('./bin/frontend_conf');
-const { deployStaticAll, deployStaticEnvTest } = require('./bin/deployStatic');
+const config = require('./config');
+const frontendConf = require('./frontend_conf');
+const { deployStaticAll, deployStaticEnvTest } = require('./deployStatic');
 
 
 program
@@ -27,27 +27,26 @@ program
   .option('pre', '代码发布到预发环境(只配合r命令)', () => config.setEnv('production'))
   .option('test', '代码发布到测试环境(只配合r命令)', () => config.setEnv('production'))
 
-  .option('duan <pc或m>', 'pc端or移动端。', name => config.setDuan(name))
+  .option('duan <pc或m>', 'pc端or移动端，或者commSingleProjSubPage配置的文件夹名。', name => config.setDuan(name))
 
   .option('ra, --release-all', '发布所有活动。')
-  .option('wa, --watch-all', '发布所有活动。')
 
   .option('u, --upload [活动名]', '上传测试服务器', name => config.setTarget(name))
-  .option('open','打开测试服务器链接')
-  .option('scope <文件夹范围>','发布所有活动的文件夹范围', name=>config.setBuildAllScope(name))
+  .option('open', '打开测试服务器链接')
+  .option('scope <文件夹范围>', '发布所有活动的文件夹范围', name => config.setBuildAllScope(name))
 
   .option('p, --production', '设置为：非开发模式。默认release自带此属性', () => config.setEnv('production'))
   .option('d, --development', '设置为：不压缩且包含inline-source-map。默认watch自带此属性', () => config.setEnv('development'))
 
 
   .option('mode <环境>', '设置前端API接口的环境, 只有在测试环境时生效，预发和生产环境无效。', mode => fFrontEndConf(mode))
-  .option('M, hard-mode <环境>', '强制更改前端API接口', mode => fFrontEndConf(mode,'hard'))
+  .option('M, hard-mode <环境>', '强制更改前端API接口', mode => fFrontEndConf(mode, 'hard'))
 
-  .option('c, --create <活动名>', '新建一个活动', name => setTimeout(()=> createAHuodong(name), 0))
+  .option('c, --create <活动名>', '新建一个活动', name => setTimeout(() => createAHuodong(name), 0))
   .option('t --template <模版名>', '新建一个活动时，选一个模版', (name, meno) => meno = name)
 
   .option('P, --proxy-port <端口>', '定义本地测试的平台页面服务端口，默认80', name => config.setConf('proxyPort', name))
-  .option('deploy-static', '把bin/resource/static的文件复制到3个环境')
+  .option('deploy-static', '把/resource/static的文件复制到3个环境')
   // .option('init --init <项目文件夹名>', '创建项目目录')
   // .option('set-source <git地址>', 'git url，指定 init 创建目录的源')
 
@@ -95,7 +94,7 @@ if (
 if (program.watch) {
   //预设api接口为测试环境
   if (!program.mode) {
-    frontendConf.setFrontEndConf('test', config.getTarget());
+    frontendConf.setFrontEndConf(config.getDevFetchName(), config.getTarget());
   }
   !program.production && config.setEnv('development');
   frontendConf.promiseSetDone
@@ -105,12 +104,10 @@ if (program.watch) {
   // 复制common.js 到build/
   deployStaticEnvTest();
 }
-if (program.watchAll) {
-  console.log('功能后续开发。');
-}
+
 
 // 生成common.js
-if(program.deployStatic){
+if (program.deployStatic) {
   deployStaticAll(!!program.upload)
 }
 
@@ -134,7 +131,7 @@ function upload() {
 
 function fFrontEndConf(mode, isHard) {
   //不让在非测试环境改
-  if (program.release && !program.test && !isHard) {
+  if (program.release && !program[config.getDevDeployName()] && !isHard) {
     return console.log(chalk.red('不允许在非测试环境改 ( ._.)'));
     /*if (!isHard) {
 
@@ -146,27 +143,32 @@ function fFrontEndConf(mode, isHard) {
 
 function createAHuodong(name) {
   create(name, program.template)
-  .then(()=>console.log(chalk.cyan("活动" + name + "添加成功")))
-  .catch(err => console.error(chalk.red(err)));
+    .then(() => console.log(chalk.cyan("活动" + name + "添加成功")))
+    .catch(err => console.error(chalk.red(err)));
 }
 
 function setReleaseConfig() {
   const target = config.getTarget();
-  //预发
-  if (program.pre) {
-    //前端代码的config设置后端接口为预发环境。
-    !program.hardMode && frontendConf.setFrontEndConf('pre', target);
-    //指定是发不到预发的文件夹
-    config.setConf('proSpecific', 'pre');
-  } else if (program.test) {
-    !program.hardMode && frontendConf.setFrontEndConf('test', target);
-    !program.mode && config.setConf('proSpecific', 'test');
-  } else {
-    //生产
-    //不可以单独一个端，可以公用代码，比如pc转跳m的时候，可减少代码加载
-    config.setDuan('m,pc');
 
-    frontendConf.setFrontEndConf('produce', target);
-    config.setConf('proSpecific', 'pro');
+  const developEnvType = config.getDevDeployName();
+        productEnvType = config.getProDeployName();
+
+  // 匹配配置文件的环境定义deployEnvType，假如没有匹配到的定义，则使用线上环境
+  const envType = Object.keys(config.getConf('deployEnvType'))
+                        .filter(name => program.hasOwnProperty(name))
+                        [0] || productEnvType;
+
+  
+  //指定是发布到哪个环境
+  config.setConf('deployType', envType);
+
+  //前端接口请求环境定义, hardMode只能在非线上环境修改。
+  if(!program.hardMode || envType === productEnvType){
+    frontendConf.setFrontEndConf(config.deployMapFetchName(envType), target);
+  }
+  
+  //非开发环境
+  if (envType !== developEnvType) { 
+    config.setDuan(config.commSingleProjSubPage);
   }
 }

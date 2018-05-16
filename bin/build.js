@@ -30,8 +30,8 @@ const setEnv = {
   },
   env() {
     process.env.NODE_ENV = getConf('env');
-    if (getConf('proSpecific')) {
-      process.env.PRO_SPECIFIC = getConf('proSpecific')
+    if (getConf('deployType')) {
+      process.env.deployType = getConf('deployType')
     }
   },
   target(which) {

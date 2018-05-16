@@ -10,7 +10,7 @@ const ftp = require('./ftp');
 const { asyncEach } = require('./util/asyncEach');
 const concatFile = require('./util/concatFile');
 
-const OutputDir = ['dist/pre', 'dist/pro', 'build/activity'];
+const OutputDir = Object.keys(config.deployEnvType).map(name=>config.deployEnvType[name]);
 
 const doConcat = function() {
   return concatFile(

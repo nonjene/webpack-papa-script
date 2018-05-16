@@ -2,7 +2,7 @@
     "name": "ok-papa-script",
     "version": "3.0.4",
     "description": "A frontend projects solution",
-    "main": "index.js",
+    "main": "bin/index.js",
     "scripts": {
         "test": "mocha",
         "test-cov": "istanbul cover _mocha",
@@ -56,7 +56,7 @@
         "url-loader": "^0.5.7",
         "webpack": "^1.15.0",
         "webpack-livereload-plugin": "^0.8.1",
-        "webpack-subresource-integrity": "^1.1.0-rc.4"
+        "webpack-subresource-integrity": "^1.0.4"
     },
     "bin": {
         "okpapa": "./index.js"

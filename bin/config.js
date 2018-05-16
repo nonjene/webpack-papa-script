@@ -5,9 +5,7 @@
 const path = require('path');
 const fs = require('fs');
 const projConfPath = `${process.cwd()}/okpapa.config.js`;
-const projConf =
-  (fs.existsSync(projConfPath) && require(projConfPath)) ||
-  {};
+const projConf = (fs.existsSync(projConfPath) && require(projConfPath)) || {};
 
 const StaticConfig = Object.assign(
   {
@@ -25,40 +23,66 @@ const StaticConfig = Object.assign(
     proxyPort: 80,
     servePort: 3005,
     staticFileConcatOrder: [], //选定需要合并的文件，必须在 resource/js 里
-    seedUrl:'https://github.com/nonjene/ok-papa-seed.git',
-    webpackConfig:{},
-    commonVersion:'',
-    deployEnvType:{
-      pre:"dist/pre",
-      pro:"dist/pro",
-      test:"build/activity",
+    seedUrl: 'https://github.com/nonjene/ok-papa-seed.git',
+    webpackConfig: {},
+    commonVersion: '',
+    // 编译一个单独的页面时，目录里面必须包含其中一个文件夹的定义
+    commSingleProjSubPage:['m', 'pc'],
+    // 获取所有项目时，排除以下这些文件夹里面的内容
+    projRecongizeExclude:[ 'm', 'pc', 'modules', 'module', 'static','components', 'component'],
+    //本地开发环境
+    developEnvType: {
+      deploy: 'test',
+      fetch: 'test'
     },
-    releaseEnvDesc:{
-      pre:'预发环境😛',
-      pro:'生产环境😝',
-      test:'开发环境🤔',
+    //正式上线的环境
+    productEnvType: {
+      deploy: 'pro',
+      fetch: 'produce'
     },
-    requestEnvDesc:{
-      pre:'预发环境🥑',
-      test:'测试环境🥝',
-      produce:'生产环境🍓',
+    deployEnvType: {
+      pre: 'dist/pre',
+      pro: 'dist/pro',
+      test: 'build/activity'
     },
+    //默认的环境对应的接口模式
+    deployEnvMapFetch: {
+      pre: 'pre',
+      pro: 'produce',
+      test: 'test'
+    },
+    releaseEnvDesc: {
+      pre: '预发环境😛',
+      pro: '生产环境😝',
+      test: '开发环境🤔'
+    },
+    fetchEnvDesc: {
+      pre: '预发环境🥑',
+      test: '测试环境🥝',
+      produce: '生产环境🍓'
+    },
+    frontendConfCode:`try{
+      Object.assign(window.publicConfig, {
+        mode:"{$mode}",
+        debug:{$debug}
+      });
+      Object.freeze(window.publicConfig);
+    }catch(e){}`,
   },
   projConf
 );
 
 // 之前写的有些代码用了 getConf() 来获取 StaticConfig，所以要合并进来
-let config = Object.assign(
+const config = Object.assign(
   {
     target: ['target_not_setted'],
     env: 'production',
     fronendEnv: null,
-    proSpecific: null,
-    duan: ['pc', 'm']
+    deployType: null,
+    duan: StaticConfig.commSingleProjSubPage
   },
   StaticConfig
 );
-
 
 module.exports = Object.assign(
   {
@@ -76,7 +100,12 @@ module.exports = Object.assign(
       config.env = env;
     },
     setDuan(duan) {
-      config.duan = duan.split(',');
+      if(typeof duan === 'string'){
+        config.duan = duan.split(',');
+      }else{
+        config.duan = duan;
+      }
+      
     },
     getConf(prop) {
       return prop ? config[prop] : config;
@@ -85,16 +114,33 @@ module.exports = Object.assign(
       config[prop] = val;
     },
     getEnvDesc() {
-      if (config.proSpecific) {
-        return config.releaseEnvDesc[config.proSpecific] || '黑洞';
-      } else {
-        /* istanbul ignore next */
-        return config.releaseEnvDesc.test || '开发环境🤔';
-      }
+      return config.releaseEnvDesc[config.deployType || StaticConfig.developEnvType.deploy] || '黑洞👽';
     },
     getFrontendEnvDesc() {
-      return config.requestEnvDesc[config.fronendEnv] || '异次元空间🌚';
+      return config.fetchEnvDesc[config.fronendEnv] || '异次元空间🌚';
     },
+    getOutputDir(type) {
+      const outputDir = config.deployEnvType[type];
+
+      /* istanbul ignore if */
+      if (!outputDir) throw new Error(`没有在配置文件中找到对应的"${type}".`);
+      return outputDir;
+    },
+    getProDeployName() {
+      return StaticConfig.productEnvType.deploy;
+    },
+    getDevDeployName() {
+      return StaticConfig.developEnvType.deploy;
+    },
+    getProFetchName() {
+      return StaticConfig.productEnvType.fetch;
+    },
+    getDevFetchName() {
+      return StaticConfig.developEnvType.fetch;
+    },
+    deployMapFetchName(deployName) {
+      return StaticConfig.deployEnvMapFetch[deployName];
+    }
   },
   StaticConfig
 );

@@ -5,11 +5,12 @@
 const chalk = require('chalk');
 
 // 哪个活动文件夹,只能指定单个
-const { NODE_ENV, PRO_SPECIFIC, BUILD_TARGET } = process.env;
-const IsPro = PRO_SPECIFIC === 'pro';
+const { NODE_ENV, deployType, BUILD_TARGET } = process.env;
 const deployConfig = require('./config');
 const compatV1 = require('./util/compat_v1');
-const {getAllProjName} = require('./util/getAllProjName');
+const {getAllProjName,getAllSubPageName} = require('./util/getAllProjName');
+
+const IsPro = deployType === deployConfig.getProDeployName();
 
 if (!BUILD_TARGET) throw new Error('没有找到活动名。请联系工具维护人员');
 
@@ -23,12 +24,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const DIR_SRC = path.resolve(`${process.cwd()}/src/`) + '/';
 
-const getOutputDir = (PRO_SPECIFIC)=>{
-  const outputDir = deployConfig.deployEnvType[PRO_SPECIFIC];
-  /* istanbul ignore next */
-  if(!outputDir) throw new Error(`没有在配置文件中找到对应的"${PRO_SPECIFIC}".`);
-  return outputDir;
-};
+
 
 let aDirName = [];
 let entry = {};
@@ -36,7 +32,8 @@ let htmlDeclare = [];
 
 let Folder = DIR_SRC + BUILD_TARGET + '/';
 
-let outputDir = getOutputDir(PRO_SPECIFIC);
+// watch的情况，没有deployType
+let outputDir = deployConfig.getOutputDir(deployType || deployConfig.getDevDeployName());
 
 const hasDuan = require('./util/hasDuan');
 
@@ -167,7 +164,7 @@ module.exports = {
   entry,
   htmlDeclare,
   outputDir,
-  PRO_SPECIFIC,
+  deployType,
   BUILD_TARGET,
   DUAN,
   helperDirs: [Folder+"hbHelper"]

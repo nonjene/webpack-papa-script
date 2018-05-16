@@ -10,9 +10,8 @@ const T = require('./util/tpl');
 const deployConfig = require('./config');
 
 const Set = require('./webpack.set.entry');
-const IsPro = Set.PRO_SPECIFIC === 'pro';
-const IsPre = Set.PRO_SPECIFIC === 'pre';
-const IsTest = Set.PRO_SPECIFIC === 'test';
+const IsPro = Set.deployType === deployConfig.getProDeployName();
+const IsTest = Set.deployType ===  deployConfig.getDevDeployName();
 const IsProduction = process.env.NODE_ENV === 'production';
 
 let CSS_Module_Loader_Pargram,

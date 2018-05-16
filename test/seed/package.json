@@ -4,10 +4,10 @@
     "description": "Directory Structure for ok-papa-cli, a frontend projects solution.",
     "main": "",
     "scripts": {
-        "start": "node ../../index",
-        "watch":"node ../../index w",
-        "build": "node ../../index r",
-        "deploytatic":"node ../../index --deploy-static"
+        "start": "node ../../bin/index",
+        "watch":"node ../../bin/index w",
+        "build": "node ../../bin/index r",
+        "deploystatic":"node ../../bin/index deploy-static"
     },
     "author": "nonjene",
     "license": "MIT",

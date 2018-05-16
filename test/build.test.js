@@ -31,7 +31,7 @@ describe('build', function () {
       config.getTarget().should.eql(['scope/proj1']);
     });
     it('getEnvDesc() echo right desc.', function () {
-      config.setConf('proSpecific', 'pro');
+      config.setConf('deployType', 'pro');
       (config.getEnvDesc().indexOf('生产环境') > -1).should.be.true();
     });
     it('getFrontendEnvDesc() echo right desc.', function () {
@@ -71,7 +71,7 @@ describe('build', function () {
       ////////////////
 
       config.setTarget('proj1');
-      config.setConf('proSpecific', 'test');
+      config.setConf('deployType', 'test');
 
       frontendConf.setFrontEndConf('test', config.getTarget());
       frontendConf.promiseSetDone
@@ -100,7 +100,7 @@ describe('build', function () {
       ////////////////
 
       config.setTarget('proj1');
-      config.setConf('proSpecific', 'pro');
+      config.setConf('deployType', 'pro');
 
       frontendConf.setFrontEndConf('produce', config.getTarget());
       frontendConf.promiseSetDone
@@ -125,7 +125,7 @@ describe('build', function () {
     it('run webpack dev watch', function (done) {
 
       config.setTarget('proj1');
-      config.setConf('proSpecific', 'test');
+      config.setConf('deployType', 'test');
       //config.setEnv('development');//webpack liveReload会导致测试不结束
 
       frontendConf.setFrontEndConf('test', config.getTarget());
