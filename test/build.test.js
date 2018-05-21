@@ -242,12 +242,21 @@ describe('build', function () {
       });
     });
     it('deploy static.', function(done) {
-      const { deployStaticAll, deployStaticEnvTest } = require('../bin/deployStatic');
+      const { deployStaticAll } = require('../bin/deployStatic');
       try{
         deployStaticAll(true, false,()=>done());
       
       }catch(e){
         ('deploy static').should.be.exactly('not throw error.');
+      }
+    });
+    it('copy all static files to test env.', function(done) {
+      const {  deployStaticEnvTest } = require('../bin/deployStatic');
+      try{
+        deployStaticEnvTest();
+      
+      }catch(e){
+        ('copy static to test env').should.be.exactly('not throw error.');
       }
     });
   });

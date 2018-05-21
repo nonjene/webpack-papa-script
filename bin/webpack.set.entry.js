@@ -3,14 +3,17 @@
  */
 
 const chalk = require('chalk');
+const md5File = require('md5-file');
 
 // 哪个活动文件夹,只能指定单个
 const { NODE_ENV, deployType, BUILD_TARGET } = process.env;
-const deployConfig = require('./config');
+const dc = require('./config');
 const compatV1 = require('./util/compat_v1');
-const {getAllProjName,getAllSubPageName} = require('./util/getAllProjName');
+const T = require('./util/tpl');
+const {getAllProjName, getAllSubPageName} = require('./util/getAllProjName');
+const {getCommConcatFullPath} = require('./deployStatic');
 
-const IsPro = deployType === deployConfig.getProDeployName();
+const IsPro = deployType === dc.getProDeployName();
 
 if (!BUILD_TARGET) throw new Error('没有找到活动名。请联系工具维护人员');
 
@@ -33,7 +36,7 @@ let htmlDeclare = [];
 let Folder = DIR_SRC + BUILD_TARGET + '/';
 
 // watch的情况，没有deployType
-let outputDir = deployConfig.getOutputDir(deployType || deployConfig.getDevDeployName());
+let outputDir = dc.getOutputDir(deployType || dc.getDevDeployName());
 
 const hasDuan = require('./util/hasDuan');
 
@@ -74,16 +77,16 @@ const setEntry = function (subpath, duan) {
   const { htmlFile } = targetConf;
   delete targetConf.htmlFile;
 
-  const cdnPrefix = IsPro ? deployConfig.cdnDomain : '';
-  const comFilePath = '/activity/static/common.js';
-  const linkParam = `?v=${deployConfig.commonVersion}`;
+  const cdnPrefix = IsPro ? dc.cdnDomain : '';
+  const comFilePath = path.join(T(dc.remotePath, {target: dc.staticFileSubPath}), dc.staticFileName);
+  const linkParam = `?h=${(md5File.sync(getCommConcatFullPath())||'').slice(-5)}`;
   // 这个别改，改了你就要重写compat_v1.js的匹配规则，否则会重复添加。
   const commonFileInject = `<script type="text/javascript" src="${cdnPrefix}${comFilePath}${linkParam}"></script>`;
 
   //兼容旧版
   if (!Object.keys(targetConf).length) {
     //插入script common.js去html
-    if (deployConfig.staticFileConcatOrder.length > 0) {
+    if (dc.staticFileConcatOrder.length > 0) {
       compatV1.injectCommon(
         Path + '/index.html',
         commonFileInject,
@@ -113,7 +116,7 @@ const setEntry = function (subpath, duan) {
         {
           // 在模版插入common.js
           moreScript:
-            deployConfig.staticFileConcatOrder.length > 0
+          dc.staticFileConcatOrder.length > 0
               ? commonFileInject
               : ''
         },
