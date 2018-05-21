@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { setConf, getProFetchName, getDevFetchName, ...config } = require('./config');
+const config = require('./config');
 const { asyncEach } = require('./util/asyncEach');
 const T = require('./util/tpl');
 
@@ -46,7 +46,7 @@ module.exports = {
     }
   },
   setFrontEndConf(...arg) {
-    const proName = getProFetchName();
+    const proName = config.getProFetchName();
     let [mode = proName, debug = true, target] = arg;
     if (arg.length === 2) {
       target = debug;
@@ -60,7 +60,7 @@ module.exports = {
 
     this.promiseSetDone = change({ mode, debug }, target);
 
-    setConf('fronendEnv', mode);
+    config.setConf('fronendEnv', mode);
     return this.promiseSetDone;
   }
 };
