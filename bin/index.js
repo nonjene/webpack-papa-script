@@ -24,8 +24,8 @@ program
 
   .option('w, --watch <活动名>', '开发一个活动，监听代码实时刷新，并开启服务', name => config.setTarget(name))
   .option('r, --release <活动名>', '发布某个活动的代码。默认生产环境', name => config.setTarget(name))
-  .option('pre', '代码发布到预发环境(只配合r命令)', () => config.setEnv('production'))
-  .option('test', '代码发布到测试环境(只配合r命令)', () => config.setEnv('production'))
+  .option('pre, --pre', '代码发布到预发环境(只配合r命令)', () => config.setEnv('production'))
+  .option('test, --test', '代码发布到测试环境(只配合r命令)', () => config.setEnv('production'))
 
   .option('duan <pc或m>', 'pc端or移动端，或者commSingleProjSubPage配置的文件夹名。', name => config.setDuan(name))
 
@@ -33,7 +33,7 @@ program
 
   .option('u, --upload [活动名]', '上传测试服务器', name => config.setTarget(name))
   .option('open', '打开测试服务器链接')
-  .option('scope <文件夹范围>', '发布所有活动的文件夹范围', name => config.setBuildAllScope(name))//todo: 这里没有执行
+  .option('scope, --scope <文件夹范围>', '发布所有活动的文件夹范围', name => config.setBuildAllScope(name))//todo: 这里没有执行
 
   .option('p, --production', '设置为：非开发模式。默认release自带此属性', () => config.setEnv('production'))
   .option('d, --development', '设置为：不压缩且包含inline-source-map。默认watch自带此属性', () => config.setEnv('development'))
