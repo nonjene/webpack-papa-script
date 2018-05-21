@@ -62,7 +62,7 @@ const setEntry = function (subpath, duan) {
   const Path = path.join(Folder, dir);
 
   if (hasDuan(BUILD_TARGET, dir).length < 1) {
-    return console.log(chalk.yellow(`${BUILD_TARGET}的${dir}端不存在, 已略过`) + '🌚');
+    return !process.env._mocha_test && console.log(chalk.yellow(`${BUILD_TARGET}的${dir}端不存在, 已略过`) + '🌚');
   }
 
   aDirName.push(Path);

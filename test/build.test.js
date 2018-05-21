@@ -8,16 +8,19 @@ describe('build', function () {
   const pathConfig = path.join(__dirname, '../bin/config.js');
   let config;
   let frontendConf;
+  let getAllProjName;
 
   const resetConfig = () => {
     if (require.cache[pathConfig]) {
       delete require.cache[pathConfig];
     }
+    getAllProjName = require('../bin/util/getAllProjName').getAllProjName;
     config = require('../bin/config');
   };
 
   before(function () {
     process.chdir(path.join(__dirname, './seed'));
+    process.env._mocha_test = true;
   });
   after(function () {
     process.chdir(dir);
@@ -42,12 +45,18 @@ describe('build', function () {
   });
 
   describe('#run build', function () {
-    let runBuild, runWatch;
-    let relDir, config_v;
+    let runBuild, runWatch,allProjAddr;
+    before(function(){
+      allProjAddr = getAllProjName(null, path.join(__dirname, './seed/src')).split(',').map(item=>path.join(__dirname, './seed/src', item));
+    })
+
     beforeEach(function () {
-      config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
       try {
-        shelljs.rm('-rf', config_v);
+        // 删除例子里的所有config_v.js文件
+        allProjAddr.forEach(projAddr=>{
+          shelljs.rm('-rf', path.join(projAddr, 'config_v.js'));
+        })
+        
       } catch (e) { }
 
       resetConfig();
@@ -64,7 +73,8 @@ describe('build', function () {
     });
 
     it('release a test project', function (done) {
-      relDir = path.join(process.cwd(), 'build/activity/proj1');
+      const relDir = path.join(process.cwd(), 'build/activity/proj1');
+      const config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
       try {
         shelljs.rm('-rf', relDir);
       } catch (e) { }
@@ -93,7 +103,8 @@ describe('build', function () {
         });
     });
     it('release as production', function (done) {
-      relDir = path.join(process.cwd(), 'dist/pro/proj1');
+      const relDir = path.join(process.cwd(), 'dist/pro/proj1');
+      const config_v = path.join(process.cwd(), 'src/proj1/config_v.js');
       try {
         shelljs.rm('-rf', relDir);
       } catch (e) { }
@@ -111,6 +122,67 @@ describe('build', function () {
             .should.containEql('produce');
 
           config.getTarget().should.eql(['proj1']);
+          config.getEnvDesc().should.containEql('生产环境');
+          config.getFrontendEnvDesc().should.containEql('生产环境');
+
+          return runBuild({ noLog: true });
+        })
+        .then(() => {
+          fs.existsSync(relDir).should.be.true();
+          done();
+        });
+    });
+    it('release a project with muti pages.', function (done) {
+      const relDir = path.join(process.cwd(), 'dist/pro/proj2');
+      const config_v = path.join(process.cwd(), 'src/proj2/config_v.js');
+      try {
+        shelljs.rm('-rf', relDir);
+      } catch (e) { }
+      ////////////////
+
+      config.setTarget('proj2');
+      config.setConf('deployType', 'pro');
+
+      frontendConf.setFrontEndConf('produce', config.getTarget());
+      frontendConf.promiseSetDone
+        .then(function () {
+          fs.existsSync(config_v).should.be.true();
+          fs
+            .readFileSync(config_v, { encoding: 'utf8' })
+            .should.containEql('produce');
+
+          config.getTarget().should.eql(['proj2']);
+          config.getEnvDesc().should.containEql('生产环境');
+          config.getFrontendEnvDesc().should.containEql('生产环境');
+
+          return runBuild({ noLog: true });
+        })
+        .then(() => {
+          fs.existsSync(relDir).should.be.true();
+          done();
+        });
+    });
+    it('release muti projects', function (done) {
+      const relDir = path.join(process.cwd(), 'dist/pro/subFolder');
+      const config_v1 = path.join(process.cwd(), 'src/subFolder/proj1/config_v.js');
+      const config_v2 = path.join(process.cwd(), 'src/subFolder/proj2/config_v.js');
+      try {
+        shelljs.rm('-rf', relDir);
+      } catch (e) { }
+      ////////////////
+      config.setBuildAllScope('subFolder');
+      config.setTarget(getAllProjName(config.getConf('buildAllScope')));
+      config.setConf('deployType', 'pro');
+
+      frontendConf.setFrontEndConf('produce', config.getTarget());
+      frontendConf.promiseSetDone
+        .then(function () {
+          fs.existsSync(config_v1).should.be.true();
+          fs.existsSync(config_v2).should.be.true();
+          fs.readFileSync(config_v2, { encoding: 'utf8' })
+            .should.containEql(fs.readFileSync(config_v2, { encoding: 'utf8' }));
+
+          config.getTarget().should.eql(['subFolder/proj1','subFolder/proj2']);
           config.getEnvDesc().should.containEql('生产环境');
           config.getFrontendEnvDesc().should.containEql('生产环境');
 
@@ -156,7 +228,7 @@ describe('build', function () {
       })
     });
     it('upload files of a test project to ftp.', function (done) {
-      relDir = path.join(process.cwd(), 'build/activity/proj1');
+      const relDir = path.join(process.cwd(), 'build/activity/proj1');
       fs.existsSync(relDir).should.be.true();
 
       config.setTarget('proj1');

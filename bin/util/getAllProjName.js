@@ -49,7 +49,7 @@ let ls = function (baseDir = DIR_SRC) {
  * 返回 'scope/page1,scope/scope2/page2'
  * @param scope
  * @param base  根目录
- * @returns {string}
+ * @returns {string}  base/scope 下的所有子目录字符串（不包含base/scope）, 以","隔开
  */
 const getAllProjName = function (scope, base = DIR_SRC) {
   let list = [];

@@ -33,7 +33,7 @@ program
 
   .option('u, --upload [活动名]', '上传测试服务器', name => config.setTarget(name))
   .option('open', '打开测试服务器链接')
-  .option('scope, --scope <文件夹范围>', '发布所有活动的文件夹范围', name => config.setBuildAllScope(name))//todo: 这里没有执行
+  .option('scope, --scope <文件夹范围>', '发布所有活动的文件夹范围', name => config.setBuildAllScope(name))
 
   .option('p, --production', '设置为：非开发模式。默认release自带此属性', () => config.setEnv('production'))
   .option('d, --development', '设置为：不压缩且包含inline-source-map。默认watch自带此属性', () => config.setEnv('development'))
