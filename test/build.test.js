@@ -253,7 +253,9 @@ describe('build', function () {
     it('copy all static files to test env.', function(done) {
       const {  deployStaticEnvTest } = require('../bin/deployStatic');
       try{
-        deployStaticEnvTest();
+        deployStaticEnvTest(()=>{
+          done();
+        });
       
       }catch(e){
         ('copy static to test env').should.be.exactly('not throw error.');

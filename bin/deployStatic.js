@@ -52,7 +52,7 @@ const deployStaticAll = function(isUpload, isLog=true, done) {
   );
 };
 
-const deployStaticEnvTest = function() {
+const deployStaticEnvTest = function(done) {
   copydir(
     path.resolve('resource/bundle'),
     path.resolve(path.join(OutputDir[2], commFileSubPath)),
@@ -60,6 +60,7 @@ const deployStaticEnvTest = function() {
       if (err) {
         throw new Error(`复制${commFileSubPath}错误`);
       }
+      done && done();
     }
   );
 };
