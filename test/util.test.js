@@ -101,13 +101,13 @@ __<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/co
     it('get all.', function() {
       const list = getAllProjName().split(',');
       list.should.be.an.instanceOf(Array);
-      list.should.containEql('_template_def').and.containEql('scope/proj2');
+      list.should.containEql('_template_def').and.containEql('subFolder/proj2');
     });
     it('get scope.', function() {
-      const list = getAllProjName('scope').split(',');
+      const list = getAllProjName('subFolder').split(',');
       list.should.be.an.instanceOf(Array);
       list.should.have.length(2);
-      list.should.containEql('scope/proj1').and.containEql('scope/proj2');
+      list.should.containEql('subFolder/proj1').and.containEql('subFolder/proj2');
     });
   });
   describe('#hasDuan()', function() {
@@ -126,14 +126,26 @@ __<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/co
       tar.should.containEql('m').and.not.containEql('pc');
     });
     it('get the actual dir.', function() {
-      const tar = hasDuan('scope/proj1',['m','pc']);
+      const tar = hasDuan('subFolder/proj1',['m','pc']);
       tar.should.be.an.instanceOf(Array);
       tar.should.containEql('m').and.not.containEql('pc');
     });
     it('get nothing.', function() {
-      const tar = hasDuan('scope/proj1','pc');
+      const tar = hasDuan('subFolder/proj1','pc');
       tar.should.be.an.instanceOf(Array);
       tar.should.lengthOf(0);
     });
   });
+  describe('#isProj()',function(){
+    let isproj;
+    before(function() {
+      isproj = require('../bin/util/isProj');
+    });
+    it('has proj "subFolder/proj1"',function(){
+      isproj('subFolder/proj1').should.be.true;
+    });
+    it('has proj "proj2"',function(){
+      isproj('proj2').should.be.true;
+    });
+  })
 });
