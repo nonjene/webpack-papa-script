@@ -25,7 +25,7 @@ const sep = path.sep.replace(/(\/|\\)/g, '\\$1');
 const rootDir = path.join(process.cwd(), './src');
 const plugins = [
   new ExtractTextPlugin({
-    filename: `${bundlePath}/[name]${fileNameHash}.css`,
+    filename: `[name]/main${fileNameHash}.css`,
     allChunks: true
   }),
   //@手动把公共的集中到这里
@@ -114,7 +114,7 @@ const postcssConf = {
 };
 
 const htmlLoaderOpt = {
-  minimize: isProduction,
+  minimize: IsProduction,
   ignoreCustomFragments: [/{{.*?}}/],
   root: rootDir,
   attrs: ['img:src', 'img:data-src', 'link:href']
@@ -147,12 +147,13 @@ const webpackConfig = {
   },
   resolve: {
     modules: ['node_modules', rootDir],
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
     alias: {}
   },
   plugins,
   module: {
     rules: [
+      //#region js,sw
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components|sw.js)/,
@@ -212,6 +213,8 @@ const webpackConfig = {
             loader: 'es3ify-loader'
           }
         : {},
+      //#endregion
+      //#region css
       {
         test: /\.css$/,
         exclude: /http/,
@@ -239,6 +242,8 @@ const webpackConfig = {
               ]
             })
       },
+      //#endregion
+      //#region pic
       {
         test: /\.(png|gif)$/,
         exclude: /http|iso/,
@@ -262,9 +267,11 @@ const webpackConfig = {
         exclude: /http/,
         use: [picUrlLoaderOpt]
       },
+      //#endregion
+      //#region tpl
       {
         test: /\.handlebars$/,
-        exclude: new RegExp(`resources${sep}html`),
+        exclude: new RegExp(`resource${sep}html`),
         use: [
           {
             loader: 'handlebars-loader',
@@ -280,7 +287,7 @@ const webpackConfig = {
         ]
       },
       {
-        test: new RegExp(`resources${sep}html${sep}.+\\.handlebars$`),
+        test: new RegExp(`resource${sep}html${sep}.+\\.handlebars$`),
         use: [
           {
             loader: 'handlebars-loader'
@@ -301,6 +308,7 @@ const webpackConfig = {
           loader: 'html-loader'
         }
       },
+      //#endregion
       {
         test: /\.(woff|woff2|eot|ttf|pdf)$/,
         exclude: /http/,
@@ -314,7 +322,7 @@ const webpackConfig = {
           }
         ]
       }
-    ],
+    ]
   },
   devServer: {
     contentBase: path.join(process.cwd(), './build'),
@@ -334,7 +342,7 @@ const webpackConfig = {
         );
     },
     allowedHosts: ['.'] // allow all
-  },
+  }
   /*imageWebpackLoader: {
       mozjpeg: {
           quality: 100
