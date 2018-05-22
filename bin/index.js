@@ -4,7 +4,7 @@ const fs = require("fs");
 
 const { build, watch } = require('./build');
 const { create } = require('./create');
-const initProj = require('./initProj');
+//const initProj = require('./initProj');
 const ftp = require('./ftp');
 const test = require('./test');
 const serve = require('./serve');
@@ -47,10 +47,7 @@ program
 
   .option('P, --proxy-port <端口>', '定义本地测试的平台页面服务端口，默认80', name => config.setConf('proxyPort', name))
   .option('deploy-static', '把/resource/static的文件复制到3个环境')
-  // .option('init --init <项目文件夹名>', '创建项目目录')
-  // .option('set-source <git地址>', 'git url，指定 init 创建目录的源')
-
-  .option('debug', '测试代码', () => test.getAllProjName())
+  
   .parse(process.argv);
 
 // 配置写入process.env的形式
@@ -111,14 +108,6 @@ if (program.deployStatic) {
   deployStaticAll(!!program.upload)
 }
 
-// 创建项目
-if (program.init) {
-  const projName = program.init;
-  console.log(chalk.cyan('正在初始化项目...'));
-  initProj(projName, program.setSource || config.getConf('seedUrl'))
-    .then(() => console.log(chalk.green(`项目 ${projName} 创建成功。`)))
-    .catch(e => console.log(chalk.red(e)));
-}
 
 function upload() {
   ftp

@@ -3,7 +3,7 @@
  */
 const path = require('path');
 const { getConf, getTarget } = require('./config');
-const serve = require('./serve');
+//const serve = require('./serve');
 
 const chalk = require('chalk');
 
@@ -145,11 +145,11 @@ const watch = function (conf = {}) {
     // watch 只能watch一个活动
     watchOne(0,hasLog)
       .then((watching) => {
-        !conf.noServ && serve.start();
+        //!conf.noServ && serve.start();
         resolve(watching);
       })
       .catch(err => {
-        !conf.noServ && serve.stop();
+        //!conf.noServ && serve.stop();
         reject(err);
       });
   })

@@ -1,31 +1,39 @@
 const path = require('path');
 const { fromJS } = require('immutable');
 const webpack = require('webpack');
-const LiveReloadPlugin = require('webpack-livereload-plugin');
+const proxy = require('http-proxy-middleware');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const autoprefixer = require('autoprefixer');
+
 const SriPlugin = require('webpack-subresource-integrity');
 
 const T = require('./util/tpl');
-const deployConfig = require('./config');
+const dc = require('./config');
 
 const Set = require('./webpack.set.entry');
-const IsPro = Set.deployType === deployConfig.getProDeployName();
-const IsTest = Set.deployType ===  deployConfig.getDevDeployName();
+const IsPro = Set.deployType === dc.getProDeployName();
+const IsTest = Set.deployType === dc.getDevDeployName();
 const IsProduction = process.env.NODE_ENV === 'production';
 
-let CSS_Module_Loader_Pargram,
-  CSS_SourceMap,
-  imgCompress,
-  publicPath;
+let CSS_Module_Loader_Pargram, CSS_SourceMap, imgCompress, publicPath;
 const vendorLoc = Set.DUAN.length < 2 ? Set.DUAN[0] : 'vendors';
 
 const fileNameHash = IsProduction ? '_[hash:8]' : '';
 
-let plugins = [
-  new ExtractTextPlugin(`[name]/main${fileNameHash}.css`),
+const kiss_ie8 = true; // Same name as uglify's IE8 option. Turn this on to enable HMR.
+const sep = path.sep.replace(/(\/|\\)/g, '\\$1');
+
+const rootDir = path.join(process.cwd(), './src');
+const plugins = [
+  new ExtractTextPlugin({
+    filename: `${bundlePath}/[name]${fileNameHash}.css`,
+    allChunks: true
+  }),
   //@手动把公共的集中到这里
-  new webpack.optimize.CommonsChunkPlugin('vendors', `${vendorLoc}/vendors${fileNameHash}.js`),
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendors',
+    filename: `${vendorLoc}/vendors${fileNameHash}.js`,
+    minChunks: 3
+  }),
   /* new webpack.ProvidePlugin({
        $: "jquery",
        jQuery: "jquery",
@@ -34,19 +42,19 @@ let plugins = [
    }),*/
   new SriPlugin({
     hashFuncNames: ['sha512'],
-    enabled: process.env.NODE_ENV === 'production',
+    enabled: process.env.NODE_ENV === 'production'
   }),
   ...Set.htmlDeclare
 ];
 
-
+/* plugin define */
 /* istanbul ignore else  */
 if (IsProduction) {
   //console.log('目前编译生产环境');
   plugins.push(
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production')
+        NODE_ENV: JSON.stringify('production')
       }
     })
   );
@@ -55,142 +63,277 @@ if (IsProduction) {
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false,
-          screw_ie8: false
+          screw_ie8: !kiss_ie8
         },
-        mangle: { screw_ie8: false },
-        output: { screw_ie8: false }
-      })
-    )
-
-  }
-  CSS_Module_Loader_Pargram = '?modules&importLoaders=1&localIdentName=[hash:6]';
-  CSS_SourceMap = '';
-  imgCompress = '!image-webpack-loader';
-  if (IsTest) {
-    publicPath = T(deployConfig.remotePath, { target: Set.module });
-  } else {
-    publicPath = path.join(
-      IsPro ? deployConfig.cdnDomain : '',
-      T(deployConfig.remotePath, {
-        target: Set.module
+        mangle: { screw_ie8: !kiss_ie8 },
+        output: { screw_ie8: !kiss_ie8 }
       })
     );
   }
 
-} else {
+  CSS_Module_Loader_Pargram =
+    '?modules&importLoaders=1&localIdentName=[hash:6]';
+  CSS_SourceMap = '';
+  imgCompress = '!image-webpack-loader';
+
+  if (IsTest) {
+    publicPath = T(dc.remotePath, { target: Set.module });
+  } else {
+    publicPath = path.join(
+      IsPro ? dc.cdnDomain : '',
+      T(dc.remotePath, {
+        target: Set.module
+      })
+    );
+  }
+}
+// not IsProduction
+else {
   //console.log('目前编译开发环境');
-  plugins.push(
-    //live reload
-    new LiveReloadPlugin({
-      port: 35729,
-      appendScriptTag: true,
-      ignore: null
-    })
-  );
-  CSS_Module_Loader_Pargram = '?modules&importLoaders=1&localIdentName=[path]__[name]__[local]__[hash:3]';
+  plugins.push(new webpack.HotModuleReplacementPlugin());
+
+  CSS_Module_Loader_Pargram =
+    '?modules&importLoaders=1&localIdentName=[path]__[name]__[local]__[hash:3]';
   CSS_SourceMap = '?sourceMap';
   imgCompress = '';
-  publicPath = T(deployConfig.remotePath, { target: Set.module });
-
+  publicPath = T(dc.remotePath, { target: Set.module });
 }
 
-let configWrap = {
+/* loader config define */
+const postcssConf = {
+  loader: 'postcss-loader',
+  options: {
+    ident: 'postcss',
+    sourceMap: true,
+    plugins: loader => [
+      require('autoprefixer')()
+      // 不能使用cssnano。require.ensure时，需要ExtractTextPlugin的allChunks: true，fallback 走style-loader, 导致cssnano改keyFrame名字时重复了。。
+      //require('cssnano')()
+    ]
+  }
+};
+
+const htmlLoaderOpt = {
+  minimize: isProduction,
+  ignoreCustomFragments: [/{{.*?}}/],
+  root: rootDir,
+  attrs: ['img:src', 'img:data-src', 'link:href']
+};
+
+const babelPlugin = [
+  '@babel/plugin-transform-runtime',
+  '@babel/plugin-proposal-object-rest-spread',
+  '@babel/plugin-transform-object-assign'
+  //'@babel/plugin-syntax-dynamic-import'
+];
+const picUrlLoaderOpt = {
+  loader: 'file-loader',
+  options: {
+    name: '/img/[name]_[hash:5].[ext]' /*+ imgCompress*/
+  }
+};
+
+/***** (⁎⁍̴̛ᴗ⁍̴̛⁎) *****/
+
+const webpackConfig = {
+  context: path.resolve('./'),
   entry: Object.assign({}, Set.entry),
   output: {
     path: path.resolve(Set.outputDir, Set.module),
     filename: `[name]/bundle${fileNameHash}.js`,
     publicPath,
-    chunkFilename: `/${vendorLoc}/chunk_[name]${fileNameHash}.js`,
+    chunkFilename: `${vendorLoc}/chunk_[name]${fileNameHash}.js`,
     crossOriginLoading: 'anonymous'
   },
   resolve: {
-    root: path.resolve(`${process.cwd()}/src/`),
-    alias: {},
-    extensions: ['', '.js', '.jsx']
+    modules: ['node_modules', rootDir],
+    extensions: ['', '.js', '.jsx'],
+    alias: {}
   },
+  plugins,
   module: {
-    loaders: [
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components|sw.js)/,
+        //include:/node_modules\/fow-encrypt/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            presets: [
+              '@babel/preset-env' /*'@babel/preset-stage-0' ie8 will crash*/
+            ],
+            plugins: babelPlugin
+          }
+        }
+      },
+      {
+        test: /sw\.js$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name]_[hash:8].[ext]'
+            }
+          }
+        ]
+      },
+      {
+        test: /manifest\.json$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.jsx$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            presets: [
+              '@babel/preset-env',
+              '@babel/preset-react' /*'@babel/preset-stage-0' ie8 will crash*/
+            ],
+            plugins: babelPlugin
+          }
+        }
+      },
+      IsProduction && kiss_ie8
+        ? {
+            test: /\.jsx?$/,
+            enforce: 'post',
+            loader: 'es3ify-loader'
+          }
+        : {},
+      {
+        test: /\.css$/,
+        exclude: /http/,
+        use: !IsProduction
+          ? ['style-loader', 'css-loader', 'resolve-url-loader']
+          : /*[MiniCssExtractPlugin.loader, 'css-loader', 'resolve-url-loader']*/
+            ExtractTextPlugin.extract({
+              fallback: ['style-loader'],
+              use: ['css-loader', postcssConf, 'resolve-url-loader']
+            })
+      },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style' + CSS_SourceMap, 'css!postcss!resolve-url!sass')/*ExtractTextPlugin.extract(
-             'style?sourceMap',
-             'css&importLoaders=1',// + CSS_Module_Loader_Pargram +
-             '!postcss' +
-             '!resolve-url' +
-             '!sass?sourceMap'
-             )*/
-      }, {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style', 'css!postcss')
-      },
-
-      {
-        test: /\.png|gif$/,
-        exclude: /http|iso/,
-        loader: "url-loader?limit=4000&name=" + "/img/[name]_[hash:5].[ext]" /*+ imgCompress*/
-      },
-      {
-        test: /\.iso.png$/,
         exclude: /http/,
-        loader: "url-loader?limit=1&name=" + "/img/[name]_[hash:5].[ext]" /*+ imgCompress*/
+        use: !IsProduction
+          ? ['style-loader', 'css-loader', 'resolve-url-loader', 'sass-loader']
+          : /*[MiniCssExtractPlugin.loader, 'css-loader', 'resolve-url-loader', 'sass-loader']*/
+            ExtractTextPlugin.extract({
+              fallback: ['style-loader'],
+              use: [
+                'css-loader',
+                postcssConf,
+                'resolve-url-loader',
+                'sass-loader'
+              ]
+            })
+      },
+      {
+        test: /\.(png|gif)$/,
+        exclude: /http|iso/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 4096,
+              name: '/img/[name]_[hash:5].[ext]' /*+ imgCompress*/
+            }
+          }
+        ]
+      },
+      {
+        test: /\.iso.(png|gif)$/,
+        exclude: /http/,
+        use: [picUrlLoaderOpt]
       },
       {
         test: /\.jpe?g|svg$/,
         exclude: /http/,
-        loader: "file-loader?&name=" + "/img/[name]_[hash:5].[ext]" /*+ imgCompress*/
+        use: [picUrlLoaderOpt]
       },
-      { test: /\.handlebars$/, loader: "handlebars-loader", query: { debug: false, helperDirs: [...Set.helperDirs] } },
       {
-        test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel', // 'babel-loader' is also a legal name to reference
-        query: {
-          presets: ['es2015']
-        }
-      }, {
-        test: /\.jsx$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel', // 'babel-loader' is also a legal name to reference
-        query: {
-          presets: ['es2015']
-        }
+        test: /\.handlebars$/,
+        exclude: new RegExp(`resources${sep}html`),
+        use: [
+          {
+            loader: 'handlebars-loader',
+            options: { debug: false, helperDirs: [...Set.helperDirs] }
+          },
+          {
+            loader: 'extract-loader'
+          },
+          {
+            loader: 'html-loader',
+            options: htmlLoaderOpt
+          }
+        ]
+      },
+      {
+        test: new RegExp(`resources${sep}html${sep}.+\\.handlebars$`),
+        use: [
+          {
+            loader: 'handlebars-loader'
+          }
+        ]
       },
       {
         test: /\.tmpl$/,
-        loader: "html-loader",
-        query: {
-          minimize: true
+        use: {
+          loader: 'html-loader',
+          options: htmlLoaderOpt
         }
       },
       //为了解决html修改后不会自动reload的问题
       {
-        test: /index.html/,
-        loader: "html-loader",
-        query: {
-          minimize: false
+        test: /index.html$/,
+        use: {
+          loader: 'html-loader'
         }
       },
       {
-        test: /\.(woff|woff2|eot|ttf)$/,
+        test: /\.(woff|woff2|eot|ttf|pdf)$/,
         exclude: /http/,
-        loader: "url-loader?limit=1000&name=" + "/font/[name]_[hash:5].[ext]"
-      },
-      {
-        test: /\.(pdf)$/,
-        exclude: /http/,
-        loader: "url-loader?limit=1&name=" + "/files/[name]_[hash:5].[ext]"
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 1,
+              name: '/font/[name]_[hash:5].[ext]'
+            }
+          }
+        ]
       }
-
-    ]
+    ],
   },
-  plugins: plugins,
-  htmlLoader: {
-    ignoreCustomFragments: [/\{\{.*?}}/],
-    root: path.resolve(`${process.cwd()}/src/`),
-    attrs: ['img:src', 'img:data-src', 'link:href']
-  },
-  postcss: function () {
-    return [autoprefixer];
+  devServer: {
+    contentBase: path.join(process.cwd(), './build'),
+    publicPath: '',
+    hot: true,
+    inline: true,
+    port: dc.servePort,
+    before(app) {
+      // 代理筛选
+      dc.proxyFilterPathname &&
+        app.get(
+          dc.proxyFilterPathname,
+          proxy({
+            target: `http://localhost:${dc.proxyPort}`,
+            changeOrigin: true
+          })
+        );
+    },
+    allowedHosts: ['.'] // allow all
   },
   /*imageWebpackLoader: {
       mozjpeg: {
@@ -210,15 +353,16 @@ let configWrap = {
           ]
       }
   }*/
-
 };
 if (process.env.NODE_ENV !== 'production') {
-  configWrap.devtool = "#inline-source-map";
+  webpackConfig.devtool = '#inline-source-map';
 } else if (IsTest) {
-  configWrap.devtool = 'eval';
+  webpackConfig.devtool = 'eval';
 }
 
 //fromJS toJS
-configWrap = fromJS(configWrap).mergeDeep(deployConfig.webpackConfig).toJS();
+const mergedConfig = fromJS(webpackConfig)
+  .mergeDeep(dc.webpackConfig)
+  .toJS();
 
-module.exports = configWrap;
+module.exports = mergedConfig;
