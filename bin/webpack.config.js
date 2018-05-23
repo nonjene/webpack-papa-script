@@ -137,7 +137,7 @@ const babelPlugin = [
 const picUrlLoaderOpt = {
   loader: 'file-loader',
   options: {
-    name: '/img/[name]_[hash:5].[ext]' /*+ imgCompress*/
+    name: 'img/[name]_[hash:5].[ext]' /*+ imgCompress*/
   }
 };
 
@@ -260,7 +260,7 @@ const webpackConfig = {
             loader: 'url-loader',
             options: {
               limit: 4096,
-              name: '/img/[name]_[hash:5].[ext]' /*+ imgCompress*/
+              name: 'img/[name]_[hash:5].[ext]' /*+ imgCompress*/
             }
           }
         ]

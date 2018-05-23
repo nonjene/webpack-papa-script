@@ -5,15 +5,9 @@ module.exports = {
     user: "testlimincom",
     password: "testlimincom"
   },
-  remoteBasePath: "",
-  remotePath: "/activity/{$target}",
-  localAssetPath: "build/activity",
-  domainName: "http://m.okpapa.net",
-  cdnDomain: "https://images.okpapa.com",
-  proxyPort: 80,
-  servePort: 3005,
+  
   staticFileConcatOrder: ["reset.js", "config.js",  "responsive.js"],
-  commonVersion: "12",
+  
   commSingleProjSubPage:['m', 'pc'],
   webpackConfig: {
     resolve: {
