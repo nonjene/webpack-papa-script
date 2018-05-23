@@ -342,7 +342,9 @@ const webpackConfig = {
     quiet: !!process.env._mocha_test,
     before(app) {
       // 代理筛选
-      for (let { filterPathname, ...proxyConf } of aProxy) {
+      for (let proxyConf of aProxy) {
+        let {filterPathname} = proxyConf;
+        delete proxyConf.filterPathname;
         app.get(filterPathname, proxy(proxyConf));
       }
     },

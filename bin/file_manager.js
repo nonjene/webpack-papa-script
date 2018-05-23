@@ -103,7 +103,7 @@ module.exports = {
     asyncEach(
       filesInfo,
       function ({ fileName, localFullPath, remoteFullPath }, next) {
-        const RealRemoteFullPath = remoteBasePath + remoteFullPath; //打个布丁
+        const RealRemoteFullPath = path.join(remoteBasePath, remoteFullPath); //打个布丁
 
         return uploadFunc(RealRemoteFullPath, localFullPath, err => {
           if (err) {
