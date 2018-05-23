@@ -104,10 +104,7 @@ const watchOne = function (which = 0, hasLog = true) {
          
           resolve(watching);
         })
-        .catch(err => {
-          hasLog && console.log(chalk.red(err));
-          reject(err);
-        });
+        .catch(reject);
     }
     catch (err) { reject(err); }
 

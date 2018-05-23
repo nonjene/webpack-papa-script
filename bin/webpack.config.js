@@ -23,7 +23,15 @@ const kiss_ie8 = true; // Same name as uglify's IE8 option. Turn this on to enab
 const sep = path.sep.replace(/(\/|\\)/g, '\\$1');
 
 const rootDir = path.join(process.cwd(), './src');
+
+const aProxy = dc.proxy
+  ? Array.isArray(dc.proxy)
+    ? dc.proxy
+    : [dc.proxy]
+  : [];
+
 const plugins = [
+  /*'syntax-flow',*/
   new ExtractTextPlugin({
     filename: `[name]/main${fileNameHash}.css`,
     allChunks: true
@@ -326,20 +334,17 @@ const webpackConfig = {
   },
   devServer: {
     contentBase: path.join(process.cwd(), './build'),
-    publicPath: '',
+    publicPath,
     hot: true,
     inline: true,
     port: dc.servePort,
+    host: 'localhost',
+    quiet: !!process.env._mocha_test,
     before(app) {
       // 代理筛选
-      dc.proxyFilterPathname &&
-        app.get(
-          dc.proxyFilterPathname,
-          proxy({
-            target: `http://localhost:${dc.proxyPort}`,
-            changeOrigin: true
-          })
-        );
+      for (let { filterPathname, ...proxyConf } of aProxy) {
+        app.get(filterPathname, proxy(proxyConf));
+      }
     },
     allowedHosts: ['.'] // allow all
   }
