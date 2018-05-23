@@ -12,7 +12,7 @@ module.exports = {
   cdnDomain: "https://images.okpapa.com",
   proxyPort: 80,
   servePort: 3005,
-  staticFileConcatOrder: ["config.js", "reset.js", "responsive.js"],
+  staticFileConcatOrder: ["reset.js", "config.js",  "responsive.js"],
   commonVersion: "12",
   commSingleProjSubPage:['m', 'pc'],
   webpackConfig: {
