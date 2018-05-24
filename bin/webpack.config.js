@@ -19,7 +19,7 @@ const vendorLoc = Set.DUAN.length < 2 ? Set.DUAN[0] : 'vendors';
 
 const fileNameHash = IsProduction ? '_[hash:8]' : '';
 
-const kiss_ie8 = true; // Same name as uglify's IE8 option. Turn this on to enable HMR.
+const kiss_ie8 = dc.kiss_ie8; // Same name as uglify's IE8 option. Turn this on to enable HMR.
 const sep = path.sep.replace(/(\/|\\)/g, '\\$1');
 
 const rootDir = path.join(process.cwd(), './src');
