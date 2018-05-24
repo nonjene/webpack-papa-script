@@ -14,10 +14,12 @@ const chalk = require("chalk");
 const copy = function(name, templateName = "def", resolve, reject) {
     const tplPath = path.resolve(`${process.cwd()}/src/_template_${templateName}`);
 
+     /* istanbul ignore if */
     if (!fs.existsSync(tplPath)) return reject(`模版: "${templateName}"不存在，请检查。`);
 
     copydir(tplPath, path.resolve(`${process.cwd()}/src/${name}`), err => {
         if (err) {
+            /* istanbul ignore next */
             reject(err);
         } else {
             resolve();

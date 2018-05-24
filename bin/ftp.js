@@ -29,9 +29,7 @@ module.exports = {
 
     promiseUpload
       .then(() => this.end())
-      .catch(/* istanbul ignore next */ function() { 
-        console.error(e);
-      });
+      .catch(e => { /* istanbul ignore next */ console.error(e) });
 
     return promiseUpload;
   },
@@ -47,9 +45,7 @@ module.exports = {
 
     promiseUpload
       .then(() => this.end())
-      .catch(/* istanbul ignore next */ function() { 
-        console.error(e);
-      });
+      .catch(e => { /* istanbul ignore next */ console.error(e) });
 
     return promiseUpload;
   },
@@ -62,7 +58,7 @@ module.exports = {
         this.mkdir(remoteDir)
           .then(() => this.putFile(remoteFullPath, localFullPath))
           .then(() => next())
-          .catch(/* istanbul ignore next */ function() {
+          .catch(/* istanbul ignore next */ function(e) {
             console.log(chalk.yellow(e));
             return next(e);
           });

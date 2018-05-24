@@ -11,24 +11,30 @@ const { asyncEach } = require('./util/asyncEach');
 const concatFile = require('./util/concatFile');
 const logger = require('./util/logger');
 
-const OutputDir = Object.keys(config.deployEnvType).map(name=>config.deployEnvType[name]);
+const OutputDir = Object.keys(config.deployEnvType).map(
+  name => config.deployEnvType[name]
+);
 const commFileName = config.staticFileName; //'common.js'
-const commFileSubPath = config.staticFileSubPath;//'static'
+const commFileSubPath = config.staticFileSubPath; //'static'
 
-const getCommConcatFullPath = ()=> path.resolve(path.join(process.cwd(), `resource/bundle/${commFileName}`));
+const getCommConcatFullPath = () =>
+  path.resolve(path.join(process.cwd(), `resource/bundle/${commFileName}`));
 const doConcat = function() {
   return concatFile(
     config
       .getConf('staticFileConcatOrder')
       .map(fileName => path.join(process.cwd(), `resource/js/${fileName}`)),
-      getCommConcatFullPath()
+    getCommConcatFullPath()
   );
 };
 
 const deployStaticAll = function(isUpload, done, uploadDone) {
   doConcat()
     .then(() => logger.log(chalk.cyan(`${commFileName} 压缩成功。`)))
-    .catch(e => logger.log(chalk.red(e)));
+    .catch(e => {
+      /* istanbul ignore next */
+      logger.log(chalk.red(e));
+    });
 
   asyncEach(
     OutputDir,
@@ -38,6 +44,7 @@ const deployStaticAll = function(isUpload, done, uploadDone) {
         path.resolve(path.join(dir, commFileSubPath)),
         err => {
           if (err) {
+            /* istanbul ignore next */
             throw new Error(`复制${commFileSubPath}错误`);
           } else {
             return next();
@@ -47,7 +54,13 @@ const deployStaticAll = function(isUpload, done, uploadDone) {
     },
     () => {
       logger.log(chalk.cyan('静态资源已复制'));
-      isUpload && ftp.uploadStatic(commFileSubPath, { desc: '上传到测试服务器', isLog: false }).then(uploadDone);
+      isUpload &&
+        ftp
+          .uploadStatic(commFileSubPath, {
+            desc: '上传到测试服务器',
+            isLog: false
+          })
+          .then(uploadDone);
       done && done();
     }
   );
@@ -58,6 +71,7 @@ const deployStaticEnvTest = function(done) {
     path.resolve('resource/bundle'),
     path.resolve(path.join(OutputDir[2], commFileSubPath)),
     err => {
+      /* istanbul ignore if */
       if (err) {
         throw new Error(`复制${commFileSubPath}错误`);
       }
@@ -69,5 +83,5 @@ const deployStaticEnvTest = function(done) {
 module.exports = {
   deployStaticAll,
   deployStaticEnvTest,
-  getCommConcatFullPath,
+  getCommConcatFullPath
 };

@@ -33,6 +33,7 @@ const writeConf = function(props, target) {
     if (!fs.existsSync(dir)) return reject(`指定的文件夹不存在：${target}, ${dir}`);
 
     fs.writeFile(path.join(dir, 'config_v.js'), T(config.frontendConfCode, props), err => {
+       /* istanbul ignore if */
       if (err) return reject(err);
       resolve();
     });
@@ -41,10 +42,9 @@ const writeConf = function(props, target) {
 
 module.exports = {
   promiseSetDone: {
-    then (cb) {
-      /* istanbul ignore next */
+    
+    then:/* istanbul ignore next: this whole funciton is for unexpected situation. */ function (cb) { 
       console.log("Haven't set frontend config, use last setting.");
-      /* istanbul ignore next */
       return cb && cb('nothing');
     }
   },
