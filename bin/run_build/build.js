@@ -10,6 +10,7 @@ module.exports = function() {
 
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
+      /* istanbul ignore if */
       if (err) {
         return reject(err);
       }

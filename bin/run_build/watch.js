@@ -16,6 +16,7 @@ module.exports = function() {
     const server = new WebpackDevServer(compiler, devServerOptions);
 
     server.listen(devServerOptions.port, 'localhost', err => {
+      /* istanbul ignore if */
       if (err) {
         return reject(err);
       }

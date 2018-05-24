@@ -10,11 +10,13 @@ const { NODE_ENV, deployType, BUILD_TARGET } = process.env;
 const dc = require('./config');
 const compatV1 = require('./util/compat_v1');
 const T = require('./util/tpl');
+const logger = require('./util/logger');
 const {getAllProjName, getAllSubPageName} = require('./util/getAllProjName');
 const {getCommConcatFullPath} = require('./deployStatic');
 
 const IsPro = deployType === dc.getProDeployName();
 
+/* istanbul ignore if */
 if (!BUILD_TARGET) throw new Error('没有找到活动名。请联系工具维护人员');
 
 // 编译pc端还是移动端还是两端都编译
@@ -65,7 +67,7 @@ const setEntry = function (subpath, duan) {
   const Path = path.join(Folder, dir);
 
   if (hasDuan(BUILD_TARGET, dir).length < 1) {
-    return !process.env._mocha_test && console.log(chalk.yellow(`${BUILD_TARGET}的${dir}端不存在, 已略过`) + '🌚');
+    return logger.log(chalk.yellow(`${BUILD_TARGET}的${dir}端不存在, 已略过`) + '🌚');
   }
 
   aDirName.push(Path);
@@ -131,7 +133,7 @@ const setEntry = function (subpath, duan) {
       get: function () {
         return getHtml(path.join(Path, htmlFile));
       },
-      set: function () { }
+      //set: function () { }
     });
 
     htmlDeclare.push(new HtmlWebpackPlugin(opt));
@@ -159,6 +161,7 @@ if (fs.statSync(Folder).isDirectory()) {
    */
   entry.vendors = [`${Folder}/config_v.js`];
 } else {
+   /* istanbul ignore next */
   throw new Error(Folder + '文件夹不存在');
 }
 

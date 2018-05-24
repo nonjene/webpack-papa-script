@@ -16,6 +16,7 @@ const serveOpen = function () {
           DefServePort = getConf('servePort');
 
     return new Promise((resovle, reject) => {
+        /* istanbul ignore if */
         if (serve) return reject('只能执行一次server start.');
         logger.log('serve:'+DefProxyPort);
         serve = exec(`node ${path.join(__dirname, '../server')} S ${DefServePort}  P ${DefProxyPort}`, function (err, stdout, stderr) {
@@ -38,6 +39,7 @@ const serveOpen = function () {
 
 };
 const stop = function () {
+    /* istanbul ignore if */
     if (!serve) return;
     serve.kill();
 
@@ -54,7 +56,7 @@ const start = function ({isOpen=true}={}) {
 
             isOpen && opn(addr, { wait: false });
         })
-        .catch(err => console.error(err));
+        .catch(err => /* istanbul ignore next */console.error(err));
 };
 
 module.exports = {

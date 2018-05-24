@@ -34,6 +34,7 @@ module.exports = {
           return next();
         }
         fs.readdir(dir, (err, files) => {
+           /* istanbul ignore if */
           if (err) throw err;
 
           allFilesInfo = [
@@ -94,6 +95,7 @@ module.exports = {
     uploadFunc,
     done
   ) {
+     /* istanbul ignore if */
     if (!filesInfo.length) {
       logger.log(
         "没有找到指定的文件，请确认活动文件夹名是否正确？如“report/2017_1，xunlei”"
@@ -107,6 +109,7 @@ module.exports = {
         const RealRemoteFullPath = path.join(remoteBasePath, remoteFullPath); //打个布丁
 
         return uploadFunc(RealRemoteFullPath, localFullPath, err => {
+           /* istanbul ignore if */
           if (err) {
             logger.log("🙅 " + chalk.yellow("上传失败：") + fileName);
           } else {

@@ -96,6 +96,7 @@ const watchOne = function (which = 0) {
     const Tar = getConf('target')[which];
     logger.log(`${chalk.blue('监听代码修改：')}${Tar} 的 ${getConf('duan').join(',')} 端...`);
 
+    /* istanbul ignore if */
     if (!isProj(Tar)) {
       return reject(errMsgNoMPC(Tar));
     }
@@ -110,7 +111,11 @@ const watchOne = function (which = 0) {
         })
         .catch(reject);
     }
-    catch (err) { reject(err); }
+   
+    catch (err) {  
+      /* istanbul ignore next */
+      reject(err); 
+    }
 
   })
 
@@ -138,6 +143,7 @@ const watch = function (conf = {}) {
   logInfo();
 
   return new Promise((resolve, reject) => {
+     /* istanbul ignore if */
     if (getConf('target').length > 1) {
       logger.log(chalk.red('只能监听你输入的第一个活动'));
     }
@@ -149,6 +155,7 @@ const watch = function (conf = {}) {
       })
       .catch(err => {
         //!conf.noServ && serve.stop();
+        /* istanbul ignore next */
         reject(err);
       });
   })

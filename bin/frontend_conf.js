@@ -29,6 +29,7 @@ const change = function(props, targets) {
 const writeConf = function(props, target) {
   return new Promise((resolve, reject) => {
     const dir = `${process.cwd()}/src/${target}`;
+    /* istanbul ignore if */
     if (!fs.existsSync(dir)) return reject(`指定的文件夹不存在：${target}, ${dir}`);
 
     fs.writeFile(path.join(dir, 'config_v.js'), T(config.frontendConfCode, props), err => {
@@ -40,8 +41,10 @@ const writeConf = function(props, target) {
 
 module.exports = {
   promiseSetDone: {
-    then(cb) {
+    then (cb) {
+      /* istanbul ignore next */
       console.log("Haven't set frontend config, use last setting.");
+      /* istanbul ignore next */
       return cb && cb('nothing');
     }
   },
@@ -52,6 +55,7 @@ module.exports = {
       target = debug;
       debug = true;
     }
+    /* istanbul ignore if */
     if (arg.length === 1) {
       throw new Error('构建错误：设置setFrontEndConf没有接收到target。');
     }

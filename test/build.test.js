@@ -309,7 +309,7 @@ describe('build', function() {
         config.setTarget('proj1');
         config.setConf('deployType', 'test');
 
-        //config.setEnv('development');//webpack liveReload会导致测试不结束
+        config.setEnv('development');
 
         frontendConf.setFrontEndConf('test', config.getTarget());
         return new Promise(resolve => {

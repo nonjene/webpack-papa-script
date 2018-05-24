@@ -147,5 +147,19 @@ __<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/co
     it('has proj "proj2"',function(){
       isproj('proj2').should.be.true;
     });
-  })
+  });
+  describe('#config.js', function(){
+    const config = require('../bin/config');
+    it('setduan by correct data type', ()=>{
+      config.setDuan('m');
+      config.getConf('duan').should.be.eql(['m']);
+      config.setDuan(['m']);
+      config.getConf('duan').should.be.eql(['m']);
+    });
+
+    it('get frontend fetch name corrently', ()=>{
+      config.getDevFetchName().should.eql('test');
+      config.deployMapFetchName('pro').should.eql('produce');
+    });
+  });
 });

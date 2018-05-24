@@ -15,6 +15,7 @@ module.exports = {
   uploadToServer(opt) {
     let target = getConf('target'),
       duan = getConf('duan');
+    /* istanbul ignore if */
     if (!target || !duan) throw new Error('没有配置活动');
 
     let promiseUpload = this.signin(FtpConf).then(
@@ -26,7 +27,11 @@ module.exports = {
         )
     );
 
-    promiseUpload.then(() => this.end()).catch(e => console.error(e));
+    promiseUpload
+      .then(() => this.end())
+      .catch(/* istanbul ignore next */ function() { 
+        console.error(e);
+      });
 
     return promiseUpload;
   },
@@ -40,7 +45,11 @@ module.exports = {
         )
     );
 
-    promiseUpload.then(() => this.end()).catch(e => console.error(e));
+    promiseUpload
+      .then(() => this.end())
+      .catch(/* istanbul ignore next */ function() { 
+        console.error(e);
+      });
 
     return promiseUpload;
   },
@@ -53,7 +62,7 @@ module.exports = {
         this.mkdir(remoteDir)
           .then(() => this.putFile(remoteFullPath, localFullPath))
           .then(() => next())
-          .catch(e => {
+          .catch(/* istanbul ignore next */ function() {
             console.log(chalk.yellow(e));
             return next(e);
           });
@@ -63,6 +72,7 @@ module.exports = {
   },
   //注意坑 一次运行只能登入一个
   signin(Ftp_config) {
+    /* istanbul ignore if */ 
     if (this.promiseSignin) return this.promiseSignin;
 
     this.promiseSignin = new Promise((resolve, reject) => {
@@ -75,7 +85,7 @@ module.exports = {
   mkdir(ftpDir) {
     return new Promise((resolve, reject) => {
       c.mkdir(ftpDir, true, function(err) {
-        /* istanbul ignore if  */
+        /* istanbul ignore if */
         if (err) return reject('创建目录失败：' + ftpDir);
 
         resolve();
@@ -86,13 +96,17 @@ module.exports = {
   putFile(remoteFullPath, localFullPath) {
     return new Promise((resolve, reject) => {
       c.put(localFullPath, remoteFullPath, function(err) {
+        /* istanbul ignore if */
         if (err)
-          return reject('上传错误：\n' + localFullPath + ' 无法上传到 ' + remoteFullPath);
+          return reject(
+            '上传错误：\n' + localFullPath + ' 无法上传到 ' + remoteFullPath
+          );
         resolve();
       });
     });
   },
   ls() {
+    /* istanbul ignore next */
     c.list(function(err, list) {
       if (err) throw err;
       console.dir(list);
