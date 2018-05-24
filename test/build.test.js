@@ -258,6 +258,9 @@ describe('build', function() {
 
     describe('#release muti projects.', function() {
       let relDir, err, config_v1, config_v2;
+      const traditionHtmlPath = path.join(__dirname, 'seed/src/subFolder/proj1/m/index.html');
+      const cacheHtmlCont = fs.readFileSync(traditionHtmlPath, 'utf8');
+
       before(() => {
         config_v1 = path.join(process.cwd(), 'src/subFolder/proj1/config_v.js');
         config_v2 = path.join(process.cwd(), 'src/subFolder/proj2/config_v.js');
@@ -281,6 +284,9 @@ describe('build', function() {
             });
         });
       });
+      after(()=>{
+        fs.writeFileSync(traditionHtmlPath, cacheHtmlCont, 'utf8');
+      })
       it('build successfully', () => {
         should(err).not.be.ok();
       });
@@ -299,6 +305,12 @@ describe('build', function() {
       it('output file.', () => {
         fs.existsSync(path.join(relDir, 'proj1')).should.be.true();
         fs.existsSync(path.join(relDir, 'proj2')).should.be.true();
+      });
+
+
+      it('project without "config.json" will be inserted a common.js script ref to "index.html".', ()=>{
+        const htmlCont = fs.readFileSync(traditionHtmlPath, 'utf8');
+        /<script.+common\.js\?.+<\/script>/.test(htmlCont).should.be.true();
       });
     });
 

@@ -4,6 +4,7 @@
 
 const fs = require("fs");
 const chalk = require("chalk");
+const logger = require("./logger");
 
 /**
  * 
@@ -27,7 +28,7 @@ const injectCommon = (file, commonFileInject, comFilePath) => {
 
   fs.writeFileSync(file, replace(code, commonFileInject, comFilePath), "utf8");
 
-  console.log(chalk.cyan(`note: 已把${file}加入common.js的引用`));
+  logger.log(chalk.cyan(`note: 已把${file}加入common.js的引用`));
 };
 
 module.exports = {
