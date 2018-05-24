@@ -29,7 +29,7 @@ const change = function(props, targets) {
 const writeConf = function(props, target) {
   return new Promise((resolve, reject) => {
     const dir = `${process.cwd()}/src/${target}`;
-    if (!fs.existsSync(dir)) return reject(`指定的文件夹不存在：${target}`);
+    if (!fs.existsSync(dir)) return reject(`指定的文件夹不存在：${target}, ${dir}`);
 
     fs.writeFile(path.join(dir, 'config_v.js'), T(config.frontendConfCode, props), err => {
       if (err) return reject(err);
