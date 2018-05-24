@@ -56,7 +56,9 @@ const start = function ({isOpen=true}={}) {
 
             isOpen && opn(addr, { wait: false });
         })
-        .catch(err => /* istanbul ignore next */console.error(err));
+        .catch(err => {
+          /* istanbul ignore next */ console.error(err);
+        });
 };
 
 module.exports = {
