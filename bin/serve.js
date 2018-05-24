@@ -7,31 +7,31 @@ const { exec } = require("child_process");
 const opn = require('opn');
 const { getConf } = require('./config');
 const path = require('path');
-
+const logger = require('./util/logger');
 
 let serve;
 
-const serveOpen = function (isLog) {
+const serveOpen = function () {
     const DefProxyPort = getConf('proxyPort'),
           DefServePort = getConf('servePort');
 
     return new Promise((resovle, reject) => {
         if (serve) return reject('只能执行一次server start.');
-        isLog && console.log('serve:'+DefProxyPort);
+        logger.log('serve:'+DefProxyPort);
         serve = exec(`node ${path.join(__dirname, '../server')} S ${DefServePort}  P ${DefProxyPort}`, function (err, stdout, stderr) {
             if (err) {
                 reject(err);
             }
         });
         serve.stdout.on('data', (data) => {
-          isLog && console.log(`${data}`);
+          logger.log(`${data}`);
             if (data.indexOf('server started') > -1) {
                 resovle();
             }
         });
 
         serve.on('exit', function (code) {
-          isLog && console.log('server stop, code ' + code);
+          logger.log('server stop, code ' + code);
         });
     })
 
@@ -45,9 +45,9 @@ const stop = function () {
 
 };
 
-const start = function ({isOpen=true,isLog=true}={}) {
+const start = function ({isOpen=true}={}) {
     const DefServePort = getConf('servePort');
-    return serveOpen(isLog)
+    return serveOpen()
         .then(() => {
             let addr = 'http://localhost:'+ DefServePort +'/activity/';
             addr += getConf('target')[0]+'/'+ getConf('duan')[0]+'/';

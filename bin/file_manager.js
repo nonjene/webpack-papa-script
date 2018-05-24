@@ -95,7 +95,7 @@ module.exports = {
     done
   ) {
     if (!filesInfo.length) {
-      console.log(
+      logger.log(
         "没有找到指定的文件，请确认活动文件夹名是否正确？如“report/2017_1，xunlei”"
       );
       return done && done();
@@ -117,6 +117,7 @@ module.exports = {
         });
       },
       function () {
+        /* istanbul ignore next */
         logger.log(
           "🍺 🍺 🍺 " +
           desc +
@@ -124,6 +125,7 @@ module.exports = {
           (isLog ? "成功上传以下文件：\n" + log.join("\n") : "") +
           "\n"
         );
+
         return done && done();
       }
     );

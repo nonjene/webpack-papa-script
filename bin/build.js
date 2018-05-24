@@ -12,6 +12,7 @@ const hasDuan = require('./util/hasDuan');
 const isProj = require('./util/isProj');
 const doBuild = require('./run_build/build');
 const doWatch = require('./run_build/watch');
+const logger = require('./util/logger');
 
 const _emptyCache = dir => {
   if (require.cache[dir]) {
@@ -48,19 +49,18 @@ const setEnv = {
   }
 };
 
-const buildOne = function (which = 0, hasLog = true) {
+const buildOne = function (which = 0) {
   //export NODE_ENV=production
   //export NODE_ENV=development
 
   // && export BUILD_TARGET=huodong1
   return new Promise((resolve, reject) => {
     const Tar = getConf('target')[which];
-    hasLog &&
-      console.log(
-        `${chalk.blue('正在编译活动：')}${Tar} 的 ${getConf('duan').join(
-          ','
-        )} 端...`
-      );
+    logger.log(
+      `${chalk.blue('正在编译活动：')}${Tar} 的 ${getConf('duan').join(
+        ','
+      )} 端...`
+    );
 
     if (!isProj(Tar)) {
       return reject(errMsgNoMPC(Tar));
@@ -69,16 +69,16 @@ const buildOne = function (which = 0, hasLog = true) {
     try {
       // 清除webpack.config.js的require.cache, 然后设置node.env的config
       setEnv.init(which);
-      doBuild(hasLog)
+      doBuild()
         .then(msg => {
-          hasLog && console.log(chalk.cyan('webpack:build'));
-          hasLog && console.log(msg);
+          logger.log(chalk.cyan('webpack:build'));
+          logger.log(msg);
           // 下一个
           resolve();
         })
         .catch(err => {
           // 单个编译不通过不阻碍下一个编译
-          hasLog && console.log(chalk.red(err));
+          logger.log(chalk.red(err));
         });
     } catch (err) {
       reject(err);
@@ -86,21 +86,21 @@ const buildOne = function (which = 0, hasLog = true) {
   });
 };
 
-const watchOne = function (which = 0, hasLog = true) {
+const watchOne = function (which = 0) {
 
   return new Promise((resolve, reject) => {
     const Tar = getConf('target')[which];
-    hasLog && console.log(`${chalk.blue('监听代码修改：')}${Tar} 的 ${getConf('duan').join(',')} 端...`);
+    logger.log(`${chalk.blue('监听代码修改：')}${Tar} 的 ${getConf('duan').join(',')} 端...`);
 
     if (!isProj(Tar)) {
       return reject(errMsgNoMPC(Tar));
     }
     try {
       setEnv.init(which);
-      doWatch(hasLog)
+      doWatch()
         .then(({msg, watching}) => {
-          hasLog && console.log(chalk.cyan('webpack:watch'));
-          hasLog && console.log(msg);
+          logger.log(chalk.cyan('webpack:watch'));
+          logger.log(msg);
          
           resolve(watching);
         })
@@ -113,8 +113,7 @@ const watchOne = function (which = 0, hasLog = true) {
 };
 
 const build = function (conf = {}) {
-  const hasLog = !conf.noLog;
-  hasLog && logInfo();
+  logInfo();
 
   return new Promise((resolve, reject) => {
     const List = getConf('target');
@@ -123,7 +122,7 @@ const build = function (conf = {}) {
       if (i > List.length - 1) {
         return resolve();
       }
-      buildOne(i, hasLog)
+      buildOne(i)
         .then(() => run(i + 1))
         .catch(reject);
     };
@@ -132,15 +131,14 @@ const build = function (conf = {}) {
 };
 
 const watch = function (conf = {}) {
-  const hasLog = !conf.noLog;
-  hasLog && logInfo();
+  logInfo();
 
   return new Promise((resolve, reject) => {
     if (getConf('target').length > 1) {
-      hasLog && console.log(chalk.red('只能监听你输入的第一个活动'));
+      logger.log(chalk.red('只能监听你输入的第一个活动'));
     }
     // watch 只能watch一个活动
-    watchOne(0,hasLog)
+    watchOne(0)
       .then((watching) => {
         //!conf.noServ && serve.start();
         resolve(watching);

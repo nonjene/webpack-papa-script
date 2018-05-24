@@ -356,7 +356,7 @@ describe('build', function() {
       it('deploy static to all env.', function(done) {
         const { deployStaticAll } = require('../bin/deployStatic');
         try {
-          deployStaticAll(false, false, () => done());
+          deployStaticAll(false, () => done());
         } catch (e) {
           'deploy static'.should.be.exactly('not throw error.');
         }

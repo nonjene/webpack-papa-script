@@ -1,7 +1,7 @@
 /**
  * Created by Nonjene on 2017/3/8.
  */
-
+const {  getConf, getEnvDesc, getFrontendEnvDesc } = require('../config');
 const logger = require('./logger');
 
 const chalk = require('chalk');

@@ -27,7 +27,7 @@ describe('#supporter', function() {
   describe('local server', function() {
     it('start server', function(done) {
       const { start, stop } = require('../bin/serve');
-      start({ isOpen: false, isLog: false })
+      start({ isOpen: false })
         .then(() => {
           stop();
           done();

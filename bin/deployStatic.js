@@ -9,6 +9,7 @@ const config = require('./config');
 const ftp = require('./ftp');
 const { asyncEach } = require('./util/asyncEach');
 const concatFile = require('./util/concatFile');
+const logger = require('./util/logger');
 
 const OutputDir = Object.keys(config.deployEnvType).map(name=>config.deployEnvType[name]);
 const commFileName = config.staticFileName; //'common.js'
@@ -24,10 +25,10 @@ const doConcat = function() {
   );
 };
 
-const deployStaticAll = function(isUpload, isLog=true, done, uploadDone) {
+const deployStaticAll = function(isUpload, done, uploadDone) {
   doConcat()
-    .then(() => isLog && console.log(chalk.cyan(`${commFileName} 压缩成功。`)))
-    .catch(e => isLog && console.log(chalk.red(e)));
+    .then(() => logger.log(chalk.cyan(`${commFileName} 压缩成功。`)))
+    .catch(e => logger.log(chalk.red(e)));
 
   asyncEach(
     OutputDir,
@@ -45,7 +46,7 @@ const deployStaticAll = function(isUpload, isLog=true, done, uploadDone) {
       );
     },
     () => {
-      isLog && console.log(chalk.cyan('静态资源已复制'));
+      logger.log(chalk.cyan('静态资源已复制'));
       isUpload && ftp.uploadStatic(commFileSubPath, { desc: '上传到测试服务器', isLog: false }).then(uploadDone);
       done && done();
     }

@@ -66,7 +66,7 @@ describe('#ftp', function() {
     it('upload to ftp.', function(done) {
       const { deployStaticAll } = require('../bin/deployStatic');
       try {
-        deployStaticAll(true, false, null, ()=>done());
+        deployStaticAll(true, null, ()=>done());
       } catch (e) {
         'deploy static and upload to ftp'.should.be.exactly('not throw error.');
       }
