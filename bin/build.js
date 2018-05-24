@@ -19,6 +19,7 @@ const _emptyCache = dir => {
     delete require.cache[dir];
   }
 };
+/* istanbul ignore next */
 const errMsgNoMPC = (Tar)=>chalk.red(`没有找到：${Tar}，或里面没有m|pc文件夹或proj.json文件，已略过，请检查拼写`) + '🤦';
 
 // 给 webpack.config 读取
@@ -62,6 +63,7 @@ const buildOne = function (which = 0) {
       )} 端...`
     );
 
+    /* istanbul ignore if */
     if (!isProj(Tar)) {
       return reject(errMsgNoMPC(Tar));
     }
@@ -78,9 +80,11 @@ const buildOne = function (which = 0) {
         })
         .catch(err => {
           // 单个编译不通过不阻碍下一个编译
+          /* istanbul ignore next */
           logger.log(chalk.red(err));
         });
     } catch (err) {
+      /* istanbul ignore next */
       reject(err);
     }
   });

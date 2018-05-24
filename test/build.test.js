@@ -280,25 +280,25 @@ describe('build', function() {
               resolve();
             });
         });
-        it('build successfully', () => {
-          err.should.not.be.ok();
-        });
-        it('set config correctly.', () => {
-          config.getTarget().should.eql(['subFolder/proj1', 'subFolder/proj2']);
-        });
-        it('set frontend config_v.', () => {
-          fs.existsSync(config_v1).should.be.true();
-          fs.existsSync(config_v2).should.be.true();
-          fs
-            .readFileSync(config_v2, { encoding: 'utf8' })
-            .should.containEql(
-              fs.readFileSync(config_v2, { encoding: 'utf8' })
-            );
-        });
-        it('output file.', () => {
-          fs.existsSync(path.join(relDir, 'proj1')).should.be.true();
-          fs.existsSync(path.join(relDir, 'proj2')).should.be.true();
-        });
+      });
+      it('build successfully', () => {
+        should(err).not.be.ok();
+      });
+      it('set config correctly.', () => {
+        config.getTarget().should.eql(['subFolder/proj1', 'subFolder/proj2']);
+      });
+      it('set frontend config_v.', () => {
+        fs.existsSync(config_v1).should.be.true();
+        fs.existsSync(config_v2).should.be.true();
+        fs
+          .readFileSync(config_v2, { encoding: 'utf8' })
+          .should.containEql(
+            fs.readFileSync(config_v2, { encoding: 'utf8' })
+          );
+      });
+      it('output file.', () => {
+        fs.existsSync(path.join(relDir, 'proj1')).should.be.true();
+        fs.existsSync(path.join(relDir, 'proj2')).should.be.true();
       });
     });
 
@@ -314,10 +314,10 @@ describe('build', function() {
         frontendConf.setFrontEndConf('test', config.getTarget());
         return new Promise(resolve => {
           frontendConf.promiseSetDone
-            .then(()=> runWatch({ noLog: true, noServ: true }))
+            .then(()=>runWatch({ noLog: true, noServ: true }))
             .then(watching => {
               //watching.invalidate();
-              watching.close(() => done());
+              watching.close();
               resolve();
             })
             .catch(e => {
@@ -325,16 +325,16 @@ describe('build', function() {
               resolve();
             });
         });
+      });
 
-        it('config correctly.', ()=>{
-          config.getTarget().should.eql(['proj1']);
-              config.getEnvDesc().should.containEql('开发环境');
-              config.getFrontendEnvDesc().should.containEql('测试环境');
-        });
+      it('config correctly.', ()=>{
+        config.getTarget().should.eql(['proj1']);
+            config.getEnvDesc().should.containEql('开发环境');
+            config.getFrontendEnvDesc().should.containEql('测试环境');
+      });
 
-        it('do not throw err.', ()=>{
-          err.should.not.be.ok();
-        });
+      it('do not throw err.', ()=>{
+        should(err).not.be.ok();
       });
     });
 
