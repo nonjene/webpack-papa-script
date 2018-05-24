@@ -12,6 +12,7 @@ const { asyncEach } = require('./util/asyncEach');
 const { getAllSubPageName } = require('./util/getAllProjName');
 
 const { localAssetPath, remoteBasePath, remotePath, domainName } = require('./config');
+const logger = require('./util/logger');
 
 module.exports = {
   getAssetsFiles(target, duans, callback) {
@@ -88,7 +89,7 @@ module.exports = {
     callback(allFilesInfo, domainName + oriRemoteDir);
   },
   upLoadFiles(
-    { desc = "", isLog = true, isResLog = true } = {},
+    { desc = "", isLog = true } = {},
     filesInfo,
     uploadFunc,
     done
@@ -107,16 +108,16 @@ module.exports = {
 
         return uploadFunc(RealRemoteFullPath, localFullPath, err => {
           if (err) {
-            isResLog && console.log("🙅 " + chalk.yellow("上传失败：") + fileName);
+            logger.log("🙅 " + chalk.yellow("上传失败：") + fileName);
           } else {
-            isResLog && console.log("💁 " + chalk.green("上传成功：") + fileName);
-            isLog && log.push(domainName + remoteFullPath);
+            logger.log("💁 " + chalk.green("上传成功：") + fileName);
+            log.push(domainName + remoteFullPath);
           }
           return next();
         });
       },
       function () {
-        isResLog && console.log(
+        logger.log(
           "🍺 🍺 🍺 " +
           desc +
           "上传完毕!" +

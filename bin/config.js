@@ -150,6 +150,9 @@ module.exports = Object.assign(
     },
     deployMapFetchName(deployName) {
       return StaticConfig.deployEnvMapFetch[deployName];
+    },
+    isMochaTest(){
+      return !!process.env._mocha_test;
     }
   },
   StaticConfig
