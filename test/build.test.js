@@ -35,11 +35,11 @@ describe('build', function() {
       config.setTarget('scope/proj1');
       config.getTarget().should.eql(['scope/proj1']);
     });
-    it('getEnvDesc() echo right desc.', function() {
+    it('getEnvDesc() echo correct desc.', function() {
       config.setConf('deployType', 'pro');
       (config.getEnvDesc().indexOf('生产环境') > -1).should.be.true();
     });
-    it('getFrontendEnvDesc() echo right desc.', function() {
+    it('getFrontendEnvDesc() echo correct desc.', function() {
       config.setConf('fronendEnv', 'pre');
       config.getFrontendEnvDesc().should.containEql('预发环境');
     });
@@ -88,9 +88,9 @@ describe('build', function() {
       config_vProj1 = path.join(process.cwd(), 'src/proj1/config_v.js');
       config_vProj2 = path.join(process.cwd(), 'src/proj2/config_v.js');
     });
-    after(()=>{
+    after(() => {
       resetEnv();
-    })
+    });
 
     describe('#release a test project.', function() {
       let relDir;
@@ -112,7 +112,7 @@ describe('build', function() {
       });
       after(() => {});
 
-      it('set config right', function() {
+      it('set config correctly', function() {
         config.getTarget().should.eql(['proj1']);
         config.getEnvDesc().should.containEql('开发环境');
         config.getFrontendEnvDesc().should.containEql('测试环境');
@@ -147,7 +147,7 @@ describe('build', function() {
             .catch(e => reject(e));
         });
       });
-      it('should config right.', () => {
+      it('should config correctly.', () => {
         fs.existsSync(config_vProj2).should.be.true();
         fs
           .readFileSync(config_vProj2, { encoding: 'utf8' })
@@ -160,7 +160,7 @@ describe('build', function() {
       it('output file.', () => {
         fs.existsSync(relDir).should.be.true();
       });
-      it('link the right path of files.', () => {
+      it('link the correct path of files.', () => {
         fs.existsSync(path.join(relDir, 'img')).should.be.true();
         const file = fs.readdirSync(path.join(relDir, 'img'))[0];
         const namedir = path.join('/activity/proj2/img/', file);
@@ -185,21 +185,20 @@ describe('build', function() {
           ).be.ok();
         });
         // js vendor
-        fs.readdirSync(path.join(relDir, 'vendors')).filter(name=>/^vendors.*\.js$/.test(name)).forEach(name=>{
-          should(
-            fs
-              .readFileSync(path.join(relDir, 'vendors', name), 'utf8')
-              .match('https:/images.okpapa.com/activity/proj2/')
-          ).be.ok();
-        });
-
+        fs
+          .readdirSync(path.join(relDir, 'vendors'))
+          .filter(name => /^vendors.*\.js$/.test(name))
+          .forEach(name => {
+            should(
+              fs
+                .readFileSync(path.join(relDir, 'vendors', name), 'utf8')
+                .match('https:/images.okpapa.com/activity/proj2/')
+            ).be.ok();
+          });
       });
     });
-    xdescribe('#xx.', function() {
-      before(() => {});
-    });
 
-    describe('#release pro', function() {
+    describe('#release a pro project', function() {
       let relDir, err;
 
       before(() => {
@@ -224,7 +223,7 @@ describe('build', function() {
         (!!err).should.be.false();
       });
 
-      it('config right.', () => {
+      it('config correctly.', () => {
         fs.existsSync(config_vProj1).should.be.true();
         fs
           .readFileSync(config_vProj1, { encoding: 'utf8' })
@@ -239,7 +238,7 @@ describe('build', function() {
         fs.existsSync(relDir).should.be.true();
       });
 
-      it('link the right path of files.', function() {
+      it('link the correct path of files.', function() {
         // /activity/proj1/img/example_93785.jpg
         fs.existsSync(path.join(relDir, 'img')).should.be.true();
         const file = fs.readdirSync(path.join(relDir, 'img'))[0];
@@ -257,27 +256,37 @@ describe('build', function() {
       });
     });
 
-    xit('release muti projects', function(done) {
-      const relDir = path.join(process.cwd(), 'dist/pro/subFolder');
-      const config_v1 = path.join(
-        process.cwd(),
-        'src/subFolder/proj1/config_v.js'
-      );
-      const config_v2 = path.join(
-        process.cwd(),
-        'src/subFolder/proj2/config_v.js'
-      );
-      try {
-        shelljs.rm('-rf', relDir);
-      } catch (e) {}
-      ////////////////
-      config.setBuildAllScope('subFolder');
-      config.setTarget(getAllProjName(config.getConf('buildAllScope')));
-      config.setConf('deployType', 'pro');
+    describe('#release muti projects.', function() {
+      let relDir, err, config_v1, config_v2;
+      before(() => {
+        config_v1 = path.join(process.cwd(), 'src/subFolder/proj1/config_v.js');
+        config_v2 = path.join(process.cwd(), 'src/subFolder/proj2/config_v.js');
 
-      frontendConf.setFrontEndConf('produce', config.getTarget());
-      frontendConf.promiseSetDone
-        .then(function() {
+        resetEnv();
+        relDir = outPutDirGetAndClean('dist/pro/subFolder');
+        config.setBuildAllScope('subFolder');
+
+        config.setTarget(getAllProjName(config.getConf('buildAllScope')));
+        config.setConf('deployType', 'pro');
+
+        frontendConf.setFrontEndConf('produce', config.getTarget());
+
+        return new Promise(resolve => {
+          frontendConf.promiseSetDone
+            .then(() => runBuild({ noLog: true }))
+            .then(() => resolve())
+            .catch(e => {
+              err = e;
+              resolve();
+            });
+        });
+        it('build successfully', () => {
+          err.should.not.be.ok();
+        });
+        it('set config correctly.', () => {
+          config.getTarget().should.eql(['subFolder/proj1', 'subFolder/proj2']);
+        });
+        it('set frontend config_v.', () => {
           fs.existsSync(config_v1).should.be.true();
           fs.existsSync(config_v2).should.be.true();
           fs
@@ -285,85 +294,76 @@ describe('build', function() {
             .should.containEql(
               fs.readFileSync(config_v2, { encoding: 'utf8' })
             );
-
-          config.getTarget().should.eql(['subFolder/proj1', 'subFolder/proj2']);
-          config.getEnvDesc().should.containEql('生产环境');
-          config.getFrontendEnvDesc().should.containEql('生产环境');
-
-          return runBuild({ noLog: true });
-        })
-        .then(() => {
-          fs.existsSync(relDir).should.be.true();
-          done();
         });
+        it('output file.', () => {
+          fs.existsSync(path.join(relDir, 'proj1')).should.be.true();
+          fs.existsSync(path.join(relDir, 'proj2')).should.be.true();
+        });
+      });
     });
 
-    xit('run webpack dev watch', function(done) {
-      config.setTarget('proj1');
-      config.setConf('deployType', 'test');
-      //config.setEnv('development');//webpack liveReload会导致测试不结束
+    describe('#run webpack dev watch.', function() {
+      let err;
+      before(() => {
+        resetEnv();
+        config.setTarget('proj1');
+        config.setConf('deployType', 'test');
 
-      frontendConf.setFrontEndConf('test', config.getTarget());
-      frontendConf.promiseSetDone
-        .then(function() {
+        //config.setEnv('development');//webpack liveReload会导致测试不结束
+
+        frontendConf.setFrontEndConf('test', config.getTarget());
+        return new Promise(resolve => {
+          frontendConf.promiseSetDone
+            .then(()=> runWatch({ noLog: true, noServ: true }))
+            .then(watching => {
+              //watching.invalidate();
+              watching.close(() => done());
+              resolve();
+            })
+            .catch(e => {
+              err = e;
+              resolve();
+            });
+        });
+
+        it('config correctly.', ()=>{
           config.getTarget().should.eql(['proj1']);
-          config.getEnvDesc().should.containEql('开发环境');
-          config.getFrontendEnvDesc().should.containEql('测试环境');
-
-          return runWatch({ noLog: true, noServ: true });
-        })
-        .then(watching => {
-          //watching.invalidate();
-          watching.close(() => done());
-        })
-        .catch(e => {
-          throw new Error(e);
+              config.getEnvDesc().should.containEql('开发环境');
+              config.getFrontendEnvDesc().should.containEql('测试环境');
         });
+
+        it('do not throw err.', ()=>{
+          err.should.not.be.ok();
+        });
+      });
     });
 
-    xit('start server', function(done) {
-      const { start, stop } = require('../bin/serve');
-      start({ isOpen: false, isLog: false })
-        .then(() => {
-          stop();
-          done();
-        })
-        .catch(e => {
-          'server.js'.should.be.exactly('not throw error.');
-        });
-    });
-    xit('upload files of a test project to ftp.', function(done) {
-      const relDir = path.join(process.cwd(), 'build/activity/proj1');
-      fs.existsSync(relDir).should.be.true();
 
-      config.setTarget('proj1');
-      const ftp = require('../bin/ftp');
-      ftp
-        .uploadToServer({ desc: '', isLog: false, isResLog: false })
-        .then(remoteLink => {
-          done();
-        })
-        .catch(e => {
-          'upload to ftp'.should.be.exactly('not throw error.');
-        });
+    describe('deploy static files', function(){
+      before(()=> resetConfig());
+      after(()=>resetConfig());
+  
+      it('copy all static files to local dev folder.', function(done) {
+        const { deployStaticEnvTest } = require('../bin/deployStatic');
+        try {
+          deployStaticEnvTest(() => {
+            done();
+          });
+        } catch (e) {
+          'copy static to test env'.should.be.exactly('not throw error.');
+        }
+      });
+      it('deploy static to all env.', function(done) {
+        const { deployStaticAll } = require('../bin/deployStatic');
+        try {
+          deployStaticAll(false, false, () => done());
+        } catch (e) {
+          'deploy static'.should.be.exactly('not throw error.');
+        }
+      });
     });
-    xit('deploy static.', function(done) {
-      const { deployStaticAll } = require('../bin/deployStatic');
-      try {
-        deployStaticAll(true, false, () => done());
-      } catch (e) {
-        'deploy static'.should.be.exactly('not throw error.');
-      }
-    });
-    xit('copy all static files to test env.', function(done) {
-      const { deployStaticEnvTest } = require('../bin/deployStatic');
-      try {
-        deployStaticEnvTest(() => {
-          done();
-        });
-      } catch (e) {
-        'copy static to test env'.should.be.exactly('not throw error.');
-      }
-    });
+
+    
+    
   });
 });

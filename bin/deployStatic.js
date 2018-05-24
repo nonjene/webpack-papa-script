@@ -24,7 +24,7 @@ const doConcat = function() {
   );
 };
 
-const deployStaticAll = function(isUpload, isLog=true, done) {
+const deployStaticAll = function(isUpload, isLog=true, done, uploadDone) {
   doConcat()
     .then(() => isLog && console.log(chalk.cyan(`${commFileName} 压缩成功。`)))
     .catch(e => isLog && console.log(chalk.red(e)));
@@ -46,7 +46,7 @@ const deployStaticAll = function(isUpload, isLog=true, done) {
     },
     () => {
       isLog && console.log(chalk.cyan('静态资源已复制'));
-      isUpload && ftp.uploadStatic(commFileSubPath, { desc: '上传到测试服务器', isLog: false });
+      isUpload && ftp.uploadStatic(commFileSubPath, { desc: '上传到测试服务器', isLog: false }).then(uploadDone);
       done && done();
     }
   );
