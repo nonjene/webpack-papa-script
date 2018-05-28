@@ -82,9 +82,9 @@ const setEntry = function (subpath, duan) {
   const cdnPrefix = IsPro ? dc.cdnDomain : '';
   const comFilePath = path.join(T(dc.remotePath, {target: dc.staticFileSubPath}), dc.staticFileName);
 
-  const commonFilePath = getCommConcatFullPath();
-  const linkParam = `?h=${(fs.existsSync(commonFilePath) && md5File.sync(commonFilePath) || '').slice(-5)}`;
-  
+  const commonFileDir = getCommConcatFullPath();
+  const linkParam = `?h=${(fs.existsSync(commonFileDir) && md5File.sync(commonFileDir) || '').slice(-5)}`;
+
   // 这个别改，改了你就要重写compat_v1.js的匹配规则，否则会重复添加。
   const commonFileInject = `<script type="text/javascript" src="${cdnPrefix}${comFilePath}${linkParam}"></script>`;
 

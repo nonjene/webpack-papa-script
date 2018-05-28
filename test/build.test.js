@@ -310,7 +310,7 @@ describe('build', function() {
 
       it('project without "config.json" will be inserted a common.js script ref to "index.html".', ()=>{
         const htmlCont = fs.readFileSync(traditionHtmlPath, 'utf8');
-        /<script.+common\.js\?.+<\/script>/.test(htmlCont).should.be.true();
+        /<script.+common_test\.js\?.+<\/script>/.test(htmlCont).should.be.true();
       });
     });
 

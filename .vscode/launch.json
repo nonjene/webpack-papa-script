@@ -8,10 +8,12 @@
       "type": "node",
       "request": "launch",
       "name": "debug",
-      "program": "${workspaceRoot}/index.js",
+      "program": "${workspaceRoot}/bin/index.js",
       "cwd": "${workspaceRoot}/test/seed/",
       "args": [
-        "--copy-static"
+        "ra",
+        "--scope",
+        "subFolder"
       ]
     },
     {

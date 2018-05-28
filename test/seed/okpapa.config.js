@@ -7,6 +7,8 @@ module.exports = {
   },
 
   staticFileConcatOrder: ['reset.js', 'config.js', 'responsive.js'],
+  staticFileSubPath: 'static',
+  staticFileName: 'common_test.js',
 
   commSingleProjSubPage: ['m', 'pc'],
   webpackConfig: {
@@ -16,12 +18,6 @@ module.exports = {
       }
     }
   },
-  //开发环境端口
-  servePort: 3005,
-  //选定需要合并的非模块的文件，必须在 resource/js 里
-  staticFileConcatOrder: [],
-  staticFileSubPath: 'static',
-  staticFileName: 'common_test.js',
 
   //本地开发环境
   developEnvType: {
