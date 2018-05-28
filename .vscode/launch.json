@@ -11,9 +11,7 @@
       "program": "${workspaceRoot}/bin/index.js",
       "cwd": "${workspaceRoot}/test/seed/",
       "args": [
-        "ra",
-        "--scope",
-        "subFolder"
+        "deploy-static"
       ]
     },
     {

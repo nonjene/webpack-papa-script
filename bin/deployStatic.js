@@ -2,6 +2,7 @@
  * Created by Nonjene on 2017/3/9.
  */
 const chalk = require('chalk');
+const fs = require('fs');
 
 const path = require('path');
 const copydir = require('copy-dir');
@@ -29,13 +30,22 @@ const doConcat = function() {
 };
 
 const deployStaticAll = function(isUpload, done, uploadDone) {
-  doConcat()
+  const concatFileList = config.getConf('staticFileConcatOrder');
+  if(!Array.isArray(concatFileList) || concatFileList.length===0){
+    logger.log(chalk.yellow(`没有设置需要合并的文件。请将需要合并的文件名定义在 okpapa.config.js 的 staticFileConcatOrder。`));
+  }else{
+    doConcat()
     .then(() => logger.log(chalk.cyan(`${commFileName} 压缩成功。`)))
     .catch(e => {
       /* istanbul ignore next */
       logger.log(chalk.red(e));
     });
+  }
+  
 
+  if(!fs.existsSync(path.resolve('resource/bundle'))){
+    return logger.log(chalk.yellow(`没有任何资源需要复制。(不存在 ${path.resolve('resource/bundle')}。)`));
+  }
   asyncEach(
     OutputDir,
     (dir, next) => {
@@ -67,6 +77,7 @@ const deployStaticAll = function(isUpload, done, uploadDone) {
 };
 
 const deployStaticEnvTest = function(done) {
+  if(!fs.existsSync(path.resolve('resource/bundle'))) return;
   copydir(
     path.resolve('resource/bundle'),
     path.resolve(path.join(OutputDir[2], commFileSubPath)),
