@@ -42,7 +42,7 @@ const deployStaticAll = function(isUpload, done, uploadDone) {
     });
   }
   
-
+  /* istanbul ignore if */
   if(!fs.existsSync(path.resolve('resource/bundle'))){
     return logger.log(chalk.yellow(`没有任何资源需要复制。(不存在 ${path.resolve('resource/bundle')}。)`));
   }
@@ -77,10 +77,11 @@ const deployStaticAll = function(isUpload, done, uploadDone) {
 };
 
 const deployStaticEnvTest = function(done) {
+  /* istanbul ignore if */
   if(!fs.existsSync(path.resolve('resource/bundle'))) return;
   copydir(
     path.resolve('resource/bundle'),
-    path.resolve(path.join(OutputDir[2], commFileSubPath)),
+    path.resolve(path.join(config.deployEnvType[config.developEnvType.deploy], commFileSubPath)),
     err => {
       /* istanbul ignore if */
       if (err) {
