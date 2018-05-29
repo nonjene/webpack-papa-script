@@ -38,10 +38,12 @@ const StaticConfig = Object.assign(
     //是否支持ie8
     kiss_ie8: true,
 
-    // 编译一个单独的页面时，目录里面必须包含其中一个文件夹的定义
+    // 编译一个单独的页面时，目录里面必须包含其中一个文件夹的定义 //todo 抛弃
     commSingleProjSubPage:['m', 'pc'],
-    // 获取所有项目时，排除以下这些文件夹里面的内容
-    projRecongizeExclude:[ 'm', 'pc', 'modules', 'module', 'static','components', 'component'],
+    // 辨别一个项目时，只要一个文件夹里面包含以下文件或文件夹，则认定它为一个项目。（无论单独页面还是多页面）
+    projContainsOneOf: ['m', 'pc', 'proj.json', 'config.json'],
+    // 获取所有项目时，排除以下这些文件夹里面的内容（不会在已识别为proj的文件夹里再查找）
+    projScanExclude:['modules', 'module', 'static', 'components', 'component', 'img', 'js'],
     //本地开发环境
     developEnvType: {
       deploy: 'test',

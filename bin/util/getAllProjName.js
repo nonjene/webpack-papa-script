@@ -4,7 +4,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const {projRecongizeExclude} = require('../config');
+const {projScanExclude} = require('../config');
 
 const DIR_SRC = path.join(process.cwd(), '/src');
 
@@ -17,7 +17,7 @@ let ls = function (baseDir = DIR_SRC) {
     .filter(dir => {
       let fullPath = path.join(baseDir, dir);
 
-      if (fs.statSync(fullPath).isDirectory() && projRecongizeExclude.every(exDir => exDir !== dir)) {
+      if (fs.statSync(fullPath).isDirectory() && projScanExclude.every(exDir => exDir !== dir)) {
         if (isProj(fullPath, 'abs')) {
           return true;
         } else {
