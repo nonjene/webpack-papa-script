@@ -66,8 +66,7 @@ const setEntry = function (subpath, duan) {
   const Path = path.join(Folder, dir);
 
   // 验证是否合法
-  console.log(subpath, duan);
-  if (!verifyEntry(BUILD_TARGET, dir, 'hard')) {
+  if (!verifyEntry(BUILD_TARGET, dir)) {
     return logger.log(chalk.yellow(`${BUILD_TARGET}/${dir}不存在, 或其里面没入口文件, 已略过`) + '🌚');
   }
 

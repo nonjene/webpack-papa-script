@@ -86,7 +86,7 @@ const getAllProjName = function(scope, base = DIR_SRC) {
  * @param {string} target 
  * @param {string} dir 
  */
-const verifyEntry = (target, dir) => hasEntryFiles(target, dir).length > 0;
+const verifyEntry = (target, dir) => hasEntryFiles(target, dir, 'hard').length > 0;
 /**
  * 验证目录是否含有 commSingleProjSubPage 中的一个
  * @param {string} target 
