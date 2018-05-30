@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!--[if lt IE 9 ]>
+<html lang="zh" class="lt-ie9"><![endif]-->
+<!--[if IE 9 ]>
+<html lang="zh" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="zh">
+<!--<![endif]-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{htmlWebpackPlugin.options.tpl.title}}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#0077cc" />
+    {{!--<link rel="dns-prefetch" href=""> --}}
+    {{{htmlWebpackPlugin.options.tpl.moreMeta}}} 
+
+</head>
+
+<body {{{htmlWebpackPlugin.options.tpl.bodyProp}}}>
+    <div id="container" class="container">
+        {{{htmlWebpackPlugin.options.tpl.main}}}
+    </div>
+    {{{htmlWebpackPlugin.options.tpl.moreScript}}}
+
+</body>
+
+</html>
