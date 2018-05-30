@@ -38,12 +38,15 @@ const StaticConfig = Object.assign(
     //是否支持ie8
     kiss_ie8: true,
 
-    // 编译一个单独的页面时，目录里面必须包含其中一个文件夹的定义 //todo 抛弃
+    // 定义一个页面下面还分哪些版本页面。比如一个单页项目，不适合做响应式，需要包含电脑端和移动端两个页面。可以定义为空，则忽略掉这个情况
     commSingleProjSubPage:['m', 'pc'],
     // 辨别一个项目时，只要一个文件夹里面包含以下文件或文件夹，则认定它为一个项目。（无论单独页面还是多页面）
+    // 查找 proj 里面的页面时也会用这个做参考, 某些情况下, 假如子目录含有 proj.json, 就会导致错误的识别, 因为该文件夹没有js入口。
     projContainsOneOf: ['m', 'pc', 'proj.json', 'config.json'],
     // 获取所有项目时，排除以下这些文件夹里面的内容（不会在已识别为proj的文件夹里再查找）
     projScanExclude:['modules', 'module', 'static', 'components', 'component', 'img', 'js'],
+    // 验证 webpack 入口必须包含这个值的所有文件。
+    entryInclude: ['index.js', 'index.html'],
     //本地开发环境
     developEnvType: {
       deploy: 'test',

@@ -11,7 +11,7 @@ const dc = require('./config');
 const compatV1 = require('./util/compat_v1');
 const T = require('./util/tpl');
 const logger = require('./util/logger');
-const {getAllProjName, getAllSubPageName} = require('./util/getAllProjName');
+const {getAllProjName, getAllSubPageName, hasDuan, verifyEntry} = require('./util/getAllProjName');
 const {getCommConcatFullPath} = require('./deployStatic');
 
 const IsPro = deployType === dc.getProDeployName();
@@ -40,7 +40,6 @@ let Folder = DIR_SRC + BUILD_TARGET + '/';
 // watch的情况，没有deployType
 let outputDir = dc.getOutputDir(deployType || dc.getDevDeployName());
 
-const hasDuan = require('./util/hasDuan');
 
 const getHtml = function (Path) {
   return fs.readFileSync(Path, 'utf8');
@@ -66,8 +65,10 @@ const setEntry = function (subpath, duan) {
   const dir = path.join(subpath, duan);
   const Path = path.join(Folder, dir);
 
-  if (hasDuan(BUILD_TARGET, dir).length < 1) {
-    return logger.log(chalk.yellow(`${BUILD_TARGET}的${dir}端不存在, 已略过`) + '🌚');
+  // 验证是否合法
+  console.log(subpath, duan);
+  if (!verifyEntry(BUILD_TARGET, dir, 'hard')) {
+    return logger.log(chalk.yellow(`${BUILD_TARGET}/${dir}不存在, 或其里面没入口文件, 已略过`) + '🌚');
   }
 
   aDirName.push(Path);
@@ -108,12 +109,17 @@ const setEntry = function (subpath, duan) {
       })
     );
   } else {
+    const getTplName = duan =>{
+      if(!duan) duan = 'comm';
+      return targetConf[`templateName_${duan}`] || `index_${duan}.handlebars`;
+    };
+
     let opt = {
       filename: dir + '/index.html',
       // 优先选取config.json的templateName_m/pc，没有则用默认的
       template: path.resolve(
         process.cwd(),
-        `resource/html/${targetConf[`templateName_${duan}`] || `index_${duan}.handlebars`}`
+        `resource/html/${getTplName(duan)}`
       ),
       chunks: [dir, 'vendors'],
       inject: 'body',
@@ -145,16 +151,23 @@ const setEntry = function (subpath, duan) {
 //path.resolve(__dirname, '../resource/bundle/common.js')
 
 if (fs.statSync(Folder).isDirectory()) {
+
   if (fs.readdirSync(Folder).some(subDir => subDir === 'proj.json')) {
     // 一个项目包含多个页面
-    getAllSubPageName(BUILD_TARGET, DUAN).forEach(({subpath, duan}) => setEntry(subpath, duan));
+    getAllSubPageName(BUILD_TARGET, DUAN).forEach(({subpath, duan}) => {
+      setEntry(subpath, duan);
+    });
 
 
 
   } else {
-    // 一个页面作为一个项目
-    DUAN.forEach(duan => setEntry('', duan));
-
+    // 一个页面作为一个项目, 用配置的 commSingleProjSubPage 或命令行指定的 --duan xxx
+    if(DUAN && DUAN.length && hasDuan(BUILD_TARGET)){
+      DUAN.forEach(duan => setEntry('', duan));
+    }else{
+      setEntry('', '');
+    }
+    
   }
 
 
