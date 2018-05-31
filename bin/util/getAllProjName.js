@@ -135,11 +135,14 @@ const getAllSubPageName = function(BUILD_TARGET, duans, base) {
         ? dir.replace(path.join(BUILD_TARGET.toString()) + path.sep, '')
         : dir;
 
+      
+      if(!subpath){}
       // getAllProjName 是拿到所有包含pc或m或proj.json的文件夹
       // 所以还要辨别是否有配置 duans, 并且，该文件夹中是否含有至少其中一个。
-      if (duans && duans.length && hasDuan(dir, 'easy')) {
+      else if (duans && duans.length && hasDuan(dir, 'easy')) {
         duans.forEach(duan => _aDirs.push({ subpath, duan }));
-      } else {
+      } 
+      else {
         _aDirs.push({ subpath, duan: '' });
       }
 

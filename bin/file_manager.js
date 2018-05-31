@@ -13,6 +13,7 @@ const { getAllSubPageName } = require('./util/getAllProjName');
 
 const { localAssetPath, remoteBasePath, remotePath, domainName } = require('./config');
 const logger = require('./util/logger');
+const regSep = new RegExp(path.sep,'g');
 
 module.exports = {
   getAssetsFiles(target, duans, callback) {
@@ -41,8 +42,8 @@ module.exports = {
             ...allFilesInfo,
             ...files.map(file => ({
               fileName: file,
-              localFullPath: [localDir, subPath, file].join('/'),
-              remoteFullPath: [remoteDir, subPath, file].join('/')
+              localFullPath: path.join(localDir, subPath, file).replace(regSep, '/'),
+              remoteFullPath: path.join(remoteDir, subPath, file).replace(regSep, '/'),
             }))
           ];
 
