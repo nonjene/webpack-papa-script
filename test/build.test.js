@@ -167,12 +167,12 @@ describe('build', function() {
         const namedirJs = path.join('img/', file);
         //console.log(namedir)
 
-        const filesName = fs.readdirSync(path.join(relDir, 'page1/m'));
+        const filesName = fs.readdirSync(path.join(relDir, 'page1/page1-1'));
         //css
         filesName.filter(name => /\.css$/.test(name)).forEach(name => {
           should(
             fs
-              .readFileSync(path.join(relDir, 'page1/m', name), 'utf8')
+              .readFileSync(path.join(relDir, 'page1/page1-1', name), 'utf8')
               .match(namedir)
           ).be.ok();
         });
@@ -180,7 +180,7 @@ describe('build', function() {
         filesName.filter(name => /\.js$/.test(name)).forEach(name => {
           should(
             fs
-              .readFileSync(path.join(relDir, 'page1/m', name), 'utf8')
+              .readFileSync(path.join(relDir, 'page1/page1-1', name), 'utf8')
               .match(namedirJs)
           ).be.ok();
         });
