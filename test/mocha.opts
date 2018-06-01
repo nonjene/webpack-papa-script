@@ -5,5 +5,5 @@ test/util.test.js
 test/build.test.js
 test/supporter.test.js
 test/create.test.js
-test/ftp.test.js
+#test/ftp.test.js
 test/fileManager.test.js
