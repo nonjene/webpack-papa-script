@@ -29,6 +29,7 @@ function compress(aFileList, sTo) {
     ie8: true
   });
 
+  /* istanbul ignore if */
   if (res.error) {
     return Promise.reject(
       `文件合成错误：${sTo}\n⚠️ 注意：合并的js不能包含es6语法。\n${JSON.stringify(
