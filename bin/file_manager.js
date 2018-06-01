@@ -17,15 +17,33 @@ const regSep = new RegExp(path.sep,'g');
 
 module.exports = {
   getAssetsFiles(target, duans, callback) {
+    // 目前只给单个项目上传
+    if(Array.isArray(target)){
+      target = target[0];
+    }
     let allFilesInfo = [];
-    let localDir = path.join(localAssetPath, target.toString());
+    let localDir = path.join(localAssetPath, target);
     let remoteDir = T(remotePath, { target });
-    let subPaths = ['img', 'files', 'font', 'vendors', ...duans];
+    //let subPaths = ['img', 'files', 'font', 'vendors', ...duans];
     let specFiles = [
       //'vendors.js'//不在这了
     ];
     //path.dirname(basePath) + '/vendors.js',
-    subPaths = subPaths.concat(getAllSubPageName(target, duans, localAssetPath).map(({ subpath, duan }) => path.join(subpath, duan)));
+    const subPaths = (function(){
+      const ls = (sub = "")=>{
+        const dir = path.join(localDir, sub);
+        return fs.readdirSync(dir, 'utf8')
+          .reduce((_arr, name)=>{
+            if(fs.statSync(path.join(dir,name)).isDirectory()){
+              const subber = path.join(sub,name);
+              _arr.push(subber);
+              _arr.push.apply(_arr, ls(subber));
+            }
+            return _arr;
+          }, []);
+      }
+      return ls();
+    })();
 
     asyncEach(
       subPaths,
@@ -35,16 +53,20 @@ module.exports = {
           return next();
         }
         fs.readdir(dir, (err, files) => {
-           /* istanbul ignore if */
-          if (err) throw err;
+          // 排除子目录
+          if(err){
+            return next();
+          }
 
           allFilesInfo = [
             ...allFilesInfo,
-            ...files.map(file => ({
-              fileName: file,
-              localFullPath: path.join(localDir, subPath, file).replace(regSep, '/'),
-              remoteFullPath: path.join(remoteDir, subPath, file).replace(regSep, '/'),
-            }))
+            ...files
+              .filter(file=>!fs.statSync(path.join(dir,file)).isDirectory())
+              .map(file => ({
+                fileName: file,
+                localFullPath: path.join(localDir, subPath, file).replace(regSep, '/'),
+                remoteFullPath: path.join(remoteDir, subPath, file).replace(regSep, '/'),
+              }))
           ];
 
           return next();

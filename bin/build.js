@@ -8,7 +8,6 @@ const { getConf, getTarget } = require('./config');
 const chalk = require('chalk');
 
 const logInfo = require('./util/logInfo');
-const hasDuan = require('./util/hasDuan');
 const isProj = require('./util/isProj');
 const doBuild = require('./run_build/build');
 const doWatch = require('./run_build/watch');

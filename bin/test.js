@@ -16,7 +16,7 @@ const testPromise = function () {
         setTimeout(()=> reject(),1000);
     })
 };
-const hasDuan = require('./util/hasDuan');
+const hasEntryFiles = require('./util/hasEntryFiles');
 
 
 const test = function () {
@@ -52,6 +52,6 @@ module.exports = {
         console.log(path.sep)
     },
     hasDuan(){
-        console.log(hasDuan('xxxx'))
+        console.log(hasEntryFiles('xxxx'))
     }
 };

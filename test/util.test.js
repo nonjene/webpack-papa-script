@@ -110,28 +110,28 @@ __<script type="text/javascript" src="https://cdn.okpapa.com//activity/static/co
       list.should.containEql('subFolder/proj1').and.containEql('subFolder/proj2');
     });
   });
-  describe('#hasDuan()', function() {
-    let hasDuan;
+  describe('#hasEntryFiles()', function() {
+    let hasEntryFiles;
     before(function() {
-      hasDuan = require('../bin/util/hasDuan');
+      hasEntryFiles = require('../bin/util/hasEntryFiles');
     });
     it('_template_def has "m" and "pc".', function() {
-      const tar = hasDuan('_template_def');
+      const tar = hasEntryFiles('_template_def');
       tar.should.be.an.instanceOf(Array);
       tar.should.containEql('m').and.containEql('pc');
     });
     it('get the "m" of _template_def', function() {
-      let tar = hasDuan('_template_def','m');
+      let tar = hasEntryFiles('_template_def','m');
       tar.should.be.an.instanceOf(Array);
       tar.should.containEql('m').and.not.containEql('pc');
     });
     it('get the actual dir.', function() {
-      const tar = hasDuan('subFolder/proj1',['m','pc']);
+      const tar = hasEntryFiles('subFolder/proj1',['m','pc']);
       tar.should.be.an.instanceOf(Array);
       tar.should.containEql('m').and.not.containEql('pc');
     });
     it('get nothing.', function() {
-      const tar = hasDuan('subFolder/proj1','pc');
+      const tar = hasEntryFiles('subFolder/proj1','pc');
       tar.should.be.an.instanceOf(Array);
       tar.should.lengthOf(0);
     });

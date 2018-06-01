@@ -153,8 +153,13 @@ if (fs.statSync(Folder).isDirectory()) {
 
   if (fs.readdirSync(Folder).some(subDir => subDir === 'proj.json')) {
     // 一个项目包含多个页面
-    getAllSubPageName(BUILD_TARGET, DUAN).forEach(({subpath, duan}) => {
-      setEntry(subpath, duan);
+    getAllSubPageName(BUILD_TARGET).forEach(({subpath}) => {
+      if(dc.commSingleProjSubPage.includes(path.basename(subpath))){
+        setEntry(path.dirname(subpath), path.basename(subpath));
+      }else{
+        setEntry(subpath, '');
+      }
+      
     });
 
 
