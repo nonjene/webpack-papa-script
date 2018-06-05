@@ -92,7 +92,7 @@ describe('build', function() {
       resetEnv();
     });
 
-    xdescribe('#release a test project.', function() {
+    describe('#release a test project.', function() {
       let relDir;
 
       before(() => {
@@ -129,7 +129,7 @@ describe('build', function() {
       });
     });
 
-    xdescribe('#release a project with muti pages.', function() {
+    describe('#release a project with muti pages.', function() {
       let relDir;
 
       before(() => {
@@ -198,7 +198,7 @@ describe('build', function() {
       });
     });
 
-    xdescribe('#release a pro project', function() {
+    describe('#release a pro project', function() {
       let relDir, err;
 
       before(() => {
@@ -256,7 +256,7 @@ describe('build', function() {
       });
     });
 
-    xdescribe('#release muti projects.', function() {
+    describe('#release muti projects.', function() {
       let relDir, err, config_v1, config_v2;
       const traditionHtmlPath = path.join(__dirname, 'seed/src/subFolder/proj1/m/index.html');
       const cacheHtmlCont = fs.readFileSync(traditionHtmlPath, 'utf8');
@@ -351,7 +351,7 @@ describe('build', function() {
     });
 
 
-    xdescribe('deploy static files', function(){
+    describe('deploy static files', function(){
       before(()=> resetConfig());
       after(()=>resetConfig());
   
