@@ -4,7 +4,7 @@
   "description": "A frontend projects solution",
   "main": "bin/index.js",
   "scripts": {
-    "test": "nyc mocha",
+    "test": "nyc mocha --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "author": "nonjene",
