@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 /**
  * Created by Nonjene on 2017/3/1.
  */
