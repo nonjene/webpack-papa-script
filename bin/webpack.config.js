@@ -333,7 +333,7 @@ const webpackConfig = {
     ]
   },
   devServer: {
-    contentBase: path.join(process.cwd(), './build'),
+    contentBase: path.join(process.cwd(), dc.serveContentBase),
     publicPath,
     hot: true,
     inline: true,
