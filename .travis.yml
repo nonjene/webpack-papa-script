@@ -1,5 +1,8 @@
 language: node_js
 node_js:
-  - "8"
   - "7.6"
-after_success: npm run coverage
+  - "9"
+script:
+  - npm run test-cov
+after_success:
+  - npm run coverage

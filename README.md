@@ -1,5 +1,9 @@
 # ok-papa-script
 
+[![Build Status](https://travis-ci.org/nonjene/ok-papa-script.svg?branch=master)](https://travis-ci.org/nonjene/ok-papa-script)
+[![Coverage Status](https://coveralls.io/repos/github/nonjene/ok-papa-script/badge.svg?branch=master)](https://coveralls.io/github/nonjene/ok-papa-script?branch=master)
+[![npm](https://img.shields.io/npm/v/ok-papa-script.svg)](https://www.npmjs.com/package/ok-papa-script)
+
 基于 webpack 的纯前端多页面应用、多个项目集成的解决方案。此方案优势是避免大量的npm install的运行，适用于部署大量短期性、互相独立无关联的页面，比如活动推广页。
 发布单个页面时，不需要整个项目进行编译，在利用webpack部署方案便捷性的同时，避开了它的单项目的特性，帮助我们快速部署前端页面。
 

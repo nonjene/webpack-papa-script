@@ -5,8 +5,9 @@
     "main": "bin/index.js",
     "scripts": {
         "test": "mocha",
-        "coverage": "istanbul cover _mocha",
-        "coverage-all": "istanbul cover --include-all-sources --root ./bin _mocha"
+        "test-cov": "istanbul cover _mocha",
+        "test-cov-all": "istanbul cover --include-all-sources --root ./bin _mocha",
+        "coverage": "cat ./coverage/lcov.info | coveralls"
     },
     "author": "nonjene",
     "license": "MIT",
@@ -14,6 +15,7 @@
         "node": ">=7"
     },
     "devDependencies": {
+        "coveralls": "^3.0.1",
         "mocha": "^4.0.1",
         "shelljs": "^0.8.1",
         "should": "^13.1.3"
