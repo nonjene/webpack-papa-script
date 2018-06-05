@@ -3,6 +3,8 @@ node_js:
   - "7.6"
   - "9"
 script:
-  - npm run test-cov
-after_script:
-  - npm run coverage
+  - npm test
+after_success: npm run coverage
+cache:
+  directories:
+    - "node_modules"
