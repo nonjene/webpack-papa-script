@@ -1,6 +1,6 @@
 {
-  "name": "ok-papa-script",
-  "version": "3.2.0",
+  "name": "webpack-papa-script",
+  "version": "3.2.1",
   "description": "A frontend projects solution",
   "main": "bin/index.js",
   "scripts": {
@@ -63,17 +63,17 @@
     "webpack-subresource-integrity": "^1.0.4"
   },
   "bin": {
-    "okpapa": "./bin/index.js"
+    "papa": "./bin/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nonjene/ok-papa-script.git"
+    "url": "https://github.com/nonjene/webpack-papa-script.git"
   },
   "keywords": ["webpack", "frontend", "multi-project", "project"],
   "bugs": {
-    "url": "https://github.com/nonjene/ok-papa-script/issues"
+    "url": "https://github.com/nonjene/webpack-papa-script/issues"
   },
-  "homepage": "https://github.com/nonjene/ok-papa-script#readme",
+  "homepage": "https://github.com/nonjene/webpack-papa-script#readme",
   "nyc": {
     "extension": [".js"],
     "exclude": [

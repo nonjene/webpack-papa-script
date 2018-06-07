@@ -32,7 +32,7 @@ const doConcat = function() {
 const deployStaticAll = function(isUpload, done, uploadDone) {
   const concatFileList = config.getConf('staticFileConcatOrder');
   if(!Array.isArray(concatFileList) || concatFileList.length===0){
-    logger.log(chalk.yellow(`没有设置需要合并的文件。请将需要合并的文件名定义在 okpapa.config.js 的 staticFileConcatOrder。`));
+    logger.log(chalk.yellow(`没有设置需要合并的文件。请将需要合并的文件名定义在 papa.config.js 的 staticFileConcatOrder。`));
   }else{
     doConcat()
     .then(() => logger.log(chalk.cyan(`${commFileName} 压缩成功。`)))
