@@ -9,7 +9,7 @@
         "watch":"node ../../bin/index w",
         "build": "node ../../bin/index r",
         "build-all": "node ../../bin/index ra",
-        "deploystatic":"node ../../bin/index deploy-static"
+        "deploy-static":"node ../../bin/index deploy-static"
     },
     "author": "nonjene",
     "license": "MIT",
