@@ -5,8 +5,10 @@
     "main": "",
     "scripts": {
         "start": "node ../../bin/index",
+        "create": "node ../../bin/index c",
         "watch":"node ../../bin/index w",
         "build": "node ../../bin/index r",
+        "build-all": "node ../../bin/index ra",
         "deploystatic":"node ../../bin/index deploy-static"
     },
     "author": "nonjene",
