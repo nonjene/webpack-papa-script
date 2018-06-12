@@ -88,8 +88,8 @@ todo:小项目模版
 -----|-----|---- | ---
 创建新文件夹/小项目 | create | `npm run create xx` | 创建一个xx小项目。支持层级的目录：假如是`src/2018/abc`，则把`xx`换为`2018/abc`
 创建小项目时，选用特定的模版 | t | `npm run create xx t min` | 指定模版为`src/`目录下的`_template_min` (默认模版是`_template_def`)
-开启本地开发 | watch | `npm run watch path/to/xx` | `path/to/xx` 代表`src/`下的文件夹，文件夹`xx`需确保[可被识别为一个项目的入口](##如何把一个文件夹被识别为一个项目)
-生成部署代码 | build | `npm run build path/to/xx` | 编译目录`path/to/xx`的代码; 可以指定多个位置, 以`,`间隔，如`npm run build path/to/xx,path/to/yy`。默认是部署`config.productEnvType`指定的模式编译; 具体的编译效果请看[具体介绍](##build的介绍)。
+开启本地开发 | watch | `npm run watch path/to/xx` | `path/to/xx` 代表`src/`下的文件夹，文件夹`xx`需确保[可被识别为一个项目的入口](#如何把一个文件夹被识别为一个项目)
+生成部署代码 | build | `npm run build path/to/xx` | 编译目录`path/to/xx`的代码; 可以指定多个位置, 以`,`间隔，如`npm run build path/to/xx,path/to/yy`。默认是部署`config.productEnvType`指定的模式编译; 具体的编译效果请看[具体介绍](#build的介绍)。
 批量生成部署代码   | build-all | `npm run build-all` | 自动查找`src/`下的所有的项目，依次自动编译所有。
 设置批量生成的范围 | scope | `npm run build-all scope path/to/xx` | 自动查找`src/path/to/xx`下的所有的项目，依次自动编译所有；同`build`命令，`scope`的值也可以包含多个，以`,`间隔。
 选择部署方式 | key值 | `npm run build xx test` | `pro`是`config.deployEnvType`中定义的key值, 默认是`test|pre|pro`.
@@ -101,12 +101,12 @@ todo:小项目模版
 
 ## build的介绍
 
-webpack-papa-script 有非常灵活的编译功能，build的操作可以针对一个或多个或一个范围内的所有项目，详见[使用build命令](###使用build命令)。
+webpack-papa-script 有非常灵活的编译功能，build的操作可以针对一个或多个或一个范围内的所有项目，详见[使用build命令](#使用build命令)。
 
 此外我们可以在项目下的`papa.config.js`自定义build的各项配置，如: 
-- [各种编译模式的定义](###编译模式的定义)
-- [编译代码的输出目录](###编译输出)
-- [定义如何识别项目](###定义如何识别项目)(约定优先，不再需要手工配置入口，只要目录按照这一个参考系数的规则创建，即自动识别为一个项目)
+- [各种编译模式的定义](#编译模式的定义)
+- [编译代码的输出目录](#编译输出)
+- [定义如何识别项目](#定义如何识别项目)(约定优先，不再需要手工配置入口，只要目录按照这一个参考系数的规则创建，即自动识别为一个项目)
 
 ### 使用build命令
 
@@ -198,12 +198,12 @@ webpack-papa-script 有非常灵活的编译功能，build的操作可以针对�
 
 ### 编译代码的输出目录
 
-编译输出位置即上文的[前端环境](####前端环境)提到的`deployEnvType`中定义。
+编译输出位置即上文的[前端环境](#前端环境)提到的`deployEnvType`中定义。
 
 
 ### 定义如何识别项目
 
-项目识别的参考值定义在 `papa.config.js`。比如默认的配置中，目录中含有`config.json`，则识别为一个页面；含有`proj.json`, 则识别为一个多页项目。
+项目识别的参考值定义在 `papa.config.js`，当目录中含有`projContainsOneOf`的值，就识别为项目，其中，假如该目录拥有`proj.json`, 则识别为一个多页项目，其它情况就是单页项目。
 
 具体介绍如下：
 
@@ -211,7 +211,7 @@ webpack-papa-script 有非常灵活的编译功能，build的操作可以针对�
 ----  | --- |----
 projContainsOneOf | `['m', 'pc', 'proj.json', 'config.json']` | 辨别一个项目时，只要一个文件夹里面包含此属性定义的文件或文件夹名，则认定它为一个项目。（无论单独页面还是多页面）
 projScanExclude | `['modules','components', 'img', 'js']` | 获取所有项目时，排除以下这些文件夹里面的内容
-entryInclude | `['index.js', 'index.html']` | 入口文件夹必须包含这些文件。一般不要更改这个值，因为必须包含这两个webpack才能正常编译
+entryInclude | `['index.js', 'index.html']` | 入口文件夹必须包含这些文件。一般不要更改这个值，其中包含 index.js, webpack才能正常编译
 commSingleProjSubPage | `['m', 'pc']` | 可以定义通用的，每个小项目可以默认包含这些子页面，它们共享`config.json`，无需每个这种页面都添加 多页项目识别文件`proj.json`。 比如一个单页项目，不适合做响应式，需要包含电脑端和移动端两个页面。可以定义为空，则忽略掉这个情况。具体请看默认的初始化项目中的模版项目。
 
 
@@ -226,16 +226,22 @@ commSingleProjSubPage | `['m', 'pc']` | 可以定义通用的，每个小项目�
 
 ## 项目风格
 
-### html
+### 小项目的识别
+
+如上文[定义如何识别项目](#定义如何识别项目)所介绍，一个目录含有`proj.json`就识别为一个多页项目，否则假如符合`projContainsOneOf`的范围的话，则识别为一个单页项目。
+
+多页项目里，程序将寻找所有符合`entryInclude`的识别为页面；单页项目假如含有`commSingleProjSubPage`定义的子页面的话，则自动识别为拥有子页面, 参考下文的[html风格](#html风格)
+
+### html风格
   每个页面的html文件只需包含业务代码，编译后会将内容传入html模版。
-  每个页面都包含一个`config.json`文件，如：
+  每个页面都包含一个`config.json`文件，用于定义html模版的变量，如：
   ```shell
     |-foo
     |---config.json
     |---index.js
     |---index.html
   ```
-  假如定义了`commSingleProjSubPage`, 而且项目中含有这些子页面，则json文件放在子页面文件夹的同级, 假如该值是 `['m','pc']`,则如下：
+  假如定义了`commSingleProjSubPage`, 而且项目中含有这些子页面，则json文件放在子页面文件夹的同级, 假如该值是 `['m','pc']`, 则如下：
   ```shell
     |-foo
     |---config.json
@@ -246,20 +252,91 @@ commSingleProjSubPage | `['m', 'pc']` | 可以定义通用的，每个小项目�
     |-----index.js
     |-----index.html
   ```
+  默认的，用`npm run create`命令创建的模版项目是以上第二个的目录结构。
 
-  定义页面的标题等信息
-  参考模版`_template_def`。
+  `config.json`有如下示例：
+
+  属性 | 默认值 | 描述
+  --|--|--
+  title| `标题` | html的`<title/>`
+  htmlFile | `index.html` | 指定html文件的名字
+  templateName_xx |  `index_xx.handlebars` | 指定html模版文件。xx 是假如此页面包含 `commSingleProjSubPage`定义的子页面，xx就是该子页面名字。
+  templateName_comm | `index_comm.handlebars` | 假如该页面不包含`commSingleProjSubPage`的子页面, 则使用这个来指定模版
+  bodyProp | `""` | `<body/>`的属性 比如`"class=\"top\" data-version=\"3.0.0\""`
+  moreMeta | `""` | `<head/>`内添加内容。如`"<link rel=\"dns-prefetch\" href=\"https://www.github.com\">"`
+
+  模版文件位于`resource/html`。
+
+  如果项目目录不包含 config.json, 将不会使用`html模版`，而会把目录顶层的`index.html`视为完整的 html 文件（webpack 编译出来的资源会自动填入）
+
+### 本地开发
+
+本地开发采用 webpack-dev-server，开启了自带的热更新功能，并且整合了比较灵活的代理功能。
+
+在一些场景中，比如我们这个项目并非一个完全独立的站点，它还需要与其他项目联动，那么代理功能就非常实用了。我们可以通过`papa.config.js` 的 `proxy` 设置代理，可以通过正则匹配路径实现代理, 并可以设置多个匹配规则。
+如以下配置, 代理了路径以非 "activity" 开头的所有请求 到本地的80端口：
+```js
+proxy:[
+      {
+        filterPathname: /^\/(?!activity\/)/, 
+        target: 'http://localhost:80',
+      },
+    ],
+```
+
+### 其它
+
+webpack-papa-script 基于webpack，已集成所有常见资源的处理，以下是集成功能的列表：
+* **ES6 -> es5**
+* **React**
+* 集成**babel-runtime**，Promise随便用
+* 可开启ie8兼容，把代码转为es3
+
+    在`resource/html/index_pc.handlebars`模版里，加了ie8以下 es5-slim和 sham 文件的引用，我们可以按照实际场景把该引用链接更换。
+    该文件在`resource/bundle/`中已预置，执行  
+    ```shell
+    npm run deploy-static
+    ```
+    即可把es5-slim-sham文件复制到部署目录中。
+
+* **handlebar**
+* **sass-postcss-autoprofixer**
+* **webpack-dev-server**    本地开发集成热更新及代理
+* **extract-text-webpack-plugin**   build时独立出css文件
+
+支持的文件格式：
+
+* js[x]
+* [s]css
+* png|jpg|gif|svg
+* handlebars|tmpl
+* woff|woff2|eot|ttf
+* pdf
+
+支持的特殊文件：
+
+* sw.js
+
+  使用 file-loader 编译，require后就会把该文件独立释出到输出目录；输出文件名带hash值，可确保sw更新被触发。
+
+* manifest.json
+
+  同样使用 file-loader 编译，但不带hash值，便于固定写在html模版。
+
+* \*.iso.(png|gif)
+  
+  绝对不合并到css文件。其他的小于 4KB 的图片将转为 base64 合并入css文件
 
 
+以下内容因有不理想的效果，所以没有支持：
 
-1. 每个项目里新增 `config.json`, 主要用来配置项目的标题，或`html外层模版`的其他变量。可参考模版(/_template_def/)的示例。
-2. `html外层模版` 存放在`/resource/html/`里。
-3. 每个项目里会自动新增 config_v.js, 无需理会此文件。
-4. 如果项目目录不包含 config.json, 将不会使用`html外层模版`，而会把目录顶层的`index.html`视为完整的 html 文件（webpack 编译出来的资源会自动填入）
+* 图片压缩功能
 
-* 可以使用 ES6，react。
-* 可用 handlebar 模版。
-* sass、及 autoprofixer 的添加
+  转换png时，现有的图片压缩插件是把png24转为png8，会导致图片低质量，所以在找到更好的压缩功能后再添加该功能。
+
+* `.html`文件内的资源引用
+
+  如index.html假如有`<img src="foo.jpg"/>`，foo.jpg无法解析。这类功能请转移到css、React 或 handlebars实现。
 
 
 
@@ -267,27 +344,5 @@ commSingleProjSubPage | `['m', 'pc']` | 可以定义通用的，每个小项目�
   papa.config.js的配置介绍：
  
 
-# 特点
-
-1. `/resource/js/`里的js文件可以合并为 common.js，并自动插入到 html 引用。具体的文件选择及排序可在`okpapa.config.json`的`staticFileConcatOrder`配置。
-
-
-## 注意的地方
-* 关于js里本地图片的引用，不能直接填写地址字符串，要用require。（参考例子）
-* 不要在`.html`文件里直接引用图片，其他地方均可以，如js[x] css handlebars
-
-## 其他特点
-
-* 由于已有的图片压缩插件会导致图片过低质量，所以暂时不内置图片压缩功能
-
-
-
 # 常见问题
-    
 
-# Config
-
-papa.config.js:
-```js
-{}
-```

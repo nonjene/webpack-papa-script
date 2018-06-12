@@ -19,7 +19,7 @@ const _emptyCache = dir => {
   }
 };
 /* istanbul ignore next */
-const errMsgNoMPC = (Tar)=>chalk.red(`没有找到：${Tar}，或里面没有m|pc文件夹或proj.json文件，已略过，请检查拼写`) + '🤦';
+const errMsgNoMPC = (Tar)=>chalk.red(`没有找到：${Tar}，或里面没有${getConf(commSingleProjSubPage).join('|')}文件夹或proj.json文件，已略过，请检查拼写`) + '🤦';
 
 // 给 webpack.config 读取
 const setEnv = {
