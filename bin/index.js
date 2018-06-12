@@ -24,9 +24,7 @@ program
 
   .option('w, --watch <活动名>', '开发一个活动，监听代码实时刷新，并开启服务', name => config.setTarget(name))
   .option('r, --release <活动名>', '发布某个活动的代码。默认生产环境', name => config.setTarget(name))
-  .option('pre, --pre', '代码发布到预发环境(只配合r命令)', () => config.setEnv('production'))
-  .option('test, --test', '代码发布到测试环境(只配合r命令)', () => config.setEnv('production'))
-
+  
   .option('duan <pc或m>', 'pc端or移动端，或者commSingleProjSubPage配置的文件夹名。', name => config.setDuan(name))
 
   .option('ra, --release-all', '发布所有活动。')
@@ -45,10 +43,13 @@ program
   .option('c, --create <活动名>', '新建一个活动', name => setTimeout(() => createAHuodong(name), 0))
   .option('t --template <模版名>', '新建一个活动时，选一个模版', (name, meno) => meno = name)
 
-  .option('P, --proxy-port <端口>', '定义本地测试的平台页面服务端口，默认80', name => config.setConf('proxyPort', name))
-  .option('deploy-static', '把/resource/static的文件复制到3个环境')
+  .option('deploy-static', '把/resource/static的文件复制到3个环境');
   
-  .parse(process.argv);
+Object.keys(config.deployEnvType).forEach(name=>{
+  program.option(`${name}, --${name}`, `发布到${config.releaseEnvDesc[name]}环境`, ()=>config.setEnv('production'));
+});
+  
+program.parse(process.argv);
 
 // 配置写入process.env的形式
 
