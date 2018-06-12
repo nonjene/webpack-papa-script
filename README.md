@@ -75,8 +75,6 @@ webpack-papa-script 是一个帮助前端开发更轻易地执行从开发到�
 
 - 其他功能参考详细的[命令介绍](#命令介绍)
 
-todo:创建一个多页面的小项目
-todo:小项目模版
 
 # 功能介绍
 
@@ -284,7 +282,7 @@ proxy:[
     ],
 ```
 
-### 其它
+## 集成功能
 
 webpack-papa-script 基于webpack，已集成所有常见资源的处理，以下是集成功能的列表：
 * **ES6 -> es5**
@@ -304,7 +302,7 @@ webpack-papa-script 基于webpack，已集成所有常见资源的处理，以�
 * **webpack-dev-server**    本地开发集成热更新及代理
 * **extract-text-webpack-plugin**   build时独立出css文件
 
-支持的文件格式：
+## 编译支持的文件格式：
 
 * js[x]
 * [s]css
@@ -313,7 +311,7 @@ webpack-papa-script 基于webpack，已集成所有常见资源的处理，以�
 * woff|woff2|eot|ttf
 * pdf
 
-支持的特殊文件：
+## 编译支持的特殊文件：
 
 * sw.js
 
@@ -338,11 +336,130 @@ webpack-papa-script 基于webpack，已集成所有常见资源的处理，以�
 
   如index.html假如有`<img src="foo.jpg"/>`，foo.jpg无法解析。这类功能请转移到css、React 或 handlebars实现。
 
+## eject
 
+假如 webpack-papa-script 满足不了项目的需要，随时可运行 `create-webpack-papa eject`，把 webpack-papa-script 的代码转移到项目目录上，对构建代码自行修改。不过需要注意的是，该操作无法逆转，操作前请确认清楚。
 
-# 项目配置
-  papa.config.js的配置介绍：
- 
+## 项目配置
+  以下是默认配置，我们可以在项目的 papa.config.js 修改这些属性：
 
-# 常见问题
+```js
+{
+    // 自动上传ftp需要的配置信息
+    ftp: {
+      host: '192.168.1.1',
+      port: '',
+      user: 'user',
+      password: 'ps'
+    },
+
+    // ftp的根目录
+    remoteBasePath: '',
+    
+    // ftp的目录
+    remotePath: '/activity/{$target}/',
+
+    // 需要上传到ftp的根目录
+    localAssetPath: 'build/activity',
+
+    // 部署上线时的host
+    domainName: 'http://m.okpapa.com',
+
+    // js,css,image 等资源的host
+    cdnDomain: 'https://images.okpapa.com',
+    
+    // 代理信息, 数据类型: object array 
+    proxy:[
+      {
+        filterPathname: /^\/(?!activity\/)/,  // 代理 pathname 以非 activity开头的所有请求
+        target: 'http://localhost:80',
+      },
+    ],
+    
+    //本地开发环境的服务端口
+    servePort: 3005,
+    
+    // 本地开发环境的静态资源基目录（同 devServer.contentBase）
+    serveContentBase:'./build/',
+    
+    // `resource/js` 中的js文件的合并顺序，合并生成脱离webpack的公共代码包 
+    staticFileConcatOrder: [],
+
+    // 合并js的命名
+    staticFileName:'common.js',
+
+    // 脱离webpack的公共文件的输出子路径
+    staticFileSubPath:'static',
+
+    // 覆盖预置的webpack配置
+    webpackConfig: {},
+
+    // 是否支持ie8
+    kiss_ie8: true,
+
+    // 定义一个页面下面还分哪些版本页面。
+    // 比如一个单页项目，不适合做响应式，需要包含电脑端和移动端两个页面。可以定义为空，则忽略掉这个情况
+    commSingleProjSubPage:['m', 'pc'],
+
+    // 辨别一个项目时，只要一个文件夹里面包含以下文件或文件夹，则认定它为一个项目。（无论单独页面还是多页面）
+    projContainsOneOf: ['m', 'pc', 'proj.json', 'config.json'],
+
+    // 获取所有项目时，排除以下这些文件夹里面的内容（不会在已识别为proj的文件夹里再查找）
+    projScanExclude:['modules', 'module', 'static', 'components', 'component', 'img', 'js'],
+
+    // 验证 webpack 入口必须包含这个值的所有文件。
+    entryInclude: ['index.js', 'index.html'],
+
+    //本地开发环境的命名和前端代码注入的环境变量名。
+    developEnvType: {
+      deploy: 'test', //命名
+      fetch: 'test'   //环境变量名
+    },
+    
+    //正式上线的环境
+    productEnvType: {
+      deploy: 'pro',
+      fetch: 'produce'
+    },
+
+    //环境名称对应的输出路径
+    deployEnvType: {
+      pre: 'dist/pre',
+      pro: 'dist/pro',
+      test: 'build/activity'
+    },
+
+    //环境名称对应的前端环境变量名
+    deployEnvMapFetch: {
+      pre: 'pre',
+      pro: 'produce',
+      test: 'test'
+    },
+
+    // 环境名称的中文名，用于命令行的显示
+    releaseEnvDesc: {
+      pre: '预发环境😛',
+      pro: '生产环境😝',
+      test: '开发环境🤔'
+    },
+
+    // 前端环境的中文名
+    fetchEnvDesc: {
+      pre: '预发环境🥑',
+      test: '测试环境🥝',
+      produce: '生产环境🍓'
+    },
+    // 前端代码注入内容
+    // mode: 前端环境变量
+    // debug: 环境与productEnvType一致时，则为false，否则true
+    frontendConfCode:`try{
+      Object.assign(window.publicConfig, {
+        mode:"{$mode}",
+        debug:{$debug}
+      });
+    }catch(e){}`,
+  },
+```
+
+## 常见问题
 
