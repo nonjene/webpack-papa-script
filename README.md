@@ -55,9 +55,9 @@ npm run create my-proj1
 npm run watch my-proj1
 ```
 
-部署上线代码, 假如在`papa.config.js`定义线上为`pro`
+部署上线代码
 ```shell
-npm run build my-proj1 pro
+npm run build my-proj1
 ```
 
 其他功能参考详细的[cli命令](#cli命令)
@@ -77,10 +77,10 @@ npm run build my-proj1 pro
 生成部署代码  | `npm run build path/to/foo`或`npm run build path/to/foo,path/to/bar` | 编译目录`path/to/foo`的代码; 可以指定多个位置, 以`,`间隔。默认是部署`config.productEnvType`指定的模式编译; 具体的编译效果请看[具体介绍](#build的介绍)。
 批量生成部署代码   | `npm run build-all` | 自动查找`src/`下的所有的项目, 依次自动编译所有。
 设置批量生成的范围 | `npm run build-all scope path/to/foo` | 自动查找`src/path/to/foo`下的所有的项目, 依次自动编译所有；同`build`命令, `scope`的值也可以包含多个, 以`,`间隔。
-选择部署方式  | `npm run build foo test` | `pro`是`config.deployEnvType`中定义的key值, 默认是`test\|pre\|pro`.
-上传代码到ftp  | `npm run build foo test u`或`npm start u foo` | `foo`在test模式编译后, 立即上传; 或指定上传的项目。(上传目录在`config.localAssetPath`设定。)
+选择部署环境  | `npm run build foo test` | `pro`是`config.deployEnvType`中定义的key值, 默认是`test\|pre\|pro`.
+上传ftp  | `npm run build foo test u`或`npm start u foo` | `foo`在test模式编译后, 立即上传; 或指定上传的项目。(上传目录在`config.localAssetPath`设定。)
 生成公共资源 | `npm run deploy-static` | 把`./resource/js`打包📦, 生成脱离webpack的公共代码包到`./resource/bundle`, 并把`./resource/bundle`的所有资源分发到`config.deployEnvType`配置的目录上(watch命令也会自动执行资源分发)
-设置前端代码的模式 | `npm run watch foo mode pro` | 把本地开发的代码的环境切换为pro的环境。为了避免误操作, 只有在`config.developEnvType`设置的环境下才能使用`mode`(`watch`即为该环境)。假如确实需要在其他环境切换, 可以把`mode`换为`hard-mode`
+设置前端的环境变量 | `npm run watch foo mode pro` | 把本地开发的代码的环境切换为pro的环境。为了避免误操作, 只有在`config.developEnvType`设置的环境下才能使用`mode`(`watch`即为该环境)。假如确实需要在其他环境切换, 可以把`mode`换为`hard-mode`
 强制编译环境为production | `npm run watch foo p` | 一般不需要使用, 某些情况为了调试或测试可用。此例子可把本地开发的编译效果改为像build那样
 强制编译环境为development | `npm run build foo d` | 一般不需要使用, 某些情况为了调试或测试可用。效果与`p`相反。
 
