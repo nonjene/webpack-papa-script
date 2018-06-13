@@ -301,10 +301,10 @@ proxy:[
 ## 集成功能
 
 webpack-papa-script 基于webpack, 已集成所有常见资源的处理, 以下是集成功能的列表：
-* **ES6 -> es5**
+* **ES6 -> ES5**
 * **React**
 * 集成**babel-runtime**, Promise随便用
-* 可开启ie8兼容, 把代码转为es3
+* 可开启ie8兼容, 把代码转为ES3
 
     在`resource/html/index_pc.handlebars`模版里, 加了ie8以下 es5-slim和 sham 文件的引用, 我们可以按照实际场景把该引用链接更换。
     该文件在`resource/bundle/`中已预置, 执行  
@@ -329,26 +329,26 @@ webpack-papa-script 基于webpack, 已集成所有常见资源的处理, 以下�
 
 ### 编译支持的特殊文件
 
-* sw.js
+* **sw.js**
 
   使用 file-loader 编译, require后就会把该文件独立释出到输出目录；输出文件名带hash值, 可确保sw更新被触发。
 
-* manifest.json
+* **manifest.json**
 
   同样使用 file-loader 编译, 但不带hash值, 便于固定写在html模版。
 
-* \*.iso.(png|gif)
+* **\*.iso.(png|gif)**
   
   绝对不合并到css文件。其他的小于 4KB 的图片将转为 base64 合并入css文件
 
 
 以下内容因有不理想的效果, 所以没有支持：
 
-* 图片压缩功能
+* **图片压缩功能**
 
   转换png时, 现有的图片压缩插件是把png24转为png8, 会导致图片低质量, 所以在找到更好的压缩功能后再添加该功能。
 
-* `.html`文件内的资源引用
+* **`.html`文件内的资源引用**
 
   如index.html假如有`<img src="foo.jpg"/>`, foo.jpg无法解析。这类功能请转移到css、React 或 handlebars实现。
 
