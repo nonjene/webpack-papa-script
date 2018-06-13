@@ -69,8 +69,17 @@ npm run build my-proj1 pro
 
 通用地, 命令采用`npm run foo`模式, foo代表具体的命令名称, 后面可接其他参数。一些参数内容是与`papa.config.js`的配置对应的。
 
-功能 | 命令&nbsp; &nbsp; &nbsp; &nbsp;  | 例子&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; | 说明
-----|--|------------ | ---
+<style>
+  .table1 table td:nth-of-type(1){
+    min-width: 200px;
+  }
+  .table1 table td:nth-of-type(3){
+    min-width: 250px;
+  }
+</style>
+<div class="table1">
+功能 | 命令 | 例子 | 说明
+-- | -- | -- | ---
 创建新小项目 | create | `npm run create foo` | 创建一个foo小项目。支持层级的目录：假如是`src/2018/abc`, 则把`foo`换为`2018/abc`
 创建小项目时, 选用特定的模版 | t | `npm run create foo t min` | 模版使用`src/_template_min` (默认模版是`_template_def`)
 开启本地开发 | watch | `npm run watch path/to/foo` | `path/to/foo` 代表`src/`下的文件夹
@@ -83,7 +92,7 @@ npm run build my-proj1 pro
 设置前端代码的模式 | mode | `npm run watch foo mode pro` | 把本地开发的代码的环境切换为pro的环境。为了避免误操作, 只有在`config.developEnvType`设置的环境下才能使用`mode`(`watch`即为该环境)。假如确实需要在其他环境切换, 可以把`mode`换为`hard-mode`
 强制编译环境为production | p | `npm run watch foo p` | 一般不需要使用, 某些情况为了调试或测试可用。此例子可把本地开发的编译效果改为像build那样
 强制编译环境为development | d | `npm run build foo d` | 一般不需要使用, 某些情况为了调试或测试可用。效果与`p`相反。
-
+</div>
 ### build的介绍
 
 webpack-papa-script 有非常灵活的编译功能, build的操作可以针对一个或多个或一个范围内的所有项目, 详见[使用build命令](#使用build命令)。
