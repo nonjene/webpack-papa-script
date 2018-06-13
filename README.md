@@ -221,6 +221,8 @@ webpack-papa-script 有非常灵活的编译功能, build的操作可以针对�
 
 如上文[定义如何识别项目](#定义如何识别项目)所介绍, 一个目录含有`proj.json`就识别为一个多页项目, 否则假如符合`projContainsOneOf`的范围的话, 则识别为一个单页项目。
 
+`proj.json`文件只作为标记，内容可为空。
+
 多页项目里, 程序将寻找所有符合`entryInclude`的识别为页面；单页项目假如含有`commSingleProjSubPage`定义的子页面的话, 则自动识别为拥有子页面, 参考[html风格](#html风格)
 
 ### html风格
