@@ -70,7 +70,7 @@ npm run build my-proj1 pro
 通用地, 命令采用`npm run foo`模式, foo代表具体的命令名称, 后面可接其他参数。一些参数内容是与`papa.config.js`的配置对应的。
 
 功能 | 例子 | 说明
---------------- | ------- | ----------------------------- | ---
+---------------  | ----------------------------- | ---
 创建新小项目  | `npm run create foo` | 创建一个foo小项目。支持层级的目录：假如是`src/2018/abc`, 则把`foo`换为`2018/abc`
 选用特定的模版创建项目 | `npm run create foo t min` | 模版使用`src/_template_min` (默认模版是`_template_def`)
 开启本地开发  | `npm run watch path/to/foo` | `path/to/foo` 代表`src/`下的文件夹
