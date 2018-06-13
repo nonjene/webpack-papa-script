@@ -69,19 +69,10 @@ npm run build my-proj1 pro
 
 通用地, 命令采用`npm run foo`模式, foo代表具体的命令名称, 后面可接其他参数。一些参数内容是与`papa.config.js`的配置对应的。
 
-<style>
-  .table1 table td:nth-of-type(1){
-    min-width: 200px;
-  }
-  .table1 table td:nth-of-type(3){
-    min-width: 250px;
-  }
-</style>
-<div class="table1">
 功能 | 命令 | 例子 | 说明
--- | -- | -- | ---
+---------- | ------- | ------------------------- | ---
 创建新小项目 | create | `npm run create foo` | 创建一个foo小项目。支持层级的目录：假如是`src/2018/abc`, 则把`foo`换为`2018/abc`
-创建小项目时, 选用特定的模版 | t | `npm run create foo t min` | 模版使用`src/_template_min` (默认模版是`_template_def`)
+选用特定的模版创建项目 | t | `npm run create foo t min` | 模版使用`src/_template_min` (默认模版是`_template_def`)
 开启本地开发 | watch | `npm run watch path/to/foo` | `path/to/foo` 代表`src/`下的文件夹
 生成部署代码 | build | `npm run build path/to/foo`或`npm run build path/to/foo,path/to/bar` | 编译目录`path/to/foo`的代码; 可以指定多个位置, 以`,`间隔。默认是部署`config.productEnvType`指定的模式编译; 具体的编译效果请看[具体介绍](#build的介绍)。
 批量生成部署代码   | build-all | `npm run build-all` | 自动查找`src/`下的所有的项目, 依次自动编译所有。
@@ -92,7 +83,7 @@ npm run build my-proj1 pro
 设置前端代码的模式 | mode | `npm run watch foo mode pro` | 把本地开发的代码的环境切换为pro的环境。为了避免误操作, 只有在`config.developEnvType`设置的环境下才能使用`mode`(`watch`即为该环境)。假如确实需要在其他环境切换, 可以把`mode`换为`hard-mode`
 强制编译环境为production | p | `npm run watch foo p` | 一般不需要使用, 某些情况为了调试或测试可用。此例子可把本地开发的编译效果改为像build那样
 强制编译环境为development | d | `npm run build foo d` | 一般不需要使用, 某些情况为了调试或测试可用。效果与`p`相反。
-</div>
+
 ### build的介绍
 
 webpack-papa-script 有非常灵活的编译功能, build的操作可以针对一个或多个或一个范围内的所有项目, 详见[使用build命令](#使用build命令)。
@@ -201,12 +192,12 @@ webpack-papa-script 有非常灵活的编译功能, build的操作可以针对�
 
 具体介绍如下：
 
-参数名 | 默认值 | 描述
-----  | --- |----
-projContainsOneOf | `['m', 'pc', 'proj.json', 'config.json']` | 辨别一个项目时, 只要一个文件夹里面包含此属性定义的文件或文件夹名, 则认定它为一个项目。（无论单独页面还是多页面）
-projScanExclude | `['modules','components', 'img', 'js']` | 获取所有项目时, 排除以下这些文件夹里面的内容
-entryInclude | `['index.js', 'index.html']` | 入口文件夹必须包含这些文件。一般不要更改这个值, 其中包含 index.js, webpack才能正常编译
-commSingleProjSubPage | `['m', 'pc']` | 可以定义通用的, 每个小项目可以默认包含这些子页面, 它们共享`config.json`, 无需每个这种页面都添加 多页项目识别文件`proj.json`。 比如一个单页项目, 不适合做响应式, 需要包含电脑端和移动端两个页面。可以定义为空, 则忽略掉这个情况。具体请看默认的初始化项目中的模版项目。
+| 参数名                | 默认值                                    | 描述                                                                                                                                                                                                                                                                   |
+| --------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| projContainsOneOf     | `['m', 'pc', 'proj.json', 'config.json']` | 辨别一个项目时, 只要一个文件夹里面包含此属性定义的文件或文件夹名, 则认定它为一个项目。（无论单独页面还是多页面）                                                                                                                                                       |
+| projScanExclude       | `['modules','components', 'img', 'js']`   | 获取所有项目时, 排除以下这些文件夹里面的内容                                                                                                                                                                                                                           |
+| entryInclude          | `['index.js', 'index.html']`              | 入口文件夹必须包含这些文件。一般不要更改这个值, 其中包含 index.js, webpack才能正常编译                                                                                                                                                                                 |
+| commSingleProjSubPage | `['m', 'pc']`                             | 可以定义通用的, 每个小项目可以默认包含这些子页面, 它们共享`config.json`, 无需每个这种页面都添加 多页项目识别文件`proj.json`。 比如一个单页项目, 不适合做响应式, 需要包含电脑端和移动端两个页面。可以定义为空, 则忽略掉这个情况。具体请看默认的初始化项目中的模版项目。 |
 
 
 ### 部署非webpack的公共静态资源
