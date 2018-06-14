@@ -9,6 +9,15 @@ const projConf = (fs.existsSync(projConfPath) && require(projConfPath)) || {};
 
 const StaticConfig = Object.assign(
   {
+    defPlugin:{
+      sri: true,
+      uglifyJs: true
+    },
+    customPlugin:{
+      production: [],
+      development: []
+    },
+    codeChk:{},
     ftp: {
       host: '192.168.1.1',
       port: '',

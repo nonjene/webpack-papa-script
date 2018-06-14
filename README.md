@@ -407,6 +407,18 @@ webpack-papa-script 基于webpack, 已集成所有常见资源的处理, 以下�
     // 脱离webpack的公共文件的输出子路径
     staticFileSubPath:'static',
 
+    // 是否启用自带的plugin
+    defPlugin:{
+      sri: true,      //webpack-subresource-integrity, 非https的话，请设为false
+      uglifyJs: true  //是否压缩js
+    },
+
+    // 加入其他 webpack 插件
+    customPlugin:{
+      production: [], // 正式环境
+      development: [] // 开发环境
+    },
+
     // 覆盖预置的webpack配置
     webpackConfig: {},
 

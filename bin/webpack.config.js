@@ -50,7 +50,7 @@ const plugins = [
    }),*/
   new SriPlugin({
     hashFuncNames: ['sha512'],
-    enabled: process.env.NODE_ENV === 'production'
+    enabled: process.env.NODE_ENV === 'production' && dc.defPlugin.sri
   }),
   ...Set.htmlDeclare
 ];
@@ -64,9 +64,10 @@ if (IsProduction) {
       'process.env': {
         NODE_ENV: JSON.stringify('production')
       }
-    })
+    }),
+    ...dc.customPlugin.production
   );
-  if (!IsTest) {
+  if (!IsTest && dc.defPlugin.uglifyJs) {
     plugins.push(
       new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -98,7 +99,7 @@ if (IsProduction) {
 // not IsProduction
 else {
   //console.log('目前编译开发环境');
-  plugins.push(new webpack.HotModuleReplacementPlugin());
+  plugins.push(new webpack.HotModuleReplacementPlugin(),...dc.customPlugin.development);
 
   CSS_Module_Loader_Pargram =
     '?modules&importLoaders=1&localIdentName=[path]__[name]__[local]__[hash:3]';
