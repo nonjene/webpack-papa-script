@@ -18,6 +18,10 @@ module.exports = {
       }
     }
   },
+  shouldCompileProceed: {
+    production: null,
+    development: null,
+  },
 
   //本地开发环境
   developEnvType: {
