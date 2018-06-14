@@ -17,7 +17,15 @@ const StaticConfig = Object.assign(
       production: [],
       development: []
     },
-    codeChk:{},
+    /**
+    * 即将执行编译前的时候，根据这个函数返回决定是继续还是中断。可为空，空则忽略。分正式环境和开发环境
+    * aTargets {array}    用户输入所有项目的完整路径
+    * return   {boolean}  false 则中断编译
+    */
+   shouldCompileProceed: {
+     production: null,
+     development: null,
+   },
     ftp: {
       host: '192.168.1.1',
       port: '',

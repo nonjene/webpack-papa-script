@@ -419,6 +419,16 @@ webpack-papa-script 基于webpack, 已集成所有常见资源的处理, 以下�
       development: [] // 开发环境
     },
 
+    /**
+     * 即将执行编译前的时候，根据这个函数返回决定是继续还是中断。可为空，空则忽略。分正式环境和开发环境
+     * aTargets {array}    用户输入所有项目的完整路径
+     * return   {boolean}  false 则中断编译
+     */
+    shouldCompileProceed: {
+      production: (aTargets)=>{return true},
+      development: (aTargets)=>{return true},
+    },
+
     // 覆盖预置的webpack配置
     webpackConfig: {},
 
