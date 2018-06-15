@@ -80,7 +80,7 @@ const setEntry = function (subpath, duan) {
   delete targetConf.htmlFile;
 
   const cdnPrefix = IsPro ? dc.cdnDomain : '';
-  const comFilePath = path.join(T(dc.remotePath, {target: dc.staticFileSubPath}), dc.staticFileName);
+  const comFilePath = path.join(T(dc.remotePath, {target: dc.staticFileSubPath}), dc.staticFileName).replace(/[\\|\/]/g, '/');
 
   const commonFileDir = getCommConcatFullPath();
   const linkParam = `?h=${(fs.existsSync(commonFileDir) && md5File.sync(commonFileDir) || '').slice(-5)}`;
