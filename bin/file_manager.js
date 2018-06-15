@@ -13,7 +13,7 @@ const { getAllSubPageName } = require('./util/getAllProjName');
 
 const { localAssetPath, remoteBasePath, remotePath, domainName } = require('./config');
 const logger = require('./util/logger');
-const regSep = new RegExp(path.sep,'g');
+const regSep = new RegExp("[/|\\]",'g');
 
 module.exports = {
   getAssetsFiles(target, duans, callback) {
