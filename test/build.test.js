@@ -192,7 +192,7 @@ describe('build', function() {
             should(
               fs
                 .readFileSync(path.join(relDir, 'vendors', name), 'utf8')
-                .match('https:/images.okpapa.com/activity/proj2/')
+                .match('https://images.okpapa.com/activity/proj2/')
             ).be.ok();
           });
       });
