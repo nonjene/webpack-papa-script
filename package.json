@@ -5,7 +5,8 @@
   "main": "bin/index.js",
   "scripts": {
     "test": "nyc mocha --exit",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "pub":"git push | npm publish"
   },
   "author": "nonjene",
   "license": "MIT",
