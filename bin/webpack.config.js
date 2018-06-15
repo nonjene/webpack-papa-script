@@ -88,8 +88,7 @@ if (IsProduction) {
   if (IsTest) {
     publicPath = T(dc.remotePath, { target: Set.module });
   } else {
-    publicPath = path.join(
-      IsPro ? dc.cdnDomain : '',
+    publicPath = (IsPro ? dc.cdnDomain : '') + path.join(
       T(dc.remotePath, {
         target: Set.module
       })
