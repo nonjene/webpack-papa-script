@@ -54,9 +54,9 @@ module.exports = {
       opt,
       filesInfo,
       (remoteFullPath, localFullPath, next) => {
-        const remoteDir = path.dirname(remoteFullPath);
+        const remoteDir = path.dirname(remoteFullPath).replace(/\\/g,'/');
         this.mkdir(remoteDir)
-          .then(() => this.putFile(remoteFullPath, localFullPath))
+          .then(() => this.putFile(remoteFullPath.replace(/\\/g,'/'), localFullPath))
           .then(() => next())
           .catch(/* istanbul ignore next */ function(e) {
             console.log(chalk.yellow(e));

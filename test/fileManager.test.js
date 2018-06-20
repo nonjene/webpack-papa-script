@@ -58,7 +58,7 @@ describe('#fileManger', function() {
       });
       it('get correct quantity of the whole "./src", ', ()=>{
         const entries = getAllProjName();
-        entries.should.be.eql('_template_def,proj1,proj2,subFolder/proj1,subFolder/proj2');
+        entries.should.be.eql('_template_def,proj1,proj2,proj_react,subFolder/proj1,subFolder/proj2');
       });
     });
   });
