@@ -1,8 +1,12 @@
-const React = require('react14');
+const React = require('react');
 
 const ReactDOM = require('react-dom');
 const { HashRouter: Router, Route } = require('react-router-dom');
-const App = require('./App');
+
+const App = function(){
+  return <div>ok</div>
+};
+
 const Root = React.createClass({
     render() {
         return <Router>
@@ -11,7 +15,6 @@ const Root = React.createClass({
     }
 });
 
-export default function(){
-
+module.exports = function(){
     ReactDOM.render(<Root />, document.getElementById('container'));
 };

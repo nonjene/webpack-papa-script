@@ -4,4 +4,4 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // react 入口
-require('./entry.jsx');
+require('./entry.jsx')();
