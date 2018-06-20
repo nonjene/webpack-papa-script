@@ -6,16 +6,17 @@
     "scripts": {
         "start": "node ../../bin/index",
         "create": "node ../../bin/index c",
-        "watch":"node ../../bin/index w",
+        "watch": "node ../../bin/index w",
         "build": "node ../../bin/index r",
         "build-all": "node ../../bin/index ra",
-        "deploy-static":"node ../../bin/index deploy-static"
+        "deploy-static": "node ../../bin/index deploy-static"
     },
     "author": "nonjene",
     "license": "MIT",
     "dependencies": {
         "react": "^15.5.4",
-        "react-dom": "^15.5.4"
+        "react-dom": "^15.5.4",
+        "react-router-dom": "^4.3.1"
     },
     "devDependencies": {},
     "bin": {},
