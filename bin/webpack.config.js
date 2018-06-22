@@ -7,6 +7,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const SriPlugin = require('webpack-subresource-integrity');
 
 const T = require('./util/tpl');
+const webPath = require('./util/webPath');
 const dc = require('./config');
 
 const Set = require('./webpack.set.entry');
@@ -20,7 +21,7 @@ const vendorLoc = Set.DUAN.length < 2 ? Set.DUAN[0] : 'vendors';
 const fileNameHash = IsProduction ? '_[hash:8]' : '';
 
 const kiss_ie8 = dc.kiss_ie8; // Same name as uglify's IE8 option. Turn this on to enable HMR.
-const sep = path.sep.replace(/(\/|\\)/g, '\\$1');
+const strSep = path.sep.replace(/(\/|\\)/g, '\\$1');
 
 const rootDir = path.join(process.cwd(), './src');
 
@@ -88,7 +89,7 @@ if (IsProduction) {
   if (IsTest) {
     publicPath = T(dc.remotePath, { target: Set.module });
   } else {
-    publicPath = (IsPro ? dc.cdnDomain : '') + path.join(
+    publicPath = (IsPro ? dc.cdnDomain : '') + webPath.join(
       T(dc.remotePath, {
         target: Set.module
       })
@@ -279,7 +280,7 @@ const webpackConfig = {
       //#region tpl
       {
         test: /\.handlebars$/,
-        exclude: new RegExp(`resource${sep}html`),
+        exclude: new RegExp(`resource${strSep}html`),
         use: [
           {
             loader: 'handlebars-loader',
@@ -295,7 +296,7 @@ const webpackConfig = {
         ]
       },
       {
-        test: new RegExp(`resource${sep}html${sep}.+\\.handlebars$`),
+        test: new RegExp(`resource${strSep}html${strSep}.+\\.handlebars$`),
         use: [
           {
             loader: 'handlebars-loader'

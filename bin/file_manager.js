@@ -13,7 +13,7 @@ const { getAllSubPageName } = require('./util/getAllProjName');
 
 const { localAssetPath, remoteBasePath, remotePath, domainName } = require('./config');
 const logger = require('./util/logger');
-const regSep = new RegExp("[\/|\\\\]",'g');
+const webPath = require('./util/webPath');
 
 module.exports = {
   getAssetsFiles(target, duans, callback) {
@@ -64,8 +64,8 @@ module.exports = {
               .filter(file=>!fs.statSync(path.join(dir,file)).isDirectory())
               .map(file => ({
                 fileName: file,
-                localFullPath: path.join(localDir, subPath, file).replace(regSep, '/'),
-                remoteFullPath: path.join(remoteDir, subPath, file).replace(regSep, '/'),
+                localFullPath: webPath.join(localDir, subPath, file),
+                remoteFullPath: webPath.join(remoteDir, subPath, file),
               }))
           ];
 
@@ -102,7 +102,7 @@ module.exports = {
           collection.push({
             fileName: file,
             localFullPath: path.join(localDir, file),
-            remoteFullPath: path.join(remoteDir, file)
+            remoteFullPath: webPath.join(remoteDir, file)
           });
         }
         return collection;
@@ -129,7 +129,7 @@ module.exports = {
     asyncEach(
       filesInfo,
       function ({ fileName, localFullPath, remoteFullPath }, next) {
-        const RealRemoteFullPath = path.join(remoteBasePath, remoteFullPath); //打个布丁
+        const RealRemoteFullPath = webPath.join(remoteBasePath, remoteFullPath); //打个布丁
 
         return uploadFunc(RealRemoteFullPath, localFullPath, err => {
            /* istanbul ignore if */

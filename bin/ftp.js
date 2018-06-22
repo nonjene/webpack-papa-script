@@ -7,7 +7,7 @@ const chalk = require('chalk');
 
 const { getConf, ftp: FtpConf } = require('./config');
 const fileManager = require('./file_manager');
-
+const {webify} = require('./util/webPath');
 const Client = require('ftp');
 const c = new Client();
 
@@ -54,9 +54,9 @@ module.exports = {
       opt,
       filesInfo,
       (remoteFullPath, localFullPath, next) => {
-        const remoteDir = path.dirname(remoteFullPath).replace(/\\/g,'/');
+        const remoteDir = webify(path.dirname(remoteFullPath));
         this.mkdir(remoteDir)
-          .then(() => this.putFile(remoteFullPath.replace(/\\/g,'/'), localFullPath))
+          .then(() => this.putFile(remoteFullPath, localFullPath))
           .then(() => next())
           .catch(/* istanbul ignore next */ function(e) {
             console.log(chalk.yellow(e));

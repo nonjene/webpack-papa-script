@@ -24,7 +24,7 @@ const DUAN = process.env.DUAN ? process.env.DUAN.split(',') : ['pc', 'm'];
 
 const fs = require('fs');
 const path = require('path');
-
+const webPath = require('./util/webPath');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const DIR_SRC = path.resolve(`${process.cwd()}/src/`) + '/';
@@ -80,7 +80,7 @@ const setEntry = function (subpath, duan) {
   delete targetConf.htmlFile;
 
   const cdnPrefix = IsPro ? dc.cdnDomain : '';
-  const comFilePath = path.join(T(dc.remotePath, {target: dc.staticFileSubPath}), dc.staticFileName).replace(/[\\|\/]/g, '/');
+  const comFilePath = webPath.join(T(dc.remotePath, {target: dc.staticFileSubPath}), dc.staticFileName);
 
   const commonFileDir = getCommConcatFullPath();
   const linkParam = `?h=${(fs.existsSync(commonFileDir) && md5File.sync(commonFileDir) || '').slice(-5)}`;
