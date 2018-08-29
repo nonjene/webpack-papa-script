@@ -369,13 +369,13 @@ webpack-papa-script 基于webpack, 已集成所有常见资源的处理, 以下�
       password: 'ps'
     },
 
-    // ftp的根目录
+    // ftp上的根目录
     remoteBasePath: '',
     
-    // ftp的目录
+    // ftp的目录,{$target}是一个固定的变量名，是小项目名称的占位符
     remotePath: '/activity/{$target}/',
 
-    // 需要上传到ftp的根目录
+    // 需要上传到ftp的本地目录
     localAssetPath: 'build/activity',
 
     // 部署上线时的host
@@ -398,13 +398,13 @@ webpack-papa-script 基于webpack, 已集成所有常见资源的处理, 以下�
     // 本地开发环境的静态资源基目录（同 devServer.contentBase）
     serveContentBase:'./build/',
     
-    // `resource/js` 中的js文件的合并顺序, 合并生成脱离webpack的公共代码包 
+    // 定义`resource/js` 中的js文件的合并顺序, 合并生成脱离webpack的公共代码包 
     staticFileConcatOrder: [],
 
     // 合并js的命名
     staticFileName:'common.js',
 
-    // 脱离webpack的公共文件的输出子路径
+    // 非模块的公共文件的输出子路径
     staticFileSubPath:'static',
 
     // 是否启用自带的plugin
@@ -435,20 +435,21 @@ webpack-papa-script 基于webpack, 已集成所有常见资源的处理, 以下�
     // 是否支持ie8
     kiss_ie8: true,
 
-    // 定义一个页面下面还分哪些版本页面。
-    // 比如一个单页项目, 不适合做响应式, 需要包含电脑端和移动端两个页面。可以定义为空, 则忽略掉这个情况
+    // 定义一个页面实际可包含有哪些版本的页面。它们虽然是不同的页面，但是业务内容是一样的，并且共用一个“config.json”。
+    // 比如一个单页项目, 不适合做响应式, 需要包含电脑端和移动端两个页面。
+    // 可以定义为空, 则忽略掉这个情况
     commSingleProjSubPage:['m', 'pc'],
 
-    // 辨别一个项目时, 只要一个文件夹里面包含以下文件或文件夹, 则认定它为一个项目。（无论单独页面还是多页面）
+    // 辨别一个文件夹是否为一个项目时, 只要该文件夹里面包含以下其一文件或文件夹, 则认定它为一个项目。（无论单独页面还是多页面）
     projContainsOneOf: ['m', 'pc', 'proj.json', 'config.json'],
 
-    // 获取所有项目时, 排除以下这些文件夹里面的内容（不会在已识别为proj的文件夹里再查找）
+    // 检索所有项目时, 排除以下这些文件夹里面的内容（不会在已识别为proj的文件夹里再查找）
     projScanExclude:['modules', 'module', 'static', 'components', 'component', 'img', 'js'],
 
     // 验证 webpack 入口必须包含这个值的所有文件。
     entryInclude: ['index.js', 'index.html'],
 
-    //本地开发环境的命名和前端代码注入的环境变量名。
+    //本地开发时 使用哪个环境(deploy)，和前端代码注入的环境变量名(fetch)。
     developEnvType: {
       deploy: 'test', //命名
       fetch: 'test'   //环境变量名
@@ -467,27 +468,27 @@ webpack-papa-script 基于webpack, 已集成所有常见资源的处理, 以下�
       test: 'build/activity'
     },
 
-    //环境名称对应的前端环境变量名
+    //环境名称默认对应的前端环境变量名
     deployEnvMapFetch: {
       pre: 'pre',
       pro: 'produce',
       test: 'test'
     },
 
-    // 环境名称的中文名, 用于命令行的显示
+    // 环境名称的中文名, 用于命令行的显示，以便识别当先运行的命令是在做什么
     releaseEnvDesc: {
+      test: '开发环境🤔',
       pre: '预发环境😛',
-      pro: '生产环境😝',
-      test: '开发环境🤔'
+      pro: '生产环境😝'
     },
 
     // 前端环境的中文名
     fetchEnvDesc: {
-      pre: '预发环境🥑',
       test: '测试环境🥝',
+      pre: '预发环境🥑',
       produce: '生产环境🍓'
     },
-    // 前端代码注入内容
+    // 注入前端代码的内容, 它将会被浏览器执行。 "{$xxx}"为变量的占位符
     // mode: 前端环境变量
     // debug: 环境与productEnvType一致时, 则为false, 否则true
     frontendConfCode:`try{
